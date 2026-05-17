@@ -2,15 +2,15 @@
 
 This module sets the behavioral foundation for senior/principal ML systems interviews.
 It is not a script. It is a structure for turning Nawab Ali's real experience into clear,
-company-relevant stories.
+company-relevant stories without inventing details.
 
 ## Learning Goals
 
 - Build a concise positioning statement for ML systems and hardware/software co-design.
 - Draft a two-minute career narrative.
 - Identify story themes that match senior/principal interview signals.
-- Prepare to discuss tradeoffs, ambiguity, influence, and technical leadership.
-- Avoid common behavioral red flags for senior candidates.
+- Separate real evidence from generic claims.
+- Prepare to discuss tradeoffs, ambiguity, influence, conflict, and technical leadership.
 
 ## Why Behavioral Interviews Matter At Senior/Principal Level
 
@@ -35,77 +35,60 @@ career. The center of gravity should stay consistent.
 
 ## Target-Company Positioning
 
-### NVIDIA
+| Company | What they may value | Positioning angle | Risk to avoid |
+| --- | --- | --- | --- |
+| NVIDIA | AI factories and platforms | PPA, modeling, co-design | Chip-only framing |
+| OpenAI | Frontier systems and safety | Reliable LLM infrastructure | Overclaiming model depth |
+| Anthropic | Reliable AI systems | Dependable co-design judgment | Ignoring safety context |
 
-Position around accelerator architecture, performance modeling, PPA discipline, and
-platform thinking. NVIDIA's public positioning emphasizes accelerated computing, AI
-factories, chips, systems, and software (Source 1).
+NVIDIA's public company material emphasizes accelerated computing, AI factories, chips,
+systems, and software (Source 1). OpenAI's charter emphasizes technical leadership and
+broadly beneficial AGI development (Source 2). Anthropic describes its work around
+reliable, interpretable, and steerable AI systems (Source 3).
 
-Your strongest angle is the ability to reason from silicon and programming models up to
-LLM training and inference systems.
+## STAR-Plus-Tradeoff Visual Framework
 
-### OpenAI
+```mermaid
+flowchart LR
+    A["Situation"] --> B["Task"]
+    B --> C["Action"]
+    C --> D["Result"]
+    D --> E["Tradeoff"]
+    E --> F["Reflection"]
+```
 
-Position around building and operating the infrastructure that makes frontier models
-useful, reliable, and efficient. OpenAI's charter emphasizes technical leadership and
-safe, broadly beneficial AGI development (Source 2).
+This is an original behavioral framework for this curriculum. It is synthesis, not a
+claim from a source.
 
-Your strongest angle is rigorous systems thinking: bottlenecks, reliability, cost, and
-hardware/software co-design for frontier-scale workloads.
+## Evidence Quality
 
-### Anthropic
+Strong senior/principal stories need evidence. Use this checklist before deciding that a
+story is interview-ready:
 
-Position around reliable, interpretable, and steerable AI systems, with a practical
-engineering bias toward safe deployment. Anthropic describes itself as building reliable,
-interpretable, and steerable AI systems (Source 3).
+- Scope: what system, team, product, or decision surface was involved?
+- Metric: what changed, even if the metric is approximate or qualitative?
+- Ambiguity: what was unknown or contested?
+- Tradeoff: what did you give up, and why?
+- Conflict: who disagreed, and how did you handle it?
+- Decision: what did you personally decide, influence, or clarify?
+- Outcome: what happened because of the work?
+- Lesson: what would you repeat or change next time?
 
-Your strongest angle is decision quality under uncertainty: how to design systems that are
-efficient, understandable, and operationally reliable.
+If a story lacks evidence, keep it in the story bank but do not lead with it.
 
 ## Story Bank Themes
 
-<table>
-  <thead>
-    <tr>
-      <th>Story theme</th>
-      <th>Likely interview signal</th>
-      <th>Example from user's background to consider</th>
-      <th>Target company relevance</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Architecture tradeoff</td>
-      <td>Judgment, PPA, and decision quality</td>
-      <td>[Fill in a custom AI silicon or accelerator tradeoff.]</td>
-      <td>NVIDIA, OpenAI, Anthropic</td>
-    </tr>
-    <tr>
-      <td>Performance model changed the plan</td>
-      <td>Analytical leadership and technical courage</td>
-      <td>[Fill in a modeling result that redirected design choices.]</td>
-      <td>NVIDIA, OpenAI</td>
-    </tr>
-    <tr>
-      <td>Programming model or ISA decision</td>
-      <td>Hardware/software co-design maturity</td>
-      <td>[Fill in a case involving usability, compiler, or kernel impact.]</td>
-      <td>NVIDIA, OpenAI, Anthropic</td>
-    </tr>
-    <tr>
-      <td>Ambiguous cross-functional decision</td>
-      <td>Influence, communication, and ownership</td>
-      <td>[Fill in a case across architecture, software, product, or leadership.]</td>
-      <td>All targets</td>
-    </tr>
-    <tr>
-      <td>Mentoring or raising the bar</td>
-      <td>Principal-level leverage beyond individual output</td>
-      <td>[Fill in a case where others made better decisions because of you.]</td>
-      <td>All targets</td>
-    </tr>
-  </tbody>
-</table>
+| Story theme | Likely signal | Background example to consider | Relevance |
+| --- | --- | --- | --- |
+| Architecture tradeoff | Judgment and PPA | [AI silicon tradeoff.] | All |
+| Model changed the plan | Analytical leadership | [Modeling result.] | NVIDIA, OpenAI |
+| ISA or programming model | Co-design maturity | [Compiler or kernel impact.] | All |
+| Ambiguous decision | Influence and ownership | [Cross-functional case.] | All |
+| Mentoring | Principal-level leverage | [Team decision quality.] | All |
+| Reliability learning | Operational judgment | [Failure or mitigation.] | OpenAI, Anthropic |
+
+Do not invent specifics. Fill placeholders only with real projects, decisions, and
+outcomes you can defend under follow-up questions.
 
 ## Week 1 Exercise: Write Your Career Narrative
 
@@ -131,9 +114,10 @@ Use STAR, but add the tradeoff explicitly:
 - Action: what did you do, and how did you influence others?
 - Result: what changed because of your work?
 - Tradeoff: what did you give up, why, and what would you revisit with hindsight?
+- Reflection: what did the story teach you about future technical leadership?
 
-The tradeoff section is the senior/principal differentiator. It shows judgment rather
-than just execution.
+The tradeoff and reflection sections are senior/principal differentiators. They show
+judgment rather than just execution.
 
 ## Leadership Dimensions To Prepare
 
@@ -145,6 +129,18 @@ than just execution.
 - Clear communication to software, product, and executive audiences.
 - Mentoring and raising engineering standards.
 - Learning a new domain quickly without pretending to know everything.
+
+## Weak Versus Strong Behavioral Answers
+
+| Prompt | Weak pattern | Strong pattern |
+| --- | --- | --- |
+| Tradeoff | "I picked the best design." | "I named the cost and owned the result." |
+| Conflict | "They were wrong." | "I aligned goals and surfaced evidence." |
+| Impact | "The project mattered." | "The decision affected [metric] or [risk]." |
+| Why this company? | "I want AI." | "My co-design background maps to this work." |
+
+Use placeholders for facts until the real story is written. Do not fabricate metrics or
+conflict.
 
 ## Red Flags To Avoid
 
@@ -174,11 +170,11 @@ than just execution.
 
 ## Sources
 
-Source 1: NVIDIA, "About Us."
-https://www.nvidia.com/en-us/about-nvidia/
+- Source 1: NVIDIA, "About Us."
+  https://www.nvidia.com/en-us/about-nvidia/
 
-Source 2: OpenAI, "OpenAI Charter."
-https://openai.com/charter/
+- Source 2: OpenAI, "OpenAI Charter."
+  https://openai.com/charter/
 
-Source 3: Anthropic, "Company."
-https://www.anthropic.com/company
+- Source 3: Anthropic, "Company."
+  https://www.anthropic.com/company

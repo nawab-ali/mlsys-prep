@@ -167,57 +167,76 @@ the sources are current enough for the claims being added.
 
 Markdown line length must remain below 120 characters in every file.
 
-## Week 1 Seed Sources
+## Week 1 Sources
 
-These sources were added for the Week 1 foundations content. They are the starting source
-set for the first researched study modules, not the final bibliography for later weeks.
+These sources support the Week 1 foundations content. They are the starting source set for
+the first researched study modules, not the final bibliography for later weeks.
 
-### LLM Fundamentals And Transformer Context
+Current NVIDIA platform facts were checked against public NVIDIA sources on May 17, 2026.
+
+No external figures are embedded in Week 1. The modules use original Mermaid diagrams and
+Markdown tables derived from the sources listed below.
+
+### LLM Foundations
 
 - Vaswani et al., "Attention Is All You Need."
-https://arxiv.org/abs/1706.03762
+  https://arxiv.org/abs/1706.03762
 
 - OpenAI Help Center, "What are tokens and how to count them?"
-https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them
+  https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them
 
 - OpenAI API docs, "Key concepts."
-https://developers.openai.com/api/docs/concepts
+  https://developers.openai.com/api/docs/concepts
 
 - OpenAI API reference, "Completions."
-https://developers.openai.com/api/reference/resources/completions
+  https://developers.openai.com/api/reference/resources/completions
 
-### NVIDIA Platforms And Software
+### NVIDIA Platforms
 
 - NVIDIA, "Blackwell Architecture."
-https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/
+  https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/
 
 - NVIDIA, "GB200 NVL72."
-https://www.nvidia.com/en-us/data-center/gb200-nvl72/
+  https://www.nvidia.com/en-us/data-center/gb200-nvl72/
 
 - NVIDIA, "GB200 NVL Multi-Node Tuning Guide."
-https://docs.nvidia.com/multi-node-nvlink-systems/multi-node-tuning-guide/overview.html
+  https://docs.nvidia.com/multi-node-nvlink-systems/multi-node-tuning-guide/overview.html
 
 - NVIDIA developer blog, "GB200 NVL72 Delivers Trillion-Parameter LLM Training."
 https://developer.nvidia.com/blog/nvidia-gb200-nvl72-delivers-trillion-parameter-llm-training-and-real-time-inference/
 
+- NVIDIA, "GB300 NVL72."
+  https://www.nvidia.com/en-us/data-center/gb300-nvl72/
+
+- NVIDIA developer blog, "Blackwell Ultra for the Era of AI Reasoning."
+  https://developer.nvidia.com/blog/nvidia-blackwell-ultra-for-the-era-of-ai-reasoning/
+
+- NVIDIA, "Vera Rubin Platform."
+  https://www.nvidia.com/en-us/data-center/technologies/rubin/
+
+- NVIDIA investor news, "NVIDIA Vera Rubin Opens Agentic AI Frontier."
+  https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Vera-Rubin-Opens-Agentic-AI-Frontier/default.aspx
+
+### GPU Software Preview
+
 - NVIDIA, "CUDA C++ Programming Guide."
-https://docs.nvidia.com/cuda/cuda-c-programming-guide/
+  https://docs.nvidia.com/cuda/cuda-c-programming-guide/
 
 - NVIDIA, "TensorRT-LLM Documentation."
-https://docs.nvidia.com/tensorrt-llm/
+  https://docs.nvidia.com/tensorrt-llm/
 
 ### LLM Serving Preview
 
 - Kwon et al., "Efficient Memory Management for Large Language Model Serving."
-https://arxiv.org/abs/2309.06180
+  https://arxiv.org/abs/2309.06180
 
-### Behavioral And Company Positioning
+### Behavioral Positioning
 
 - NVIDIA, "About Us."
-https://www.nvidia.com/en-us/about-nvidia/
+  https://www.nvidia.com/en-us/about-nvidia/
 
 - OpenAI, "OpenAI Charter."
-https://openai.com/charter/
+  https://openai.com/charter/
 
 - Anthropic, "Company."
-https://www.anthropic.com/company
+  https://www.anthropic.com/company
