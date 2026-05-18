@@ -218,7 +218,7 @@ Example pattern:
   https://docs.nvidia.com/multi-node-nvlink-systems/multi-node-tuning-guide/overview.html
 
 - Source 4: NVIDIA developer blog, "GB200 NVL72 Delivers Trillion-Parameter LLM Training."
-https://developer.nvidia.com/blog/nvidia-gb200-nvl72-delivers-trillion-parameter-llm-training-and-real-time-inference/
+  https://developer.nvidia.com/blog/nvidia-gb200-nvl72-delivers-trillion-parameter-llm-training-and-real-time-inference
 
 - Source 5: NVIDIA developer blog, "Blackwell Ultra for the Era of AI Reasoning."
   https://developer.nvidia.com/blog/nvidia-blackwell-ultra-for-the-era-of-ai-reasoning/

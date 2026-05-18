@@ -203,7 +203,7 @@ Markdown tables derived from the sources listed below.
   https://docs.nvidia.com/multi-node-nvlink-systems/multi-node-tuning-guide/overview.html
 
 - NVIDIA developer blog, "GB200 NVL72 Delivers Trillion-Parameter LLM Training."
-https://developer.nvidia.com/blog/nvidia-gb200-nvl72-delivers-trillion-parameter-llm-training-and-real-time-inference/
+  https://developer.nvidia.com/blog/nvidia-gb200-nvl72-delivers-trillion-parameter-llm-training-and-real-time-inference
 
 - NVIDIA, "GB300 NVL72."
   https://www.nvidia.com/en-us/data-center/gb300-nvl72/
