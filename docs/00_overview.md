@@ -39,3 +39,18 @@ turn into a question about memory bandwidth, KV cache, batching, Tensor Cores,
 or cluster communication.
 
 The weekly structure is designed to build those connections early.
+## Critical deep dives
+
+The curriculum explicitly includes two modern LLM systems deep dives:
+
+- Mixture of Experts, centered in Week 7.
+- Agents, centered in Week 9.
+
+MoE is treated as a systems topic, not just a model architecture topic. The deep
+dive should cover routing, expert parallelism, load balancing, all-to-all
+communication, serving implications, and hardware/software co-design.
+
+Agents are treated as production systems, not just prompting patterns. The deep
+dive should cover tool use, orchestration, memory, guardrails, evaluation,
+latency, cost, and infrastructure implications.
+

@@ -40,3 +40,46 @@ Goals:
 - Finalize behavioral stories and company-specific positioning for the target roles.
 
 Detailed study materials are pending the deep research phase.
+## Required deep-dive topics
+
+The plan must include explicit deep dives on two critical modern LLM systems
+subjects:
+
+1. Mixture of Experts.
+2. Agents.
+
+These topics should not be treated as side notes.
+
+### Mixture of Experts
+
+Mixture of Experts is introduced during the distributed-training phase and
+covered deeply in Week 7.
+
+The MoE deep dive should connect model architecture to systems consequences:
+
+- Sparse activation and activated parameters.
+- Router and gating behavior.
+- Expert parallelism.
+- Load balancing and capacity factor.
+- Token dispatch, combine, overflow, and dropped-token behavior.
+- All-to-all communication.
+- Training instability and routing collapse.
+- Inference serving, scheduling, batching, and memory implications.
+- Hardware/software co-design implications for GPUs and custom accelerators.
+
+### Agents
+
+Agents are covered deeply in Week 9.
+
+The agents deep dive should focus on production systems rather than hype:
+
+- Tool calling and function calling.
+- Planning and execution loops.
+- RAG versus agents.
+- Agent memory.
+- Multi-agent systems.
+- Guardrails, failure modes, and recovery.
+- Latency and cost implications.
+- Evaluation of agentic systems.
+- Infrastructure impact for OpenAI, Anthropic, and NVIDIA-adjacent roles.
+
