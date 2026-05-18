@@ -253,11 +253,20 @@ scheduling, utilization, and software maturity.
 
 ## Senior/Principal-Level Answer Patterns
 
-| Answer level | Pattern | Interview signal |
-| --- | --- | --- |
-| Weak | "An LLM predicts words." | Misses tokens and distributions. |
-| Acceptable | "It predicts the next token." | Mechanically useful, not system-aware. |
-| Strong | "It maps tokens to next-token distributions." | Precise, then ready for systems depth. |
+Weak answer:
+
+- Pattern: "An LLM predicts words."
+- Interview signal: misses tokens and distributions.
+
+Acceptable answer:
+
+- Pattern: "It predicts the next token."
+- Interview signal: mechanically useful, but not yet system-aware.
+
+Strong senior/principal answer:
+
+- Pattern: "It maps tokens to next-token distributions."
+- Interview signal: precise, then ready for systems depth.
 
 Use the strong form when interviewing for senior/principal roles. Start simple, then add
 hardware consequences and measurement questions.

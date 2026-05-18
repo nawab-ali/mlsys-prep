@@ -80,59 +80,155 @@ bottleneck questions, and how you would avoid premature conclusions.
 
 ## Answer Key: Part A
 
-| Q | Expected answer | Senior/principal signal | Common red flag |
-| --- | --- | --- | --- |
-| 1 | Token sequence to next-token distributions. | Connects definition to systems. | Calls it a chatbot. |
-| 2 | Tokens are text fragments, not always words. | Mentions model-specific tokenization. | Assumes words only. |
-| 3 | Integer vocabulary label. | Separates symbols from tensors. | Calls it an embedding. |
-| 4 | Learned dense vector from lookup. | Connects lookup to tensor compute. | Treats it as a fact table. |
-| 5 | Unnormalized vocabulary scores. | Separates model score from policy. | Calls logits probabilities. |
-| 6 | Probabilities come after conversion. | Mentions decoding policy. | Ignores sampling. |
-| 7 | Score, select, append, repeat. | Connects loop to latency. | Describes one pass only. |
-| 8 | Mechanistic but not complete. | Avoids dismissive framing. | Says "just autocomplete." |
-| 9 | Weights are not queried rows. | Explains learned structure. | Claims exact lookup. |
-| 10 | More parallel tensor work. | Cites Transformer motivation. | Says "because attention is magic." |
-| 11 | Training updates weights; inference serves. | Names different bottlenecks. | Treats them as identical. |
-| 12 | Attention math, KV cache, RLHF, serving. | Knows scope boundaries. | Deep-dives too early. |
+1. Expected answer: token sequence to next-token distributions.
+   Senior/principal signal: connects definition to systems.
+   Common red flag: calls it a chatbot.
+
+2. Expected answer: tokens are text fragments, not always words.
+   Senior/principal signal: mentions model-specific tokenization.
+   Common red flag: assumes words only.
+
+3. Expected answer: integer vocabulary label.
+   Senior/principal signal: separates symbols from tensors.
+   Common red flag: calls it an embedding.
+
+4. Expected answer: learned dense vector from lookup.
+   Senior/principal signal: connects lookup to tensor compute.
+   Common red flag: treats it as a fact table.
+
+5. Expected answer: unnormalized vocabulary scores.
+   Senior/principal signal: separates model score from policy.
+   Common red flag: calls logits probabilities.
+
+6. Expected answer: probabilities come after conversion.
+   Senior/principal signal: mentions decoding policy.
+   Common red flag: ignores sampling.
+
+7. Expected answer: score, select, append, repeat.
+   Senior/principal signal: connects loop to latency.
+   Common red flag: describes one pass only.
+
+8. Expected answer: mechanistic but not complete.
+   Senior/principal signal: avoids dismissive framing.
+   Common red flag: says "just autocomplete."
+
+9. Expected answer: weights are not queried rows.
+   Senior/principal signal: explains learned structure.
+   Common red flag: claims exact lookup.
+
+10. Expected answer: more parallel tensor work.
+    Senior/principal signal: cites Transformer motivation.
+    Common red flag: says "because attention is magic."
+
+11. Expected answer: training updates weights; inference serves.
+    Senior/principal signal: names different bottlenecks.
+    Common red flag: treats them as identical.
+
+12. Expected answer: attention math, KV cache, RLHF, serving.
+    Senior/principal signal: knows scope boundaries.
+    Common red flag: deep-dives too early.
 
 ## Answer Key: Part B
 
-| Q | Expected answer | Senior/principal signal | Common red flag |
-| --- | --- | --- | --- |
-| 1 | Moving public platform landscape. | Distinguishes current and roadmap. | Says only GB200. |
-| 2 | Current NVIDIA GPU architecture anchor. | Links to AI workloads. | Recites no system role. |
-| 3 | Grace CPU plus Blackwell GPU systems. | Mentions CPU-GPU integration. | Treats it as one chip only. |
-| 4 | Grace Blackwell rack-scale NVLink system. | Links to scale-up fabric. | Misses rack-scale context. |
-| 5 | Blackwell Ultra reasoning platform. | Mentions test-time scaling pressure. | Claims unsourced details. |
-| 6 | Forward-looking Vera CPU and Rubin GPU platform. | Marks roadmap status. | Treats roadmap as fixed design. |
-| 7 | Reduces scale-up communication pain. | Connects fabric to utilization. | Says "more GPUs" only. |
-| 8 | Full stack: GPU, memory, fabric, CUDA, software. | Explains platform lock-in. | Only mentions FLOPS. |
-| 9 | TensorRT-LLM or CUDA stack. | Knows software matters. | Ignores software. |
-| 10 | Memorize anchors; reason from bottlenecks. | Avoids SKU trivia. | Memorizes numbers only. |
+1. Expected answer: moving public platform landscape.
+   Senior/principal signal: distinguishes current and roadmap.
+   Common red flag: says only GB200.
+
+2. Expected answer: current NVIDIA GPU architecture anchor.
+   Senior/principal signal: links to AI workloads.
+   Common red flag: recites no system role.
+
+3. Expected answer: Grace CPU plus Blackwell GPU systems.
+   Senior/principal signal: mentions CPU-GPU integration.
+   Common red flag: treats it as one chip only.
+
+4. Expected answer: Grace Blackwell rack-scale NVLink system.
+   Senior/principal signal: links to scale-up fabric.
+   Common red flag: misses rack-scale context.
+
+5. Expected answer: Blackwell Ultra reasoning platform.
+   Senior/principal signal: mentions test-time scaling pressure.
+   Common red flag: claims unsourced details.
+
+6. Expected answer: forward-looking Vera CPU and Rubin GPU platform.
+   Senior/principal signal: marks roadmap status.
+   Common red flag: treats roadmap as fixed design.
+
+7. Expected answer: reduces scale-up communication pain.
+   Senior/principal signal: connects fabric to utilization.
+   Common red flag: says "more GPUs" only.
+
+8. Expected answer: full stack with GPU, memory, fabric, CUDA, and software.
+   Senior/principal signal: explains platform lock-in.
+   Common red flag: only mentions FLOPS.
+
+9. Expected answer: TensorRT-LLM or CUDA stack.
+   Senior/principal signal: knows software matters.
+   Common red flag: ignores software.
+
+10. Expected answer: memorize anchors; reason from bottlenecks.
+    Senior/principal signal: avoids SKU trivia.
+    Common red flag: memorizes numbers only.
 
 ## Answer Key: Part C
 
-| Q | Expected answer | Senior/principal signal | Common red flag |
-| --- | --- | --- | --- |
-| 1 | Dense tensor operations. | Mentions shapes and utilization. | Says "AI math" only. |
-| 2 | Weights, activations, KV state. | Mentions capacity and bandwidth. | Ignores memory. |
-| 3 | Multi-GPU or multi-node movement. | Separates scale-up and scale-out. | Ignores synchronization. |
-| 4 | Prefill handles prompt; decode emits tokens. | Links to different bottlenecks. | Treats all tokens alike. |
-| 5 | Stored attention state preview. | Avoids deep math too early. | Overclaims implementation. |
-| 6 | Compute, memory, communication. | Applies them consistently. | Lists random metrics. |
-| 7 | Utilization, bandwidth, queueing, batch, latency. | Asks for evidence. | Accepts label blindly. |
-| 8 | Compare PPA under workload assumptions. | Includes software and risk. | Compares peak FLOPS only. |
+1. Expected answer: dense tensor operations.
+   Senior/principal signal: mentions shapes and utilization.
+   Common red flag: says "AI math" only.
+
+2. Expected answer: weights, activations, KV state.
+   Senior/principal signal: mentions capacity and bandwidth.
+   Common red flag: ignores memory.
+
+3. Expected answer: multi-GPU or multi-node movement.
+   Senior/principal signal: separates scale-up and scale-out.
+   Common red flag: ignores synchronization.
+
+4. Expected answer: prefill handles prompt; decode emits tokens.
+   Senior/principal signal: links to different bottlenecks.
+   Common red flag: treats all tokens alike.
+
+5. Expected answer: stored attention state preview.
+   Senior/principal signal: avoids deep math too early.
+   Common red flag: overclaims implementation.
+
+6. Expected answer: compute, memory, communication.
+   Senior/principal signal: applies them consistently.
+   Common red flag: lists random metrics.
+
+7. Expected answer: utilization, bandwidth, queueing, batch, latency.
+   Senior/principal signal: asks for evidence.
+   Common red flag: accepts label blindly.
+
+8. Expected answer: compare PPA under workload assumptions.
+   Senior/principal signal: includes software and risk.
+   Common red flag: compares peak FLOPS only.
 
 ## Answer Key: Part D
 
-| Q | Expected answer | Senior/principal signal | Common red flag |
-| --- | --- | --- | --- |
-| 1 | Links ML hardware to LLM systems. | Clear, specific positioning. | Generic AI enthusiasm. |
-| 2 | PPA, modeling, platforms, co-design. | Maps to NVIDIA value. | Chip-only framing. |
-| 3 | Infrastructure rigor for frontier systems. | Connects to reliability and cost. | Claims model research depth. |
-| 4 | Reliable systems and careful deployment. | Connects to safety and trust. | Ignores mission context. |
-| 5 | Names a concrete habit to avoid. | Shows self-awareness. | Says "none." |
-| 6 | Lists scope, metric, tradeoff, outcome. | Evidence-driven story prep. | Invents details. |
+1. Expected answer: links ML hardware to LLM systems.
+   Senior/principal signal: clear, specific positioning.
+   Common red flag: generic AI enthusiasm.
+
+2. Expected answer: PPA, modeling, platforms, co-design.
+   Senior/principal signal: maps to NVIDIA value.
+   Common red flag: chip-only framing.
+
+3. Expected answer: infrastructure rigor for frontier systems.
+   Senior/principal signal: connects to reliability and cost.
+   Common red flag: claims model research depth.
+
+4. Expected answer: reliable systems and careful deployment.
+   Senior/principal signal: connects to safety and trust.
+   Common red flag: ignores mission context.
+
+5. Expected answer: names a concrete habit to avoid.
+   Senior/principal signal: shows self-awareness.
+   Common red flag: says "none."
+
+6. Expected answer: lists scope, metric, tradeoff, outcome.
+   Senior/principal signal: evidence-driven story prep.
+   Common red flag: invents details.
 
 ## Answer Key: Part E
 
