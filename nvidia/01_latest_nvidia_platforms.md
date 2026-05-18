@@ -20,7 +20,8 @@ NVIDIA documentation, and NVIDIA investor news. Interview synthesis appears in t
 "what to reason from" and answer-pattern sections, where the facts are translated into
 interview guidance.
 
-Platform facts in this file were checked against public NVIDIA sources on May 17, 2026.
+Platform facts in this file were checked against public NVIDIA sources on May 17,
+2026.
 
 ## Why This Matters For Interviews
 
@@ -35,7 +36,6 @@ to bottleneck analysis and hardware/software co-design.
 ## What "Latest NVIDIA Hardware" Means For This Curriculum
 
 "Latest" is not a single product. For this curriculum, it is a public platform landscape:
-
 - Blackwell and Grace Blackwell remain important current-generation anchors.
 - GB200 NVL72 remains a recent rack-scale anchor for Grace Blackwell systems.
 - Blackwell Ultra and GB300 NVL72 are the current public reasoning-platform anchor.
@@ -47,7 +47,12 @@ interview accuracy as NVIDIA's public platform story evolves.
 ## Platform Landscape Table
 
 | Platform | Status | Public NVIDIA positioning | Key visible components | LLM role | Week |
-| --- | --- | --- | --- | --- | --- |
+| ---
+| ---
+| ---
+| ---
+| ---
+| --- |
 | GB200 NVL72 | Recent | Grace Blackwell rack | 36 Grace; 72 Blackwell GPUs | Scale-up LLMs | 6, 12 |
 | GB300 NVL72 | Current | Blackwell Ultra reasoning | 36 Grace; 72 Blackwell Ultra | Reasoning workloads | 8, 12 |
 | Vera Rubin NVL72 | Roadmap | Agentic AI factories | Vera CPU; Rubin GPU; NVLink 6 | Next platform | 12 |
@@ -62,13 +67,14 @@ NVLink and NVLink Switch (Source 7).
 ## Platform Stack Diagram
 
 ```mermaid
+
 flowchart TB
-    A["GPU compute: Tensor Cores and kernels"] --> B["HBM capacity and bandwidth"]
-    B --> C["NVLink and NVSwitch scale-up fabric"]
-    C --> D["Scale-out network: InfiniBand or Ethernet"]
-    D --> E["CUDA, libraries, compilers"]
-    E --> F["Serving and training frameworks"]
-    F --> G["LLM training, inference, and reasoning workloads"]
+A["GPU compute: Tensor Cores and kernels"] --> B["HBM capacity and bandwidth"]
+B --> C["NVLink and NVSwitch scale-up fabric"]
+C --> D["Scale-out network: InfiniBand or Ethernet"]
+D --> E["CUDA, libraries, compilers"]
+E --> F["Serving and training frameworks"]
+F --> G["LLM training, inference, and reasoning workloads"]
 ```
 
 This original diagram synthesizes NVIDIA platform documentation and software docs
@@ -77,9 +83,10 @@ This original diagram synthesizes NVIDIA platform documentation and software doc
 ## Public Platform Timeline
 
 ```mermaid
+
 flowchart LR
-    A["GB200 NVL72\nGrace Blackwell"] --> B["GB300 NVL72\nBlackwell Ultra"]
-    B --> C["Vera Rubin NVL72\nVera CPU + Rubin GPU"]
+A["GB200 NVL72\nGrace Blackwell"] --> B["GB300 NVL72\nBlackwell Ultra"]
+B --> C["Vera Rubin NVL72\nVera CPU + Rubin GPU"]
 ```
 
 This original landscape diagram is based on current public NVIDIA platform pages and
@@ -93,7 +100,6 @@ in system designs, including coherent CPU-GPU connectivity through NVLink-C2C in
 Grace Blackwell Superchip context (Sources 3 and 4).
 
 At this level, remember the system shape:
-
 - Blackwell GPU: accelerator for dense AI math and memory-intensive execution.
 - Grace CPU: host-side compute and memory participant in Grace Blackwell systems.
 - NVLink-C2C: CPU-GPU connection in the Grace Blackwell Superchip context.
@@ -129,7 +135,6 @@ HBM, Tensor Cores, NVLink/NVSwitch, networking, CUDA, libraries, and serving/tra
 software.
 
 That combination matters because LLM systems stress multiple layers at once:
-
 - Compute: matrix operations, attention, and low-precision tensor execution.
 - Memory: weights, activations, KV cache, long context, and serving state.
 - Communication: scale-up and scale-out parallelism.
@@ -143,7 +148,6 @@ inference software layer that later modules will study in more detail (Source 10
 ## What To Memorize Versus What To Reason From
 
 Memorize:
-
 - Broad platform names and roles: Blackwell, Grace Blackwell, Blackwell Ultra, Vera Rubin.
 - GB200 NVL72 as a Grace Blackwell rack-scale anchor.
 - GB300 NVL72 as a Blackwell Ultra reasoning-platform anchor.
@@ -151,7 +155,6 @@ Memorize:
 - NVIDIA's platform story includes chip, memory, interconnect, network, CUDA, and software.
 
 Reason from:
-
 - Compute: tensor shapes, precision, attention, and utilization.
 - Memory: capacity, bandwidth, KV-cache pressure, and long-context effects.
 - Communication: scale-up fabric versus scale-out network.
@@ -180,7 +183,7 @@ belong to later weeks.
 
 - Begin with workload demands, then map them to the platform stack.
 - Say "GPU architecture plus memory plus fabric plus software ecosystem," not just
-  "faster GPU."
+"faster GPU."
 - Treat official performance claims as context, then ask about assumptions.
 - Use rack-scale facts to reason about communication and utilization.
 - Separate current public product facts from forward-looking roadmap context.
@@ -196,31 +199,22 @@ belong to later weeks.
 ## Sources
 
 - Source 1: NVIDIA, "Blackwell Architecture."
-  https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/
-
+https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/
 - Source 2: NVIDIA, "GB200 NVL72."
-  https://www.nvidia.com/en-us/data-center/gb200-nvl72/
-
+https://www.nvidia.com/en-us/data-center/gb200-nvl72/
 - Source 3: NVIDIA, "GB200 NVL Multi-Node Tuning Guide."
-  https://docs.nvidia.com/multi-node-nvlink-systems/multi-node-tuning-guide/overview.html
-
+https://docs.nvidia.com/multi-node-nvlink-systems/multi-node-tuning-guide/overview.html
 - Source 4: NVIDIA developer blog, "GB200 NVL72 Delivers Trillion-Parameter LLM Training."
-  https://developer.nvidia.com/blog/nvidia-gb200-nvl72-delivers-trillion-parameter-llm-training-and-real-time-inference
-
+https://developer.nvidia.com/blog/nvidia-gb200-nvl72-delivers-trillion-parameter-llm-training-and-real-time-inference
 - Source 5: NVIDIA, "GB300 NVL72."
-  https://www.nvidia.com/en-us/data-center/gb300-nvl72/
-
+https://www.nvidia.com/en-us/data-center/gb300-nvl72/
 - Source 6: NVIDIA developer blog, "Blackwell Ultra for the Era of AI Reasoning."
-  https://developer.nvidia.com/blog/nvidia-blackwell-ultra-for-the-era-of-ai-reasoning/
-
+https://developer.nvidia.com/blog/nvidia-blackwell-ultra-for-the-era-of-ai-reasoning/
 - Source 7: NVIDIA, "Vera Rubin Platform."
-  https://www.nvidia.com/en-us/data-center/technologies/rubin/
-
+https://www.nvidia.com/en-us/data-center/technologies/rubin/
 - Source 8: NVIDIA investor news, "NVIDIA Vera Rubin Opens Agentic AI Frontier."
-  https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Vera-Rubin-Opens-Agentic-AI-Frontier/default.aspx
-
+https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Vera-Rubin-Opens-Agentic-AI-Frontier/default.aspx
 - Source 9: NVIDIA, "CUDA C++ Programming Guide."
-  https://docs.nvidia.com/cuda/cuda-c-programming-guide/
-
+https://docs.nvidia.com/cuda/cuda-c-programming-guide/
 - Source 10: NVIDIA, "TensorRT-LLM Documentation."
-  https://docs.nvidia.com/tensorrt-llm/
+https://docs.nvidia.com/tensorrt-llm/

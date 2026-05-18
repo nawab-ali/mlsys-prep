@@ -46,7 +46,6 @@ prompt and can expose token probabilities for generated choices (Source 4).
 
 "Large" is not one fixed threshold. In interviews, use it as shorthand for multiple
 systems pressures:
-
 - Many parameters, often too large to treat as a small local data structure.
 - Large activation tensors and intermediate states.
 - Large context windows that increase memory and scheduling pressure.
@@ -74,7 +73,6 @@ are not dense semantic vectors. The model then uses embedding tables to map thos
 learned dense vectors.
 
 Hardware translation:
-
 - Token IDs are compact symbolic indices.
 - Embeddings are dense numeric tensors.
 - The embedding lookup turns sparse symbolic input into accelerator-friendly data.
@@ -93,15 +91,16 @@ as temperature, top-k, top-p, constraints, or deterministic selection.
 ## Visible Pipeline Diagram
 
 ```mermaid
+
 flowchart LR
-    A["Text prompt"] --> B["Tokens"]
-    B --> C["Token IDs"]
-    C --> D["Embedding lookup"]
-    D --> E["Transformer stack"]
-    E --> F["Logits"]
-    F --> G["Sampling or selection"]
-    G --> H["Next token"]
-    H --> I["Append and repeat"]
+A["Text prompt"] --> B["Tokens"]
+B --> C["Token IDs"]
+C --> D["Embedding lookup"]
+D --> E["Transformer stack"]
+E --> F["Logits"]
+F --> G["Sampling or selection"]
+G --> H["Next token"]
+H --> I["Append and repeat"]
 ```
 
 This is an original schematic based on OpenAI token documentation and the common
@@ -113,13 +112,15 @@ The numbers below are illustrative. They are not real tokenizer output and do no
 from a specific production model.
 
 Input text:
-
 ```text
+
 AI chips are fast
 ```
 
 | Step | Example value | Meaning |
-| --- | --- | --- |
+| ---
+| ---
+| --- |
 | Token-like chunks | `AI`, ` chips`, ` are`, ` fast` | Text pieces after tokenization. |
 | Token IDs | `812`, `4310`, `527`, `4021` | Integer vocabulary labels. |
 | Embedding lookup | `E[812] -> vector` | Learned dense vector for a token ID. |
@@ -133,7 +134,6 @@ It manipulates token IDs, dense vectors, tensor operations, and output scores.
 ## Autoregressive Generation
 
 Autoregressive generation is repeated next-token prediction:
-
 1. Convert the prompt into token IDs.
 2. Run the model on the current token sequence.
 3. Produce logits for the next token.
@@ -169,12 +169,13 @@ parallelism, and communication implications.
 ## Transformer Block Mental Model
 
 ```mermaid
+
 flowchart TB
-    A["Input token representations"] --> B["Attention: mix context"]
-    B --> C["Add and normalize"]
-    C --> D["MLP: transform each position"]
-    D --> E["Add and normalize"]
-    E --> F["Updated token representations"]
+A["Input token representations"] --> B["Attention: mix context"]
+B --> C["Add and normalize"]
+C --> D["MLP: transform each position"]
+D --> E["Add and normalize"]
+E --> F["Updated token representations"]
 ```
 
 This is an original Week 1 mental model derived from the Transformer architecture in
@@ -197,7 +198,6 @@ shape, decode loops, KV-cache memory, and serving policy.
 ## Future Topics, Not Week 1 Topics
 
 Week 1 does not yet cover:
-
 - Attention math.
 - KV-cache layout and capacity planning.
 - Fine-tuning, RLHF, or preference optimization.
@@ -210,7 +210,6 @@ These topics need deeper treatment and more careful source work in later modules
 ## Production Intuition For A Hardware Architect
 
 Translate each LLM term into one of four system questions:
-
 - What tensor operation is being performed?
 - What state must stay resident in memory?
 - What bandwidth is required to feed compute?
@@ -223,14 +222,14 @@ scheduling, utilization, and software maturity.
 ## Common Misconceptions
 
 - An LLM is not a database. It does not look up answers in weights the way a database
-  queries rows.
+queries rows.
 - Tokens are not always words. They can be word pieces, spaces, punctuation, or fragments.
 - Token IDs are not embeddings. IDs are symbolic labels; embeddings are learned vectors.
 - Logits are not probabilities yet. They are scores before probability conversion.
 - "Transformer" does not mean "all details are attention." MLPs, normalization, residuals,
-  memory layout, and serving policy also matter.
+memory layout, and serving policy also matter.
 - "Large" is not just parameter count. Context, batch shape, memory, software, and cluster
-  topology matter too.
+topology matter too.
 
 ## What Can Go Wrong In Interviews
 
@@ -254,17 +253,14 @@ scheduling, utilization, and software maturity.
 ## Senior/Principal-Level Answer Patterns
 
 Weak answer:
-
 - Pattern: "An LLM predicts words."
 - Interview signal: misses tokens and distributions.
 
 Acceptable answer:
-
 - Pattern: "It predicts the next token."
 - Interview signal: mechanically useful, but not yet system-aware.
 
 Strong senior/principal answer:
-
 - Pattern: "It maps tokens to next-token distributions."
 - Interview signal: precise, then ready for systems depth.
 
@@ -283,13 +279,10 @@ hardware consequences and measurement questions.
 ## Sources
 
 - Source 1: Vaswani et al., "Attention Is All You Need."
-  https://arxiv.org/abs/1706.03762
-
+https://arxiv.org/abs/1706.03762
 - Source 2: OpenAI Help Center, "What are tokens and how to count them?"
-  https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them
-
+https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them
 - Source 3: OpenAI API docs, "Key concepts."
-  https://developers.openai.com/api/docs/concepts
-
+https://developers.openai.com/api/docs/concepts
 - Source 4: OpenAI API reference, "Completions."
-  https://developers.openai.com/api/reference/resources/completions
+https://developers.openai.com/api/reference/resources/completions

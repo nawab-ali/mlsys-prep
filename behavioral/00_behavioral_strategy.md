@@ -26,8 +26,11 @@ whether the interviewer trusts you with scope.
 Reusable short template:
 
 > I am a senior ML hardware architect who connects accelerator architecture,
+
 > performance modeling, and hardware/software co-design to production ML systems.
+
 > I am now focusing that experience on LLM infrastructure, GPU platforms, and
+
 > system-level bottlenecks where model behavior and hardware architecture meet.
 
 Tune this for each company by changing the last clause, not by inventing a different
@@ -36,7 +39,10 @@ career. The center of gravity should stay consistent.
 ## Target-Company Positioning
 
 | Company | What they may value | Positioning angle | Risk to avoid |
-| --- | --- | --- | --- |
+| ---
+| ---
+| ---
+| --- |
 | NVIDIA | AI factories and platforms | PPA, modeling, co-design | Chip-only framing |
 | OpenAI | Frontier systems and safety | Reliable LLM infrastructure | Overclaiming model depth |
 | Anthropic | Reliable AI systems | Dependable co-design judgment | Ignoring safety context |
@@ -49,12 +55,13 @@ reliable, interpretable, and steerable AI systems (Source 3).
 ## STAR-Plus-Tradeoff Visual Framework
 
 ```mermaid
+
 flowchart LR
-    A["Situation"] --> B["Task"]
-    B --> C["Action"]
-    C --> D["Result"]
-    D --> E["Tradeoff"]
-    E --> F["Reflection"]
+A["Situation"] --> B["Task"]
+B --> C["Action"]
+C --> D["Result"]
+D --> E["Tradeoff"]
+E --> F["Reflection"]
 ```
 
 This is an original behavioral framework for this curriculum. It is synthesis, not a
@@ -64,7 +71,6 @@ claim from a source.
 
 Strong senior/principal stories need evidence. Use this checklist before deciding that a
 story is interview-ready:
-
 - Scope: what system, team, product, or decision surface was involved?
 - Metric: what changed, even if the metric is approximate or qualitative?
 - Ambiguity: what was unknown or contested?
@@ -79,7 +85,10 @@ If a story lacks evidence, keep it in the story bank but do not lead with it.
 ## Story Bank Themes
 
 | Story theme | Likely signal | Background example to consider | Relevance |
-| --- | --- | --- | --- |
+| ---
+| ---
+| ---
+| --- |
 | Architecture tradeoff | Judgment and PPA | [AI silicon tradeoff.] | All |
 | Model changed the plan | Analytical leadership | [Modeling result.] | NVIDIA, OpenAI |
 | ISA or programming model | Co-design maturity | [Compiler or kernel impact.] | All |
@@ -93,22 +102,20 @@ outcomes you can defend under follow-up questions.
 ## Week 1 Exercise: Write Your Career Narrative
 
 Use this two-minute template:
-
 1. "My background is in [custom AI silicon / ML accelerator architecture / performance
-   modeling / ISA and programming model work]."
+modeling / ISA and programming model work]."
 2. "The throughline is that I connect workload behavior to hardware and software design
-   choices."
+choices."
 3. "A representative example is [placeholder: one specific project and decision]."
 4. "The impact was [placeholder: performance, power, cost, schedule, adoption, or risk]."
 5. "I am now targeting ML systems roles because LLM infrastructure has made those
-   hardware/software tradeoffs central to product capability."
+hardware/software tradeoffs central to product capability."
 6. "At [company], I would bring [company-specific angle] while learning the missing LLM
-   domain depth quickly."
+domain depth quickly."
 
 ## STAR-Plus-Tradeoff Framework
 
 Use STAR, but add the tradeoff explicitly:
-
 - Situation: what was at stake?
 - Task: what decision or leadership role did you own?
 - Action: what did you do, and how did you influence others?
@@ -133,7 +140,9 @@ judgment rather than just execution.
 ## Weak Versus Strong Behavioral Answers
 
 | Prompt | Weak pattern | Strong pattern |
-| --- | --- | --- |
+| ---
+| ---
+| --- |
 | Tradeoff | "I picked the best design." | "I named the cost and owned the result." |
 | Conflict | "They were wrong." | "I aligned goals and surfaced evidence." |
 | Impact | "The project mattered." | "The decision affected [metric] or [risk]." |
@@ -171,10 +180,8 @@ conflict.
 ## Sources
 
 - Source 1: NVIDIA, "About Us."
-  https://www.nvidia.com/en-us/about-nvidia/
-
+https://www.nvidia.com/en-us/about-nvidia/
 - Source 2: OpenAI, "OpenAI Charter."
-  https://openai.com/charter/
-
+https://openai.com/charter/
 - Source 3: Anthropic, "Company."
-  https://www.anthropic.com/company
+https://www.anthropic.com/company

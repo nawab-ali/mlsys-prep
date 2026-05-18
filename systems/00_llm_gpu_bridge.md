@@ -34,7 +34,6 @@ weights are mostly fixed during inference. The request state changes with prompt
 generated length, batching policy, and decode scheduling.
 
 Think in layers:
-
 - Model layer: tokens, embeddings, attention, MLPs, logits.
 - Tensor layer: matrix multiplies, reductions, reshapes, and elementwise operations.
 - Memory layer: weights, activations, KV cache preview, and allocator behavior.
@@ -49,13 +48,14 @@ peak math throughput (Source 2).
 ## Compute, Memory, Communication Triangle
 
 ```mermaid
+
 flowchart TB
-    A["LLM workload"] --> B["Compute\nmatrix and attention work"]
-    A --> C["Memory\nweights, activations, KV state"]
-    A --> D["Communication\nGPU fabric and network"]
-    B --> E["Utilization and latency"]
-    C --> E
-    D --> E
+A["LLM workload"] --> B["Compute\nmatrix and attention work"]
+A --> C["Memory\nweights, activations, KV state"]
+A --> D["Communication\nGPU fabric and network"]
+B --> E["Utilization and latency"]
+C --> E
+D --> E
 ```
 
 This original diagram synthesizes Week 1 LLM and NVIDIA platform sources (Sources 1, 2,
@@ -64,7 +64,10 @@ This original diagram synthesizes Week 1 LLM and NVIDIA platform sources (Source
 ## Workload Mapping Table
 
 | LLM concept | Workload manifestation | Hardware pressure | Interview question |
-| --- | --- | --- | --- |
+| ---
+| ---
+| ---
+| --- |
 | Weights | Mostly fixed model tensors | HBM capacity and bandwidth | Can weights stay resident? |
 | Activations | Intermediate tensors | Capacity and data movement | What must be saved or recomputed? |
 | Matrix multiply | Dense tensor operations | Tensor Core utilization | Are shapes efficient? |
@@ -81,7 +84,6 @@ Many core operations in Transformer-style models are matrix or tensor operations
 why Tensor Cores, low precision, kernel efficiency, and batching matter.
 
 First-order questions:
-
 - What are the dominant tensor shapes?
 - How much reuse is available?
 - Does the batch shape expose enough parallelism?
@@ -112,21 +114,21 @@ the rack-scale systems are organized around 72-GPU NVLink domains for large AI w
 Prefill processes the prompt tokens and prepares state for generation. Decode generates
 output tokens step by step. The KV cache is the later-week mechanism that helps avoid
 recomputing prior attention state during decode.
-
 ```mermaid
+
 sequenceDiagram
-    participant U as User prompt
-    participant P as Prefill
-    participant K as KV state preview
-    participant D as Decode loop
-    participant O as Output tokens
-    U->>P: prompt tokens
-    P->>K: create reusable state
-    loop one token at a time
-        K->>D: read prior state
-        D->>O: emit next token
-        D->>K: append new state
-    end
+participant U as User prompt
+participant P as Prefill
+participant K as KV state preview
+participant D as Decode loop
+participant O as Output tokens
+U->>P: prompt tokens
+P->>K: create reusable state
+loop one token at a time
+K->>D: read prior state
+D->>O: emit next token
+D->>K: append new state
+end
 ```
 
 This original preview diagram is based on the Week 1 LLM serving sources, especially the
@@ -146,7 +148,6 @@ be very different.
 ## The Three Recurring Bottleneck Questions
 
 Use these questions in every technical interview answer:
-
 1. Where is the compute?
 2. Where is the memory capacity and bandwidth pressure?
 3. Where is the communication?
@@ -162,7 +163,6 @@ limiting resource can move with context length, batch size, precision, model arc
 and serving policy.
 
 Use this PPA framing:
-
 - Performance: tokens per second, latency, throughput per rack, and utilization.
 - Power: energy per token, cooling, memory power, and network power.
 - Area: tensor datapaths, SRAM, HBM interfaces, IO, and control complexity.
@@ -192,33 +192,31 @@ whole platform against a specified workload, SLA, software stack, and deployment
 Example pattern:
 
 > I would not call this GPU-bound until I see utilization, memory bandwidth, queueing,
+
 > context length, and decode latency. For LLM inference, the bottleneck may move between
+
 > tensor math, KV-cache memory, and scheduling depending on batch shape and SLA.
 
 ## Design Prompts For Week 1
 
 - A team says an LLM inference service is "GPU bound." What three measurements would you
-  ask for before accepting that statement?
+ask for before accepting that statement?
 - A product manager asks why a rack-scale GPU system matters for LLMs. Give a two-minute
-  answer that includes compute, memory, and communication.
+answer that includes compute, memory, and communication.
 - You are comparing a custom accelerator with an NVIDIA platform for inference. What
-  assumptions must be fixed before the comparison is meaningful?
+assumptions must be fixed before the comparison is meaningful?
 - A model's output latency rises with longer prompts. What Week 1 concepts help you form
-  the first debugging hypothesis?
+the first debugging hypothesis?
 
 ## Sources
 
 - Source 1: Vaswani et al., "Attention Is All You Need."
-  https://arxiv.org/abs/1706.03762
-
+https://arxiv.org/abs/1706.03762
 - Source 2: Kwon et al., "Efficient Memory Management for Large Language Model Serving."
-  https://arxiv.org/abs/2309.06180
-
+https://arxiv.org/abs/2309.06180
 - Source 3: NVIDIA, "GB200 NVL Multi-Node Tuning Guide."
-  https://docs.nvidia.com/multi-node-nvlink-systems/multi-node-tuning-guide/overview.html
-
+https://docs.nvidia.com/multi-node-nvlink-systems/multi-node-tuning-guide/overview.html
 - Source 4: NVIDIA developer blog, "GB200 NVL72 Delivers Trillion-Parameter LLM Training."
-  https://developer.nvidia.com/blog/nvidia-gb200-nvl72-delivers-trillion-parameter-llm-training-and-real-time-inference
-
+https://developer.nvidia.com/blog/nvidia-gb200-nvl72-delivers-trillion-parameter-llm-training-and-real-time-inference
 - Source 5: NVIDIA developer blog, "Blackwell Ultra for the Era of AI Reasoning."
-  https://developer.nvidia.com/blog/nvidia-blackwell-ultra-for-the-era-of-ai-reasoning/
+https://developer.nvidia.com/blog/nvidia-blackwell-ultra-for-the-era-of-ai-reasoning/
