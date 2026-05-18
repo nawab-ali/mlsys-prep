@@ -1,25 +1,56 @@
 # How To Use This Repo
 
-This repository is developed through reviewed pull requests. The current phase is
-curriculum and research setup, so the focus is on structure, policy, and high-level
-planning rather than full study materials.
+Use the root [README](../README.md) as the main entry point.
 
-Deep study materials will be added module by module during the deep research phase. Those
-future modules should follow the source policy in [sources.md](../references/sources.md).
+Do not browse the directories manually at first. Follow the linked study flow in
+the README.
 
-## Suggested Reading Order
+## Recommended Week 1 workflow
 
-Start with [00_overview.md](00_overview.md) for the purpose and shape of the curriculum.
-Then read [00_three_month_plan.md](../plan/00_three_month_plan.md) for the phase-level
-plan, followed by [01_weekly_schedule.md](../plan/01_weekly_schedule.md) for the 12-week
-outline.
+1. Read [LLM Fundamentals](../llms/01_llm_fundamentals.md).
+2. Read [Latest NVIDIA Platforms](../nvidia/01_latest_nvidia_platforms.md).
+3. Read [LLM and GPU Bridge](../systems/00_llm_gpu_bridge.md).
+4. Complete [Behavioral Strategy](../behavioral/00_behavioral_strategy.md).
+5. Take the [Week 1 Baseline Diagnostic](../assessments/weekly_quizzes/week_01_quiz.md).
+6. Record weak areas in the [Progress Tracker](../plan/04_progress_tracker.md).
 
-## Repository Standards
+## How to study
 
-The project uses a strict Markdown line-length rule: every Markdown line must be less than
-120 characters. Prefer lines around 88 to 100 characters when writing prose.
+For each technical module:
 
-The repository is public, so future notes should be written clearly and should avoid
-private, confidential, or employer-specific information.
+- Read once for vocabulary.
+- Read again for systems intuition.
+- Redraw the diagrams by hand.
+- Answer the interview questions out loud.
+- Write down weak areas.
+- Revisit the module after the quiz.
 
-Detailed study material is pending the deep research phase.
+## How to use assessments
+
+Assessments are not punitive. They are used to identify what needs review.
+
+A score of 3 means you can likely handle an interview question on that topic.
+A score of 4 means you can teach the concept and defend tradeoffs.
+
+## How to use the progress tracker
+
+At the end of each week, update:
+
+- Concepts you can explain.
+- Concepts you can apply.
+- Concepts that remain weak.
+- Behavioral stories that need evidence.
+- Follow-up topics for the next week.
+
+## Repository development
+
+This repository uses reviewed pull requests.
+
+The current phases are:
+
+1. Scaffold and navigation.
+2. Week 1 gold-standard content.
+3. Week 2-12 content, generated only after Week 1 is acceptable.
+4. Midterms, mock interviews, and review loops.
+
+All Markdown files should keep lines under 120 characters.
