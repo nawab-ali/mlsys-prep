@@ -40,6 +40,7 @@ Goals:
 - Finalize behavioral stories and company-specific positioning for the target roles.
 
 Detailed study materials are pending the deep research phase.
+
 ## Required deep-dive topics
 
 The plan must include explicit deep dives on two critical modern LLM systems

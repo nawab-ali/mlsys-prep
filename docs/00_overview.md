@@ -39,6 +39,7 @@ turn into a question about memory bandwidth, KV cache, batching, Tensor Cores,
 or cluster communication.
 
 The weekly structure is designed to build those connections early.
+
 ## Critical deep dives
 
 The curriculum explicitly includes two modern LLM systems deep dives:
