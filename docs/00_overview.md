@@ -1,20 +1,41 @@
 # Overview
 
-`mlsys-prep` is a Markdown-first curriculum for deep ML systems interview preparation.
-It is tailored for Nawab Ali and focused on senior and principal-level roles at NVIDIA,
-OpenAI, and Anthropic.
+This repository is a three-month ML systems interview preparation program for
+NVIDIA, OpenAI, and Anthropic roles.
 
-The repository is organized around an interleaved 12-week curriculum. Each week combines
-LLM preparation, NVIDIA GPU preparation, a systems bridge topic, behavioral leadership
-practice, and lightweight assessment.
+The curriculum is designed for a senior ML hardware architect who wants to build
+strong interview fluency in LLMs, modern NVIDIA GPU systems, production
+inference and training infrastructure, and behavioral leadership interviews.
 
-Every week includes:
+## Start here
 
-- LLM fundamentals or production LLM systems.
-- Latest NVIDIA GPU architecture or GPU systems.
-- An LLM/GPU bridge topic that connects model behavior to hardware and systems.
-- Behavioral leadership preparation for senior technical interviews.
-- Assessment and progress tracking to keep the plan adaptive.
+The root [README](../README.md) is the front door for this repository.
 
-The outline is intentionally high level. Detailed study material, citations, exercises,
-and research notes are pending the deep research phase.
+Begin there, then follow the Week 1 study flow:
+
+1. [LLM Fundamentals](../llms/01_llm_fundamentals.md)
+2. [Latest NVIDIA Platforms](../nvidia/01_latest_nvidia_platforms.md)
+3. [LLM and GPU Bridge](../systems/00_llm_gpu_bridge.md)
+4. [Behavioral Strategy](../behavioral/00_behavioral_strategy.md)
+5. [Week 1 Baseline Diagnostic](../assessments/weekly_quizzes/week_01_quiz.md)
+6. [Progress Tracker](../plan/04_progress_tracker.md)
+
+## Curriculum design
+
+The plan interleaves LLM preparation and GPU preparation every week.
+
+Each week includes:
+
+- An LLM topic.
+- An NVIDIA GPU or GPU systems topic.
+- A bridge topic connecting LLM workloads to hardware and systems.
+- A behavioral or leadership preparation topic.
+- An assessment or interview drill.
+
+## Why the curriculum is interleaved
+
+Interview questions rarely stay in one lane. A question about attention may
+turn into a question about memory bandwidth, KV cache, batching, Tensor Cores,
+or cluster communication.
+
+The weekly structure is designed to build those connections early.
