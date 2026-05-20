@@ -1,349 +1,969 @@
-# Week 1 Baseline Diagnostic
+# Week 1 Quiz
 
-This diagnostic checks whether the Week 1 concepts are usable in interviews.
+This assessment checks whether Week 1 material is usable in interview settings.
 
-It is not a punitive exam. Its purpose is to identify weak areas early.
+It covers:
 
-## Instructions
+- LLM fundamentals.
+- Latest NVIDIA platforms.
+- The LLM/GPU systems bridge.
+- Behavioral strategy.
+- Senior-level synthesis.
 
-Use this diagnostic after completing the Week 1 modules.
+This quiz is not a memory test. It is a diagnostic for interview readiness.
 
-For each question:
+## How to use this quiz
 
-- Answer without notes first.
-- Then check the answer key.
-- Score yourself using the rubric.
-- Log weak areas in `plan/04_progress_tracker.md`.
-- Re-answer missed questions out loud.
+Use this sequence:
+
+1. Answer without notes.
+2. Score yourself with the rubric.
+3. Review the answer key.
+4. Mark weak areas in the progress tracker.
+5. Repeat missed questions out loud.
+
+Recommended time:
+
+| Section | Time |
+| --- | ---: |
+| LLM fundamentals | 20 minutes |
+| NVIDIA platforms | 25 minutes |
+| LLM/GPU bridge | 30 minutes |
+| Behavioral strategy | 25 minutes |
+| Senior synthesis | 30 minutes |
+
+Total time: about two hours.
 
 ## Scoring rubric
 
+Use this 0 to 4 scale.
+
 | Score | Meaning |
 | ---: | --- |
-| 0 | Not started |
-| 1 | Familiar |
-| 2 | Can explain |
-| 3 | Can solve interview problems |
-| 4 | Can teach and defend tradeoffs |
+| 0 | Cannot answer or answer is mostly wrong |
+| 1 | Knows vocabulary but cannot explain clearly |
+| 2 | Gives a mostly correct basic answer |
+| 3 | Gives a clear interview-ready answer with tradeoffs |
+| 4 | Gives a senior-level answer with assumptions and caveats |
 
-Use score 3 as the practical interview-readiness target for Week 1.
+Week 1 target:
 
-## Part A: LLM fundamentals
+```text
+Average score >= 3.0
+No critical topic below 2.0
+At least two synthesis answers at 3.0 or higher
+```
 
-1. What is an LLM?
-2. What is the difference between a token and a word?
-3. What is a token ID?
-4. What is an embedding?
-5. What are logits?
-6. How does autoregressive generation work?
-7. Why is "next-token predictor" useful but incomplete?
-8. Why did Transformers become dominant?
-9. Why is an LLM not a database?
-10. What is the difference between training and inference?
+If a topic scores below 2.0, review the corresponding study file before moving
+to Week 2.
 
-## Part B: NVIDIA platform landscape
+## Section 1: LLM fundamentals
 
-1. Why is NVIDIA's advantage more than the GPU chip?
-2. What role does HBM play in LLM systems?
-3. Why does NVLink matter?
-4. What is GB200 NVL72 at a high level?
-5. What is GB300 NVL72 at a high level?
-6. How should Vera Rubin be discussed in interviews?
-7. Why does CUDA matter to the platform?
-8. What should you memorize versus reason from?
+### Question 1
 
-## Part C: LLM and GPU bridge
+Explain the flow from user text to next-token generation.
 
-1. What are the three recurring bottleneck questions?
-2. Why are LLMs matrix workloads?
-3. Why are LLMs memory workloads?
-4. Why are LLMs communication workloads?
-5. What is prefill?
-6. What is decode?
-7. Why does KV cache matter?
-8. Why is peak FLOPS insufficient for accelerator comparison?
+Your answer should include:
 
-## Part D: Behavioral positioning
+- tokens,
+- token IDs,
+- embeddings,
+- Transformer layers,
+- logits,
+- decoding,
+- autoregressive repetition.
 
-1. Give your 30-second career narrative.
-2. Give your two-minute career narrative.
-3. Explain why NVIDIA is a fit.
-4. Explain why OpenAI or Anthropic could be a fit.
-5. Describe one architecture tradeoff story.
-6. Describe one cross-functional leadership story.
+### Question 2
 
-## Part E: Design prompt
+What is a token?
 
-You are asked to evaluate a new accelerator for LLM inference. The team claims
-it has very high peak TOPS but provides little information about memory bandwidth
-or interconnect.
+Explain why tokens are not always the same as words.
 
-Explain what questions you would ask before trusting the performance claim.
+### Question 3
 
-## Answer key: Part A
+What are logits?
 
-### A1: What is an LLM?
+Explain where they appear in the LLM generation pipeline.
 
-Expected answer:
+### Question 4
 
-> An LLM is a neural network trained on tokenized data to model sequences. In
-> the autoregressive case, it maps previous tokens to logits over the next token.
+What does autoregressive generation mean?
 
-Senior/principal signal:
+Explain why this matters for latency and serving.
 
-- Mentions tokens, logits, decoding, and system workload implications.
+### Question 5
 
-Red flags:
+What is the purpose of a Transformer block?
 
-- Says only "chatbot."
-- Says "predicts words" without clarifying tokens.
-- Treats the model as a database.
+Do not go deep into attention math yet. Give the Week 1 mental model.
 
-### A2: Token versus word
+### Question 6
 
-Expected answer:
+Explain the difference between training and inference.
 
-> A token is a tokenizer-produced symbol. It may be a word, part of a word,
-> punctuation, whitespace, or special symbol.
+Your answer should mention:
 
-Senior/principal signal:
+- forward pass,
+- backward pass,
+- gradients,
+- optimizer state,
+- serving latency,
+- token generation.
 
-- Connects token count to context length, memory, and compute.
+### Question 7
 
-Red flags:
+What is a common misconception about LLMs that a senior interviewer might test?
 
-- Assumes one token always equals one word.
+Give the misconception and the corrected explanation.
 
-### A3: Token ID
+### Question 8
 
-Expected answer:
+Give a 60-second answer to:
 
-> A token ID is an integer vocabulary index used to look up an embedding.
+```text
+What is an LLM?
+```
 
-Senior/principal signal:
+## Section 2: Latest NVIDIA platforms
 
-- Explains that the numeric value is not semantically meaningful as a scalar.
+### Question 9
 
-Red flags:
+Why is NVIDIA's advantage platform-level rather than only GPU-level?
 
-- Treats token IDs as continuous model inputs.
+Your answer should include hardware and software.
 
-### A4: Embedding
+### Question 10
 
-Expected answer:
+What is GB200 NVL72?
 
-> An embedding is a learned dense vector associated with a token ID.
+Give a Week 1-level explanation.
 
-Senior/principal signal:
+### Question 11
 
-- Connects embeddings to hidden size and activation footprint.
+What is GB300 NVL72?
 
-Red flags:
+Explain why it is relevant for reasoning and long-context inference.
 
-- Confuses embeddings with one-hot vectors.
+### Question 12
 
-### A5: Logits
+What is Blackwell Ultra?
 
-Expected answer:
+How should it be framed relative to Blackwell?
 
-> Logits are unnormalized scores over candidate next tokens.
+### Question 13
 
-Senior/principal signal:
+Why does HBM matter for LLM workloads?
 
-- Mentions decoding policy and probability conversion.
+Mention at least three memory consumers.
 
-Red flags:
+### Question 14
 
-- Calls logits probabilities directly.
+Explain scale-up versus scale-out in NVIDIA AI systems.
 
-### A6: Autoregressive generation
+Give examples of technologies associated with each.
 
-Expected answer:
+### Question 15
 
-> The model predicts a next token, appends it to the context, and repeats.
+What does NCCL contribute?
 
-Senior/principal signal:
+Explain why communication libraries matter for multi-GPU workloads.
 
-- Mentions prefill and decode as later system-level phases.
+### Question 16
 
-Red flags:
+What does TensorRT-LLM contribute?
 
-- Describes generation as retrieving a stored answer.
+Explain why inference software is part of the platform story.
 
-### A7: Next-token predictor is incomplete
+### Question 17
 
-Expected answer:
+Why is peak FLOPS insufficient for evaluating an NVIDIA platform?
 
-> It describes the base mechanism but not alignment, tool use, RAG,
-> multimodality, evaluation, or emergent behavior.
+Give at least four other factors.
 
-Senior/principal signal:
+### Question 18
 
-- Uses the simple model while identifying its limits.
+Give a senior-level answer to:
 
-Red flags:
+```text
+Why does NVLink matter for LLM systems?
+```
 
-- Treats next-token prediction as either everything or nothing.
+## Section 3: LLM/GPU bridge
 
-### A8: Transformer dominance
+### Question 19
 
-Expected answer:
+Translate these model terms into systems terms:
 
-> Transformers combine strong sequence modeling with dense operations that scale
-> well on accelerator hardware.
+| Model term | Systems interpretation |
+| --- | --- |
+| token | |
+| weight | |
+| activation | |
+| KV cache | |
+| batch | |
+| context length | |
 
-Senior/principal signal:
+### Question 20
 
-- Mentions attention, MLPs, parallelism, and dense linear algebra.
+Explain the compute, memory, and communication triangle.
 
-Red flags:
+Why is it useful for LLM systems interviews?
 
-- Says only "attention is powerful."
+### Question 21
 
-### A9: LLM is not a database
+Why are prefill and decode different?
 
-Expected answer:
+Your answer should mention parallelism, sequential dependency, and KV cache.
 
-> A database stores explicit records. An LLM generates from learned parameters
-> and context and can hallucinate.
+### Question 22
 
-Senior/principal signal:
+A serving system has good prefill throughput but poor decode throughput.
 
-- Mentions RAG as an external retrieval path.
+List five questions you would ask before proposing a fix.
 
-Red flags:
+### Question 23
 
-- Says the model looks up facts in weights like rows.
+A model spans multiple GPUs. Single-GPU kernels are fast, but end-to-end latency
+does not scale well.
 
-### A10: Training versus inference
+What are the likely causes?
 
-Expected answer:
+### Question 24
 
-> Training updates weights using forward, backward, and optimizer steps.
-> Inference uses fixed weights to generate outputs.
+What is KV cache?
 
-Senior/principal signal:
+Explain both why it helps and why it creates pressure.
 
-- Connects training to activations, gradients, optimizer state, and
-> synchronization; connects inference to latency, throughput, and KV cache.
+### Question 25
 
-Red flags:
+Explain why a GPU can have high peak FLOPS but poor tokens per second for a
+specific serving workload.
 
-- Treats them as the same workload.
+### Question 26
 
-## Answer key: Part B
+A vendor claims their accelerator has much higher TOPS than an NVIDIA GPU.
 
-Expected themes:
+What information do you need before believing the claim?
 
-- NVIDIA's platform includes GPUs, HBM, Tensor Cores, NVLink, NVSwitch,
-  networking, CUDA, libraries, and serving software.
-- GB200 is an important Grace Blackwell anchor.
-- GB300 is the current Blackwell Ultra anchor in this curriculum.
-- Vera Rubin is forward-looking public roadmap context.
-- HBM affects model fit, bandwidth, and KV-cache behavior.
-- NVLink matters for scale-up communication.
-- CUDA and libraries make hardware capability usable.
+### Question 27
 
-Senior/principal signal:
+Explain scale-up communication pressure in one paragraph.
 
-- Explains compute, memory, communication, and software as a balanced system.
+### Question 28
 
-Common red flags:
+Explain scale-out communication pressure in one paragraph.
 
-- Says only "faster GPUs."
-- Ignores software.
-- Overstates roadmap systems as current deployed baselines.
-- Memorizes SKU names without bottleneck reasoning.
+## Section 4: Behavioral strategy
 
-## Answer key: Part C
+### Question 29
 
-Expected themes:
+Give your 30-second career narrative.
 
-- The three bottleneck questions are compute, memory, and communication.
-- Matrix workloads come from projections, MLPs, and GEMM-like operations.
-- Memory pressure comes from weights, activations, and KV cache.
-- Communication appears in tensor parallelism, pipeline parallelism, data
-  parallelism, and multi-node execution.
-- Prefill processes prompt tokens.
-- Decode generates output tokens step by step.
-- KV cache stores attention state and can limit serving throughput.
-- Peak FLOPS is insufficient without memory, interconnect, software, and
-  workload shape.
+It should follow:
 
-Senior/principal signal:
+```text
+past depth -> current focus -> target fit
+```
 
-- Separates prefill, decode, training, and serving bottlenecks.
+### Question 30
 
-Common red flags:
+Give your two-minute career narrative.
 
-- Uses a single bottleneck for every scenario.
-- Ignores latency and utilization.
-- Ignores communication.
+It should connect hardware architecture to LLM systems.
 
-## Answer key: Part D
+### Question 31
 
-Strong behavioral answers should include:
+Give a Week 1 answer to:
 
-- Scope.
-- Constraint.
-- Action.
-- Tradeoff.
-- Outcome.
-- Reflection.
-- Relevance to the target company.
+```text
+Why NVIDIA?
+```
 
-Common red flags:
+### Question 32
 
-- Vague impact.
-- No metrics.
-- No tradeoff.
-- Blaming others.
-- Overclaiming LLM research expertise.
+Give a Week 1 answer to:
 
-## Answer key: Part E
+```text
+Why OpenAI?
+```
 
-A strong design answer should ask about:
+### Question 33
 
-- Target model sizes.
-- Batch sizes.
-- Context lengths.
-- Prefill versus decode split.
-- Weight precision.
-- Activation precision.
-- KV-cache capacity.
-- HBM capacity and bandwidth.
-- Interconnect bandwidth and latency.
-- Kernel availability.
-- Software stack maturity.
-- Latency and throughput targets.
-- Power and cost constraints.
-- Comparison baseline.
-- Real workload traces.
+Give a Week 1 answer to:
 
-Senior/principal signal:
+```text
+Why Anthropic?
+```
 
-- Refuses to evaluate peak TOPS in isolation.
-- Defines workload assumptions first.
-- Separates compute-bound and memory-bound regimes.
-- Asks for measurement methodology.
+### Question 34
 
-Red flags:
+Name eight candidate stories for your behavioral story bank.
 
-- Accepts peak TOPS as enough.
-- Ignores memory bandwidth.
-- Ignores interconnect.
-- Ignores software and batching.
+For each story, state what signal it proves.
 
-## Progress reflection
+### Question 35
 
-After the diagnostic, fill this table.
+Explain STAR plus tradeoff.
 
-| Area | Score | Weak point | Next action |
+Why is plain STAR not enough for senior interviews?
+
+### Question 36
+
+Pick one architecture tradeoff story.
+
+List:
+
+- situation,
+- task,
+- action,
+- result,
+- tradeoff,
+- reflection,
+- missing metrics.
+
+### Question 37
+
+Pick one failure or mistake story.
+
+What did you learn and what changed afterward?
+
+### Question 38
+
+What are three behavioral red flags you must avoid?
+
+## Section 5: Senior synthesis
+
+### Question 39
+
+You are asked to evaluate a new GPU platform for LLM inference.
+
+Give a structured answer.
+
+Your answer should cover:
+
+- workload phase,
+- model size,
+- context length,
+- batch size,
+- precision,
+- HBM capacity,
+- HBM bandwidth,
+- KV cache,
+- interconnect,
+- software stack,
+- latency,
+- cost per token.
+
+### Question 40
+
+You are asked why a reasoning model costs more to serve.
+
+Give a systems answer.
+
+### Question 41
+
+You are asked whether a model should be split across GPUs.
+
+What questions do you ask before answering?
+
+### Question 42
+
+You are asked to explain LLM serving to an executive.
+
+Give a concise non-jargon answer.
+
+### Question 43
+
+You are asked to compare NVIDIA and a custom accelerator.
+
+Give a balanced answer without sounding like marketing.
+
+### Question 44
+
+You are asked why your hardware background is relevant to OpenAI or Anthropic.
+
+Give a senior-level answer.
+
+### Question 45
+
+You are debugging a production LLM latency regression.
+
+Give your first five steps.
+
+## Answer key
+
+Use the answer key to score quality, not word-for-word similarity.
+
+## Section 1 answer key
+
+### Answer 1
+
+A strong answer:
+
+> User text is split into tokens. Tokens are mapped to token IDs. Token IDs are
+> converted into embeddings. Embeddings pass through Transformer layers. The
+> model outputs logits over the vocabulary. A decoding policy selects the next
+> token. The new token is appended to the context, and the process repeats.
+
+Senior signal:
+
+- Mentions tensors, not just text.
+- Mentions autoregressive repetition.
+- Separates logits from decoded tokens.
+
+### Answer 2
+
+A token is a unit used by the model's tokenizer.
+
+Tokens can be:
+
+- whole words,
+- parts of words,
+- punctuation,
+- whitespace-related pieces,
+- special symbols.
+
+Words and tokens differ because tokenizers optimize for vocabulary coverage and
+statistical reuse, not human word boundaries.
+
+### Answer 3
+
+Logits are raw output scores before probability normalization or sampling.
+
+They appear after the model processes the current context and before decoding
+selects the next token.
+
+A good answer distinguishes:
+
+```text
+logits -> probabilities or scores -> decoding choice -> next token
+```
+
+### Answer 4
+
+Autoregressive generation means the model generates one token at a time, using
+previous tokens as context for the next token.
+
+This matters because decode has a sequential dependency. It can make serving
+latency-sensitive even when prefill is highly parallel.
+
+### Answer 5
+
+A Transformer block repeatedly transforms token representations.
+
+At Week 1 level, it combines:
+
+- attention-like mixing across sequence positions,
+- MLP computation,
+- residual paths,
+- normalization,
+- learned weights.
+
+The purpose is to update token representations using context.
+
+### Answer 6
+
+Training learns weights. Inference uses learned weights.
+
+Training includes forward pass, backward pass, gradients, optimizer state, and
+large memory pressure. Inference focuses on serving prompts, generating tokens,
+latency, throughput, batching, and cost.
+
+### Answer 7
+
+Example misconception:
+
+> LLMs understand text the way humans do.
+
+Correction:
+
+> LLMs operate on tokens and tensors. They learn statistical patterns in data and
+> generate next-token predictions. Their behavior can look like reasoning, but
+> systems design must treat them as tensor programs with memory, compute, and
+> communication costs.
+
+### Answer 8
+
+A strong 60-second answer:
+
+> An LLM is a neural network trained to map token sequences to predictions over
+> the next token. In modern systems, it is usually a Transformer-based model.
+> Text is tokenized, token IDs become embeddings, and Transformer layers produce
+> logits over possible next tokens. Generation is autoregressive, so each output
+> token is fed back into the context. From a systems view, an LLM is a workload
+> involving dense matrix math, memory movement, KV-cache behavior, batching, and
+> sometimes multi-GPU communication.
+
+## Section 2 answer key
+
+### Answer 9
+
+NVIDIA's advantage is platform-level because performance depends on more than
+the GPU chip.
+
+A complete answer mentions:
+
+- Tensor Cores,
+- HBM,
+- NVLink and NVSwitch,
+- InfiniBand or Ethernet,
+- CUDA,
+- NCCL,
+- TensorRT-LLM,
+- libraries,
+- tools,
+- ecosystem maturity.
+
+### Answer 10
+
+GB200 NVL72 is a Grace Blackwell rack-scale system.
+
+Week 1 answer:
+
+> It combines Grace CPUs and Blackwell GPUs into a rack-scale NVLink domain. It
+> is important because it shows NVIDIA treating the rack as a tightly coupled
+> AI compute platform rather than a pile of independent GPUs.
+
+### Answer 11
+
+GB300 NVL72 is the Blackwell Ultra rack-scale system.
+
+A strong answer:
+
+> GB300 NVL72 integrates Blackwell Ultra GPUs and Grace CPUs for reasoning,
+> long-context, and test-time scaling workloads. It matters because these
+> workloads can increase memory pressure, attention pressure, and serving cost.
+
+### Answer 12
+
+Blackwell Ultra should be framed as a platform refresh aimed at reasoning,
+long-context inference, post-training, and test-time compute.
+
+Do not describe it merely as "a faster Blackwell."
+
+### Answer 13
+
+HBM matters because LLMs need memory for:
+
+- weights,
+- activations,
+- KV cache,
+- temporary buffers,
+- gradients during training,
+- optimizer state during training.
+
+For inference, KV cache and concurrent users can make memory capacity and
+bandwidth central.
+
+### Answer 14
+
+Scale-up connects GPUs into a tightly coupled domain.
+
+Examples:
+
+- NVLink,
+- NVSwitch,
+- NVLink Switch.
+
+Scale-out connects nodes or racks.
+
+Examples:
+
+- InfiniBand,
+- Ethernet,
+- RDMA,
+- ConnectX,
+- NCCL across nodes.
+
+### Answer 15
+
+NCCL provides optimized collective communication across GPUs and nodes.
+
+It matters because distributed LLM training and multi-GPU inference rely on
+patterns such as all-reduce, all-gather, reduce-scatter, and broadcast.
+
+### Answer 16
+
+TensorRT-LLM contributes optimized inference execution for LLMs.
+
+It matters because inference performance depends on kernels, graph execution,
+batching support, precision support, and integration with serving systems.
+
+### Answer 17
+
+Peak FLOPS is insufficient because real performance can be limited by:
+
+- memory capacity,
+- memory bandwidth,
+- KV-cache traffic,
+- interconnect bandwidth,
+- collective overhead,
+- batch size,
+- latency target,
+- kernel maturity,
+- software stack,
+- precision support,
+- scheduling.
+
+### Answer 18
+
+A strong answer:
+
+> NVLink matters when a model or serving workload spans multiple GPUs. Tensor
+> parallelism, expert parallelism, and large-model inference can require
+> frequent GPU-to-GPU communication. NVLink and NVSwitch create a high-bandwidth
+> scale-up domain that reduces the penalty of splitting work across GPUs.
+
+## Section 3 answer key
+
+### Answer 19
+
+Expected mapping:
+
+| Model term | Systems interpretation |
+| --- | --- |
+| token | sequence unit processed by the model |
+| weight | learned tensor stored in memory |
+| activation | intermediate tensor produced during execution |
+| KV cache | stored attention state used during decode |
+| batch | multiple sequences or requests grouped together |
+| context length | sequence length driving attention and KV-cache footprint |
+
+### Answer 20
+
+The compute, memory, and communication triangle is a bottleneck framework.
+
+It prevents weak answers that focus only on FLOPS. It asks whether the workload
+is limited by math throughput, data movement, or device-to-device communication.
+
+### Answer 21
+
+Prefill processes prompt tokens and has more parallel work across the input
+sequence. Decode generates one token at a time and has a sequential dependency.
+
+Decode often stresses KV-cache reads and writes, latency, and scheduling.
+
+### Answer 22
+
+Good questions:
+
+- What is the decode batch size?
+- What is the context length?
+- How large is the KV cache?
+- Is HBM bandwidth saturated?
+- Are decode kernels optimized?
+- Can requests be batched without violating latency?
+- Are prefill and decode scheduled separately?
+- Is the bottleneck memory, compute, or scheduler overhead?
+
+### Answer 23
+
+Likely causes:
+
+- tensor-parallel collectives,
+- pipeline bubbles,
+- poor compute and communication overlap,
+- NVLink or network saturation,
+- small tensor shapes,
+- NCCL overhead,
+- load imbalance,
+- synchronization on the critical path.
+
+### Answer 24
+
+KV cache stores prior keys and values so decode does not recompute attention
+state for all earlier tokens.
+
+It helps efficiency, but it consumes memory and can stress memory bandwidth,
+especially for long context and many concurrent users.
+
+### Answer 25
+
+High peak FLOPS may not translate to high tokens per second because decode can
+be sequential, small-batch, memory-sensitive, and latency-constrained.
+
+The math units may not be fully fed.
+
+### Answer 26
+
+Ask for:
+
+- model,
+- phase,
+- batch size,
+- context length,
+- precision,
+- memory capacity,
+- memory bandwidth,
+- interconnect,
+- software stack,
+- latency,
+- throughput,
+- cost per token,
+- benchmark methodology.
+
+### Answer 27
+
+Scale-up communication pressure happens when GPUs in a tightly coupled domain
+must frequently exchange tensors, partial results, or activations. Tensor
+parallelism and expert parallelism can create collectives or dispatch paths
+where NVLink, NVSwitch, and NCCL become critical.
+
+### Answer 28
+
+Scale-out communication pressure happens when nodes or racks coordinate work.
+Multi-node training may need gradient synchronization, checkpointing, and
+collectives across InfiniBand or Ethernet. Network bandwidth, latency,
+congestion, and reliability can affect scaling efficiency.
+
+## Section 4 answer key
+
+### Answer 29
+
+A strong 30-second narrative includes:
+
+- senior ML hardware architecture,
+- custom AI silicon,
+- performance modeling,
+- hardware/software co-design,
+- current focus on LLM systems,
+- fit for model, GPU, and infrastructure tradeoffs.
+
+### Answer 30
+
+A strong two-minute narrative connects:
+
+- architecture background,
+- workload analysis,
+- performance modeling,
+- co-design,
+- current LLM systems focus,
+- target company fit,
+- desire to work across accelerators and production systems.
+
+### Answer 31
+
+A strong NVIDIA answer emphasizes:
+
+- platform thinking,
+- GPU systems,
+- performance,
+- CUDA ecosystem,
+- LLM workloads,
+- architecture fit,
+- customer impact.
+
+It should not say only "NVIDIA has fast GPUs."
+
+### Answer 32
+
+A strong OpenAI answer emphasizes:
+
+- production LLM systems,
+- training and inference infrastructure,
+- hardware/software boundary,
+- cost,
+- latency,
+- reliability,
+- full-stack systems impact.
+
+### Answer 33
+
+A strong Anthropic answer emphasizes:
+
+- careful systems engineering,
+- reliability,
+- principled tradeoffs,
+- evaluation,
+- infrastructure for useful AI systems,
+- humility under uncertainty.
+
+### Answer 34
+
+Good story-bank categories:
+
+- architecture tradeoff,
+- performance modeling,
+- hardware/software co-design,
+- ambiguous roadmap decision,
+- cross-functional conflict,
+- failure or mistake,
+- execution under pressure,
+- mentoring,
+- debugging,
+- product or customer impact.
+
+### Answer 35
+
+STAR plus tradeoff adds tradeoff and reflection to situation, task, action, and
+result.
+
+Plain STAR can describe what happened. Senior interviews need to know why the
+decision was hard, what was sacrificed, what evidence was used, and what the
+candidate learned.
+
+### Answer 36
+
+A strong answer should identify:
+
+- the project,
+- the decision,
+- alternatives,
+- your role,
+- evidence,
+- result,
+- tradeoff,
+- what metric is missing.
+
+### Answer 37
+
+A strong failure story should avoid blame.
+
+It should show:
+
+- initial assumption,
+- evidence that disproved it,
+- corrective action,
+- communication,
+- changed future behavior.
+
+### Answer 38
+
+Red flags include:
+
+- vague impact,
+- no metrics,
+- blaming others,
+- overclaiming,
+- too much jargon,
+- no reflection,
+- ignoring software,
+- ignoring product impact.
+
+## Section 5 answer key
+
+### Answer 39
+
+A strong answer starts by clarifying the workload.
+
+Then it covers:
+
+- training versus inference,
+- prefill versus decode,
+- model size,
+- context length,
+- batch size,
+- precision,
+- HBM capacity,
+- HBM bandwidth,
+- KV cache,
+- NVLink and scale-up,
+- InfiniBand or Ethernet and scale-out,
+- TensorRT-LLM or serving software,
+- latency,
+- throughput,
+- cost per token.
+
+Senior signal:
+
+> I would not evaluate the platform on peak FLOPS alone.
+
+### Answer 40
+
+Reasoning models may cost more to serve because they can use more test-time
+compute, generate more tokens, perform more intermediate steps, use longer
+contexts, call tools, or run multiple model passes.
+
+This increases latency, GPU time, memory pressure, and scheduling complexity.
+
+### Answer 41
+
+Ask:
+
+- Does the model fit on one GPU?
+- What is the latency target?
+- Which phase dominates?
+- What parallelism strategy is proposed?
+- What communication happens per layer?
+- Is the interconnect strong enough?
+- Can compute and communication overlap?
+- How does the serving stack support it?
+
+### Answer 42
+
+Executive answer:
+
+> LLM serving turns user requests into repeated GPU computations. The system
+> must process the prompt, generate tokens one at a time, manage memory for
+> prior context, batch users efficiently, and keep latency and cost under
+> control. The hard part is balancing quality, speed, cost, and reliability.
+
+### Answer 43
+
+Balanced answer:
+
+> I would compare the platforms using actual workload metrics, not marketing
+> numbers. I would look at time to first token, tokens per second, tail latency,
+> cost per token, memory capacity, bandwidth, interconnect, software maturity,
+> operational reliability, and how well the platform supports the target model.
+
+### Answer 44
+
+Strong answer:
+
+> My hardware background is relevant because LLM systems are constrained by
+> compute, memory, communication, and software. Hardware architecture training
+> helps me reason from workload behavior to bottlenecks, model tradeoffs, and
+> platform choices. That is directly useful for large-scale training and
+> inference infrastructure.
+
+### Answer 45
+
+Good first steps:
+
+1. Separate prefill and decode metrics.
+2. Check recent workload changes.
+3. Inspect batch size and context length.
+4. Measure GPU utilization, HBM bandwidth, and KV-cache behavior.
+5. Check serving scheduler and queueing.
+6. Check kernel or software changes.
+7. Check interconnect or collective time if multi-GPU.
+8. Compare p50, p95, and p99 latency.
+
+## Grading sheet
+
+Use this table after finishing.
+
+| Section | Score 0-4 | Weak topics | Follow-up action |
 | --- | ---: | --- | --- |
-| LLM fundamentals |  |  |  |
-| NVIDIA platforms |  |  |  |
-| LLM/GPU bridge |  |  |  |
-| Behavioral positioning |  |  |  |
-| Design reasoning |  |  |  |
+| LLM fundamentals | | | |
+| NVIDIA platforms | | | |
+| LLM/GPU bridge | | | |
+| Behavioral strategy | | | |
+| Senior synthesis | | | |
 
-Then update `plan/04_progress_tracker.md`.
+## Pass criteria
+
+You can move to Week 2 if:
+
+- every section score is at least 2.0,
+- average score is at least 3.0,
+- you can answer Questions 39, 43, and 44 out loud,
+- you have at least five usable behavioral story candidates,
+- you know exactly what to review next.
+
+## Remediation map
+
+| Weak area | Review file |
+| --- | --- |
+| LLM basics | `llms/01_llm_fundamentals.md` |
+| NVIDIA platform map | `nvidia/01_latest_nvidia_platforms.md` |
+| Bottleneck reasoning | `systems/00_llm_gpu_bridge.md` |
+| Behavioral stories | `behavioral/00_behavioral_strategy.md` |
+
+## Final instruction
+
+Do not treat the answer key as a script to memorize.
+
+Use it to learn the shape of strong answers. In interviews, your answers should
+sound natural, specific, and grounded in your own experience.

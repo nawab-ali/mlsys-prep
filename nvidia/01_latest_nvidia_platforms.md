@@ -1,275 +1,523 @@
 # Latest NVIDIA Platforms
 
-This module gives a Week 1 map of the current NVIDIA platform landscape for LLM
-systems interviews.
+This Week 1 module gives a senior hardware architect a practical map of the
+latest NVIDIA AI platform landscape.
 
 The goal is not to memorize every SKU. The goal is to understand how NVIDIA
-frames modern AI infrastructure: GPU compute, HBM, scale-up interconnect,
-scale-out networking, and a mature software stack.
+packages GPU compute, memory, scale-up interconnect, scale-out networking, and
+software into a platform for LLM training and inference.
+
+Use this file as a Week 1 orientation. Later weeks should go deeper into SM
+microarchitecture, Tensor Cores, CUDA, NCCL, TensorRT-LLM, NVLink, NVSwitch,
+training parallelism, inference serving, and cluster design.
 
 ## Learning goals
 
 By the end of this module, you should be able to:
 
-- Explain why NVIDIA's LLM advantage is a platform advantage, not only a GPU
-  chip advantage.
-- Place GB200, GB300, and Vera Rubin in the public NVIDIA platform landscape.
-- Describe why compute, memory, communication, and software all matter.
-- Give a high-level interview answer about why NVIDIA GPUs work well for LLMs.
-- Identify which details to memorize and which details to reason from.
+- Explain why NVIDIA's advantage is platform-level, not just GPU-level.
+- Place GB200 NVL72, GB300 NVL72, and Vera Rubin in the current roadmap.
+- Explain why Blackwell and Blackwell Ultra are important for LLM workloads.
+- Explain why LLMs need compute, HBM, NVLink, networking, and software.
+- Describe scale-up versus scale-out in NVIDIA AI systems.
+- Explain what CUDA, NCCL, and TensorRT-LLM contribute.
+- Give senior-level answers to basic NVIDIA-platform interview questions.
 
-## Why this matters for interviews
+## The senior-level mental model
 
-For NVIDIA interviews, this is direct domain knowledge.
+A weak answer says:
 
-For OpenAI and Anthropic interviews, it is systems context. Even if the role is
-not an NVIDIA role, production LLM infrastructure is deeply shaped by NVIDIA GPU
-platforms, software, and interconnect.
+> NVIDIA wins because its GPUs are fast.
 
-A senior/principal answer should not say only:
+A stronger answer says:
 
-> NVIDIA is good because its GPUs are fast.
+> NVIDIA wins because the GPU is only one part of an integrated platform.
+> The platform includes Tensor Cores, HBM, NVLink, NVSwitch, networking,
+> CUDA, NCCL, TensorRT-LLM, orchestration software, and a large ecosystem.
 
-A better answer is:
+For LLM systems, the recurring platform question is:
 
-> NVIDIA is strong because the GPU, HBM, Tensor Cores, NVLink, NVSwitch,
-> networking, CUDA, libraries, and model-serving software form an integrated
-> platform for training and inference.
+```text
+Can the platform keep compute, memory, and communication balanced?
+```
 
-## What latest means in this curriculum
+That question is more useful than memorizing peak FLOPS alone.
 
-"Latest NVIDIA hardware" is a moving public platform landscape.
-
-For this curriculum, use three anchors:
-
-| Platform | Status in this curriculum | Public NVIDIA positioning |
-| --- | --- | --- |
-| GB200 NVL72 | Important Grace Blackwell anchor | Rack-scale Grace Blackwell platform |
-| GB300 NVL72 | Current Blackwell Ultra anchor | Platform for AI reasoning efficiency |
-| Vera Rubin NVL72 | Forward-looking public roadmap anchor | Next-generation AI factory platform |
-
-Older NVIDIA generations are not the focus. They may appear only when they help
-explain a current platform decision.
-
-## Platform comparison
-
-| Platform | Key visible components | Why it matters for LLMs | Deep dive |
-| --- | --- | --- | --- |
-| GB200 NVL72 | Grace CPUs, Blackwell GPUs, NVLink domain | Grace Blackwell rack anchor | Weeks 6-8 |
-| GB300 NVL72 | 72 Blackwell Ultra GPUs, 36 Grace CPUs | Blackwell Ultra reasoning anchor | Weeks 6-8 |
-| Vera Rubin NVL72 | Vera CPU, Rubin GPU, NVLink 6, ConnectX-9, BlueField-4 | Public roadmap anchor | Week 12 |
-
-NVIDIA publicly describes GB300 NVL72 as a rack-scale architecture integrating
-72 Blackwell Ultra GPUs and 36 Grace CPUs into a single platform.
-
-NVIDIA's Vera Rubin public material describes the forward-looking platform in
-terms of Vera CPU, Rubin GPU, NVLink 6, ConnectX-9, and BlueField-4. Treat Vera
-Rubin as public roadmap context, not as the current deployed baseline.
-
-## Platform stack mental model
-
-NVIDIA's LLM platform should be understood as a stack.
+## Platform stack
 
 ```mermaid
 flowchart TB
-    A[GPU compute] --> B[Tensor Cores and low precision]
-    B --> C[HBM capacity and bandwidth]
-    C --> D[NVLink and NVSwitch scale-up]
-    D --> E[InfiniBand / Ethernet scale-out]
-    E --> F[CUDA and communication libraries]
-    F --> G[LLM training and serving frameworks]
-    G --> H[Production LLM applications]
+    A[LLM workload] --> B[GPU compute]
+    B --> C[Tensor Cores and low precision]
+    C --> D[HBM capacity and bandwidth]
+    D --> E[NVLink and NVSwitch scale-up]
+    E --> F[InfiniBand or Ethernet scale-out]
+    F --> G[CUDA, NCCL, TensorRT-LLM, NeMo]
+    G --> H[Training and inference services]
 ```
 
-The stack matters because LLM bottlenecks shift across layers:
+The key interview point:
 
-- Matrix-heavy phases stress compute.
-- Decode can stress memory bandwidth and KV-cache capacity.
-- Distributed training stresses collectives and interconnect.
-- Serving stresses scheduling, batching, latency, and cost.
-- Software determines how much hardware capability is actually usable.
+> NVIDIA sells and supports a full AI factory stack, not only accelerator chips.
+
+## Current platform anchors
+
+Use these anchors for Week 1.
+
+| Anchor | How to think about it | Why it matters |
+| --- | --- | --- |
+| GB200 NVL72 | Grace Blackwell rack-scale system | Important Blackwell baseline |
+| GB300 NVL72 | Blackwell Ultra rack-scale system | Current reasoning-inference anchor |
+| Vera Rubin | Public next-generation roadmap | Forward-looking platform direction |
+
+Do not overfit on exact SKU details in Week 1. Instead, understand why NVIDIA is
+moving from single-GPU thinking toward rack-scale and data-center-scale design.
 
 ## GB200 NVL72
 
-GB200 NVL72 is an important Grace Blackwell rack-scale platform.
+GB200 NVL72 is a Grace Blackwell rack-scale system.
 
-At Week 1 level, remember:
+At a high level:
 
-- It combines Grace CPUs and Blackwell GPUs.
-- It is designed as a rack-scale AI system.
-- It uses a large NVLink domain.
-- It is an important reference point for LLM training and inference discussions.
+- It connects 36 Grace CPUs and 72 Blackwell GPUs.
+- It is liquid-cooled.
+- It creates a 72-GPU NVLink domain.
+- It is designed for large AI and HPC workloads.
+- It is a useful baseline for discussing Blackwell-era LLM systems.
 
-Do not over-index on memorizing every GB200 number in Week 1. Later modules
-cover scale-up, NVLink, NVSwitch, memory, and cluster design.
+A single GB200 Grace Blackwell Superchip combines one Grace CPU and two
+Blackwell GPUs. The rack-level system then connects many of these pieces into a
+larger NVLink domain.
+
+The important lesson is not only "72 GPUs." The important lesson is that NVIDIA
+is treating the rack as a scale-up compute domain.
 
 ## GB300 NVL72
 
-GB300 NVL72 is the current public Blackwell Ultra anchor for this curriculum.
+GB300 NVL72 is the Blackwell Ultra rack-scale system.
 
-NVIDIA describes GB300 NVL72 as integrating:
+At a high level:
 
-- 72 Blackwell Ultra GPUs.
-- 36 Grace CPUs.
-- A fully liquid-cooled rack-scale architecture.
-- Networking and system integration for AI reasoning workloads.
+- It integrates 72 Blackwell Ultra GPUs and 36 Grace CPUs.
+- It is fully liquid-cooled.
+- It is designed for AI reasoning and test-time scaling workloads.
+- It exposes a 72-GPU NVLink domain.
+- It increases memory capacity and attention acceleration versus Blackwell.
 
-For interviews, the key point is not only the count of GPUs and CPUs. The key
-point is that NVIDIA is pushing from individual accelerators toward integrated
-rack-scale systems for inference and training.
+Public NVIDIA material describes GB300 NVL72 as having:
 
-## Vera Rubin NVL72
+| Attribute | Public NVIDIA value |
+| --- | --- |
+| GPUs | 72 Blackwell Ultra GPUs |
+| CPUs | 36 Grace CPUs |
+| NVLink bandwidth | 130 TB/s per rack |
+| Fast memory | 37 TB on the product page |
+| GPU memory | 20 TB per rack |
+| GPU memory bandwidth | Up to 576 TB/s per rack |
+| Network connectivity | 800 Gb/s per GPU through ConnectX-8 |
 
-Vera Rubin NVL72 is the forward-looking public roadmap anchor.
+For Week 1, remember the product intent:
 
-At Week 1 level, remember the public platform components:
+> GB300 NVL72 is positioned for reasoning inference, long-context workloads,
+> and higher test-time compute.
 
-- Vera CPU.
-- Rubin GPU.
-- NVLink 6.
-- ConnectX-9.
-- BlueField-4.
-- Related scale-up and scale-out system pieces.
+## Blackwell versus Blackwell Ultra
+
+Blackwell is the GPU architecture family. Blackwell Ultra is a later platform
+refresh aimed at higher reasoning and long-context inference efficiency.
+
+NVIDIA publicly emphasizes several Blackwell and Blackwell Ultra themes:
+
+- Second-generation Transformer Engine.
+- Blackwell Tensor Cores with lower-precision formats.
+- NVFP4 and other microscaling formats.
+- More attention-layer acceleration in Blackwell Ultra.
+- Larger HBM capacity in Blackwell Ultra.
+- Deeper co-design with TensorRT-LLM, Dynamo, and model frameworks.
+
+Do not say:
+
+> Blackwell Ultra is just a faster Blackwell.
+
+Say:
+
+> Blackwell Ultra should be framed as a platform step for reasoning,
+> post-training, long-context, and agentic inference workloads.
+
+## Vera Rubin
+
+Vera Rubin is the forward-looking public roadmap anchor.
 
 Use careful language:
 
-> NVIDIA publicly positions Vera Rubin as a next-generation platform direction.
+> Vera Rubin is NVIDIA's next-generation public platform direction after
+> Blackwell Ultra.
 
-Do not present it as the current baseline for deployed production clusters.
+Do not describe it as the current deployed baseline unless the specific role or
+interviewer gives that context.
 
-## Platform timeline
+For Week 1, Vera Rubin matters because it shows the direction of the platform:
+
+- more integrated CPU and GPU platform design,
+- newer NVLink generation,
+- newer networking,
+- more emphasis on AI factories,
+- continued hardware/software co-design.
+
+## Why LLMs fit NVIDIA platforms
+
+LLMs stress several resources at the same time.
 
 ```mermaid
-timeline
-    title NVIDIA platform anchors for this curriculum
-    GB200 NVL72 : Grace Blackwell rack-scale anchor
-    GB300 NVL72 : Blackwell Ultra reasoning platform anchor
-    Vera Rubin NVL72 : Forward-looking public roadmap anchor
+flowchart LR
+    A[LLM] --> B[Dense GEMMs]
+    A --> C[Large weights]
+    A --> D[KV cache]
+    A --> E[Multi-GPU parallelism]
+    A --> F[Serving software]
+
+    B --> B1[Tensor Cores]
+    C --> C1[HBM capacity]
+    D --> D1[HBM bandwidth]
+    E --> E1[NVLink, NVSwitch, NCCL]
+    F --> F1[CUDA, TensorRT-LLM]
 ```
 
-## Why NVIDIA platforms work well for LLMs
+The best answer is balanced:
 
-LLMs need multiple kinds of capability at once.
-
-| Need | NVIDIA platform element |
+| LLM need | NVIDIA platform response |
 | --- | --- |
-| Dense matrix throughput | Tensor Cores and low-precision formats |
-| Model weight capacity | HBM capacity |
-| Weight and KV-cache bandwidth | HBM bandwidth |
-| Multi-GPU model partitioning | NVLink and NVSwitch |
-| Multi-node scale | InfiniBand, Ethernet, RDMA, collectives |
-| Programmability | CUDA |
-| Library performance | cuBLAS, cuDNN, NCCL, TensorRT-LLM, related stack |
-| Serving efficiency | Batching, kernels, memory management, scheduling |
+| Matrix math | Tensor Cores and optimized kernels |
+| Low precision | FP8, FP4/NVFP4, Transformer Engine |
+| Model capacity | Large HBM pools |
+| Decode memory pressure | HBM bandwidth and KV-cache-aware serving |
+| Multi-GPU model parallelism | NVLink and NVSwitch |
+| Multi-node training | InfiniBand, Ethernet, NCCL |
+| Inference serving | TensorRT-LLM, Dynamo, Triton, ecosystem |
+| Developer reach | CUDA and mature libraries |
 
-The interview point is that performance emerges from system balance.
+## Compute
 
-## What to memorize versus reason from
+Transformer models contain many dense linear operations.
 
-Memorize:
+Examples include:
 
-- GB200, GB300, and Vera Rubin as the platform anchors.
-- GB300 NVL72 has 72 Blackwell Ultra GPUs and 36 Grace CPUs.
-- Vera Rubin public material includes Vera CPU, Rubin GPU, NVLink 6,
-  ConnectX-9, and BlueField-4.
-- NVIDIA's moat is platform-level, not only chip-level.
+- Q, K, V projections.
+- Attention output projection.
+- MLP up-projection.
+- MLP down-projection.
+- Output projection to vocabulary logits.
 
-Reason from:
+These map naturally to GEMMs or GEMM-like kernels.
 
-- Compute versus memory versus communication.
-- Training versus inference.
-- Prefill versus decode.
-- Batch size, latency, throughput, and utilization.
-- Software maturity and kernel availability.
-- Cost per token and total cost of ownership.
+NVIDIA's advantage is not only raw peak FLOPS. It is also:
 
-Avoid:
+- Tensor Core support for relevant precisions,
+- mature matrix libraries,
+- compiler and kernel ecosystem,
+- framework integration,
+- profiling and tuning tools.
 
-- Memorizing every SKU detail without understanding bottlenecks.
-- Treating the GPU chip as the entire product.
-- Discussing older architectures unless needed for context.
-- Claiming roadmap systems are already the deployed baseline.
+For interviews, connect compute to the phase:
 
-## What this file does not cover yet
+| Phase | Compute behavior |
+| --- | --- |
+| Training | forward pass, backward pass, optimizer work |
+| Prefill | high parallelism across prompt tokens |
+| Decode | repeated small-step generation |
+| Post-training | often heavy compute for customization and alignment |
+| Reasoning inference | more test-time compute per user request |
 
-This file intentionally does not yet deep dive into:
+## Memory
 
-- SM microarchitecture.
-- Warps and scheduling.
-- Tensor Core instruction behavior.
-- HBM organization.
-- NVLink and NVSwitch topology.
-- CUDA programming.
-- NCCL collectives.
-- TensorRT-LLM internals.
-- Cluster-level training and serving.
+LLMs are also memory systems problems.
 
-Those topics appear in later weeks.
+Important memory consumers include:
 
-## Interviewer questions to expect
+- model weights,
+- activations,
+- KV cache,
+- temporary buffers,
+- gradients during training,
+- optimizer state during training.
 
-You should be ready to answer:
+GB300's larger HBM capacity matters because long-context and reasoning
+workloads can increase memory pressure, especially during inference serving.
 
-1. What are the current NVIDIA platform anchors for LLM systems?
-2. Why is NVIDIA strong for LLM training and inference?
-3. Why is GB300 important in current public NVIDIA positioning?
-4. What is the difference between GB200 and GB300 at a high level?
-5. How should Vera Rubin be discussed in an interview?
-6. Why does NVLink matter?
-7. Why is HBM important?
-8. Why is CUDA part of the platform advantage?
-9. What does rack-scale design change compared with single-GPU thinking?
-10. What details should you memorize versus reason from?
+A strong answer says:
 
-## Senior/principal answer pattern
+> More compute is useful only if the model, KV cache, and serving batch can be
+> kept fed by memory capacity and bandwidth.
+
+## Scale-up interconnect
+
+Scale-up means connecting GPUs into a tightly coupled domain.
+
+In NVIDIA's current AI platforms, the key scale-up technologies are:
+
+- NVLink,
+- NVSwitch,
+- NVLink Switch systems,
+- NVLink-C2C between Grace and Blackwell components.
+
+Scale-up matters when one model or one serving workload needs multiple GPUs.
+
+Examples:
+
+- tensor parallelism,
+- expert parallelism,
+- pipeline parallelism,
+- large-model inference,
+- all-reduce and all-gather collectives,
+- remote weight or activation movement.
+
+The Week 1 mental model:
+
+```text
+NVLink/NVSwitch reduce the penalty of splitting one model across many GPUs.
+```
+
+## Scale-out networking
+
+Scale-out means connecting racks or nodes into a larger cluster.
+
+NVIDIA platform material commonly discusses:
+
+- InfiniBand,
+- Spectrum-X Ethernet,
+- ConnectX adapters or SuperNICs,
+- RDMA,
+- collective communication,
+- cluster management and observability.
+
+Scale-out matters for:
+
+- multi-node training,
+- large inference fleets,
+- distributed serving,
+- checkpointing,
+- reliability,
+- congestion control,
+- cost per token at fleet scale.
+
+A good interview answer separates scale-up and scale-out.
+
+| Concept | Typical role |
+| --- | --- |
+| NVLink / NVSwitch | tightly coupled GPU-to-GPU scale-up |
+| InfiniBand / Ethernet | node-to-node or rack-to-rack scale-out |
+| NCCL | optimized communication primitives |
+| CUDA | programming model and execution substrate |
+| TensorRT-LLM | inference optimization and serving path |
+
+## Software stack
+
+NVIDIA's software stack is part of the product.
+
+```mermaid
+flowchart TB
+    A[Application / serving layer] --> B[TensorRT-LLM, Triton, Dynamo, NeMo]
+    B --> C[NCCL, cuBLAS, CUTLASS, CUDA libraries]
+    C --> D[CUDA programming model]
+    D --> E[GPU drivers and runtime]
+    E --> F[Blackwell / Blackwell Ultra hardware]
+```
+
+For Week 1, know these names:
+
+| Component | What it contributes |
+| --- | --- |
+| CUDA | programming model and runtime for NVIDIA GPUs |
+| cuBLAS / CUTLASS | optimized matrix math building blocks |
+| NCCL | multi-GPU and multi-node collectives |
+| TensorRT-LLM | optimized LLM inference toolkit |
+| Triton Inference Server | production inference serving |
+| NeMo | model training, customization, and deployment ecosystem |
+| Dynamo | inference optimization and disaggregated serving direction |
+
+You do not need API-level detail yet. You do need to know why software is part
+of NVIDIA's platform advantage.
+
+## Why this matters for OpenAI and Anthropic
+
+Even if the job is not at NVIDIA, this material matters.
+
+OpenAI and Anthropic care about:
+
+- training efficiency,
+- inference cost,
+- latency,
+- throughput,
+- reliability,
+- cluster utilization,
+- serving architecture,
+- hardware/software co-design,
+- vendor platform tradeoffs.
+
+A strong answer at OpenAI or Anthropic should not sound like NVIDIA marketing.
+It should sound like systems reasoning:
+
+> I would evaluate the platform by workload phase, memory footprint, parallelism
+> strategy, interconnect pressure, kernel maturity, software integration, and
+> operational cost.
+
+## Common interview traps
+
+Avoid these mistakes.
+
+| Trap | Better answer |
+| --- | --- |
+| "NVIDIA is fast because FLOPS" | Discuss compute, memory, communication, and software. |
+| "NVLink is just networking" | Separate scale-up NVLink from scale-out networking. |
+| "HBM only stores weights" | Mention weights, activations, KV cache, and training state. |
+| "CUDA is only a language" | CUDA is a platform: runtime, libraries, tools, ecosystem. |
+| "Blackwell Ultra is just a chip" | Frame it as a reasoning and long-context platform. |
+| "One GPU comparison is enough" | LLM systems often need rack and cluster-level comparison. |
+| "Peak TOPS decides inference" | Ask about batch, context, KV cache, latency, and software. |
+
+## Senior/principal answer patterns
+
+### Question: Why does NVIDIA do well for LLMs?
 
 Weak answer:
 
-> NVIDIA has the fastest GPUs.
+> NVIDIA GPUs are fast.
 
-Acceptable answer:
+Strong answer:
 
-> NVIDIA GPUs are good for LLMs because they have high matrix throughput and
-> high-bandwidth memory.
+> NVIDIA does well because the platform is balanced for LLM workloads. Tensor
+> Cores accelerate dense math and low precision. HBM capacity and bandwidth help
+> weights and KV cache. NVLink and NVSwitch reduce the cost of model
+> parallelism. InfiniBand or Ethernet support scale-out. CUDA, NCCL, and
+> TensorRT-LLM make the hardware usable in production systems.
 
-Strong senior/principal answer:
+### Question: Why does NVLink matter?
 
-> NVIDIA's advantage is the full platform. Transformer workloads need dense
-> matrix throughput, HBM capacity and bandwidth, low-precision Tensor Cores,
-> scale-up links, scale-out networking, mature collectives, CUDA, libraries, and
-> serving frameworks. GB200, GB300, and Vera Rubin show NVIDIA moving from
-> accelerator chips toward integrated AI factory platforms.
+Weak answer:
+
+> It connects GPUs.
+
+Strong answer:
+
+> NVLink matters when a model or serving workload spans GPUs. Tensor
+> parallelism, expert parallelism, and some inference strategies require frequent
+> GPU-to-GPU communication. NVLink and NVSwitch create a high-bandwidth scale-up
+> domain so multi-GPU execution behaves more like one larger accelerator.
+
+### Question: How would you evaluate GB300 for LLM inference?
+
+Weak answer:
+
+> I would look at the FLOPS.
+
+Strong answer:
+
+> I would separate prefill, decode, long-context, and reasoning workloads. Then
+> I would evaluate Tensor Core throughput, HBM capacity, HBM bandwidth, KV-cache
+> pressure, NVLink bandwidth, scale-out network bandwidth, serving software,
+> batching policy, latency targets, and cost per token.
+
+### Question: What should you know about Vera Rubin?
+
+Weak answer:
+
+> It is NVIDIA's next GPU.
+
+Strong answer:
+
+> I would treat Vera Rubin as a public roadmap anchor rather than the current
+> deployed baseline. It matters because it shows NVIDIA's direction: tighter
+> CPU-GPU integration, newer NVLink and networking, and continued AI factory
+> platform design.
+
+## Whiteboard framework
+
+When asked about an NVIDIA platform, draw this.
+
+```text
+LLM workload
+  |
+  +-- compute: GEMMs, Tensor Cores, precision
+  |
+  +-- memory: weights, activations, KV cache, HBM
+  |
+  +-- scale-up: NVLink, NVSwitch, tensor/expert parallelism
+  |
+  +-- scale-out: InfiniBand, Ethernet, NCCL, cluster scheduling
+  |
+  +-- software: CUDA, libraries, TensorRT-LLM, serving stack
+```
+
+Then ask:
+
+```text
+Which phase are we optimizing: training, prefill, decode, or reasoning?
+```
+
+That one question prevents many weak interview answers.
+
+## What to memorize for Week 1
+
+Memorize these anchors:
+
+- GB200 NVL72 is the Grace Blackwell rack-scale baseline.
+- GB300 NVL72 is the Blackwell Ultra reasoning-inference platform anchor.
+- GB300 NVL72 integrates 72 Blackwell Ultra GPUs and 36 Grace CPUs.
+- GB300 NVL72 exposes 130 TB/s of NVLink bandwidth at rack scale.
+- Blackwell Ultra emphasizes reasoning, long context, and test-time scaling.
+- HBM matters for weights, KV cache, batch size, and long-context inference.
+- NVLink and NVSwitch are scale-up technologies.
+- InfiniBand and Ethernet are scale-out technologies.
+- NCCL provides optimized collectives.
+- TensorRT-LLM is NVIDIA's optimized LLM inference toolkit.
+- CUDA and libraries are central to NVIDIA's platform advantage.
+
+## What not to memorize yet
+
+Do not spend Week 1 memorizing:
+
+- every SM-level detail,
+- every Tensor Core instruction,
+- every CUDA API,
+- every NCCL algorithm,
+- every rack SKU,
+- every benchmark number.
+
+Those belong in later weeks.
+
+Week 1 is about the platform map and the interview vocabulary.
 
 ## Week 1 self-check
 
-You are ready to move on when you can explain:
+You are ready to move on when you can answer these without notes:
 
-- Why NVIDIA's advantage is platform-level.
-- Why GB200 remains an important Grace Blackwell anchor.
-- Why GB300 is the current Blackwell Ultra anchor.
-- Why Vera Rubin should be framed as public roadmap context.
-- Why LLMs require compute, memory, communication, and software.
-- Why memorizing SKU details is less important than understanding bottlenecks.
+1. Why is NVIDIA's advantage platform-level?
+2. What is GB200 NVL72?
+3. What is GB300 NVL72?
+4. Why is Blackwell Ultra important for reasoning inference?
+5. Why does HBM matter for LLMs?
+6. Why does NVLink matter for multi-GPU inference?
+7. What is the difference between scale-up and scale-out?
+8. What does NCCL contribute?
+9. What does TensorRT-LLM contribute?
+10. Why is peak FLOPS insufficient for LLM platform evaluation?
 
 ## Sources
 
-- NVIDIA, GB300 NVL72.
-  <https://www.nvidia.com/en-us/data-center/gb300-nvl72/>
+- NVIDIA, "GB300 NVL72."
+  https://www.nvidia.com/en-us/data-center/gb300-nvl72/
 
-- NVIDIA, Blackwell Architecture.
-  <https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/>
+- NVIDIA Developer Blog, "NVIDIA Blackwell Ultra for the Era of AI Reasoning."
+  https://developer.nvidia.com/blog/nvidia-blackwell-ultra-for-the-era-of-ai-reasoning/
 
-- NVIDIA, GB200 NVL72.
-  <https://www.nvidia.com/en-us/data-center/gb200-nvl72/>
+- NVIDIA, "Blackwell Architecture."
+  https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/
 
-- NVIDIA, Grace Blackwell Multi-Node Tuning Guide.
-  <https://docs.nvidia.com/multi-node-nvlink-systems/multi-node-tuning-guide/overview.html>
+- NVIDIA Docs, "NVIDIA GB200 NVL Multi-Node Tuning Guide."
+  https://docs.nvidia.com/multi-node-nvlink-systems/multi-node-tuning-guide/overview.html
 
-- NVIDIA, Blackwell Ultra technical blog.
-  <https://developer.nvidia.com/blog/nvidia-blackwell-ultra-for-the-era-of-ai-reasoning/>
+- NVIDIA Docs, "TensorRT-LLM."
+  https://docs.nvidia.com/tensorrt-llm/
 
-- NVIDIA, Vera Rubin Platform.
-  <https://www.nvidia.com/en-us/data-center/technologies/rubin/>
-
-- NVIDIA, Vera Rubin investor news.
-<https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Vera-Rubin-Opens-Agentic-AI-Frontier/default.aspx>
+- NVIDIA Developer, "NVIDIA Collective Communications Library."
+  https://developer.nvidia.com/NCCL
