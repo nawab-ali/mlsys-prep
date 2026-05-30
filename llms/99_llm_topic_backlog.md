@@ -8,6 +8,7 @@ curriculum later.
 
 - Mixture of Experts (MoE)
 - Training
+- Backpropagation
 - RLHF
 - DeepSeek
 - Chain of Thought (CoT)
