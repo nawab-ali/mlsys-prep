@@ -4,6 +4,30 @@ This is a 12-week coding interview plan for easy and medium DSA problems.
 
 The target is 100 problems in both Python and C++.
 
+## Table of contents
+
+- [Goals](#goals)
+- [Weekly cadence](#weekly-cadence)
+- [Topic coverage](#topic-coverage)
+- [12-week plan](#12-week-plan)
+- [Week 1: Arrays, Hashing, and Basic Strings](#week-1-arrays-hashing-and-basic-strings)
+- [Week 2: Two Pointers and Sliding Window](#week-2-two-pointers-and-sliding-window)
+- [Week 3: Stacks, Queues, and Expression Handling](#week-3-stacks-queues-and-expression-handling)
+- [Week 4: Binary Search, Sorting, and Intervals](#week-4-binary-search-sorting-and-intervals)
+- [Week 5: Linked Lists](#week-5-linked-lists)
+- [Week 6: Binary Trees and BSTs](#week-6-binary-trees-and-bsts)
+- [Week 7: Trees, BSTs, and Tree Construction](#week-7-trees-bsts-and-tree-construction)
+- [Week 8: Graphs and Matrix BFS / DFS](#week-8-graphs-and-matrix-bfs--dfs)
+- [Week 9: Graphs, Union Find, Tries, and Backtracking](#week-9-graphs-union-find-tries-and-backtracking)
+- [Week 10: Heaps, Priority Queues, and Greedy](#week-10-heaps-priority-queues-and-greedy)
+- [Week 11: Dynamic Programming Fundamentals](#week-11-dynamic-programming-fundamentals)
+- [Week 12: Dynamic Programming and Final Mixed Review](#week-12-dynamic-programming-and-final-mixed-review)
+- [Review rules](#review-rules)
+- [Mistake log template](#mistake-log-template)
+- [Python and C++ expectations](#python-and-c-expectations)
+- [Final readiness check](#final-readiness-check)
+- [Notes](#notes)
+
 ## Goals
 
 - Build fluency in common interview patterns.
