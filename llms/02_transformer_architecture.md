@@ -1,5 +1,16 @@
 # Transformer Architecture
 
+## Table of contents
+
+- [Executive summary](#executive-summary)
+- [Study goals and source strategy](#study-goals-and-source-strategy)
+- [The decoder-only Transformer from input to logits](#the-decoder-only-transformer-from-input-to-logits)
+- [Self-attention mechanics](#self-attention-mechanics)
+- [The Transformer block and why it trains](#the-transformer-block-and-why-it-trains)
+- [Training, inference, and systems intuition](#training-inference-and-systems-intuition)
+- [Interview toolkit](#interview-toolkit)
+- [Sources and visual references](#sources-and-visual-references)
+
 ## Executive summary
 
 This module is a deep dive into the decoder-only Transformer block used by GPT-style large
