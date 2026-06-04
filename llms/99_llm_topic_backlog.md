@@ -8,6 +8,8 @@ curriculum later.
 
 - Mixture of Experts (MoE)
 - Training
+- Pre-training
+- Post-training
 - Backpropagation
 - RLHF
 - DeepSeek
