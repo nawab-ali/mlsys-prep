@@ -1,4 +1,4 @@
-# Week 2: NVIDIA GPU Execution Model for Transformer Workloads
+# NVIDIA GPU Execution Model
 
 This module moves from the Week 1 platform view to the execution view: not just *what* NVIDIA sells,
 but *how* NVIDIA GPUs actually execute ML work in practice. The focus is the CUDA execution model,
@@ -313,7 +313,7 @@ A useful interview summary:
 | Shared memory | one block | tiling, reuse, cooperation, staging | on-chip, bank conflicts matter |
 | L1 | one SM | recent global/local/shared traffic | helps coalescing and reuse |
 | L2 | whole GPU | cross-SM reuse, persistent data, traffic smoothing | shared by all SMs |
-| HBM / global memory | whole GPU | model weights, activations, KV cache | huge capacity, high bandwidth, high latency |
+| HBM / global memory | whole GPU | weights, activations, KV cache | huge capacity, high bandwidth, high latency |
 
 Registers are on-chip and per-thread. Shared memory is on-chip and per-block. L1 is per-SM. L2 is
 global to the GPU. Global memory is device DRAM, which in server AI parts is HBM. Constant memory is
@@ -484,7 +484,7 @@ as large, parallel matrix operations. NVIDIA's LLM inference guidance says prefi
 parallelized and can effectively saturate GPU utilization.
 
 Decode generates tokens one at a time. The new token depends on all prior keys and values, so
-autogressive structure limits parallelism across generated tokens. NVIDIA describes decode as more
+autoregressive structure limits parallelism across generated tokens. NVIDIA describes decode as more
 like a matrix-vector operation that underutilizes the GPU relative to prefill, with latency often
 dominated by moving weights, keys, values, and activations from memory.
 
@@ -699,14 +699,14 @@ Try to answer these without notes:
 
 The Markdown above is designed to stand on its own, but these public visuals are worth studying:
 
-- [CUDA Programming Guide: Programming Model figure and hierarchy][cuda-programming-model]
-- [Cornell Virtual Workshop: SIMT and Warps](https://cvw.cac.cornell.edu/gpu-architecture/gpu-characteristics/simt_warp)
+- CUDA Programming Guide: Programming Model figure and hierarchy
+- Cornell Virtual Workshop: SIMT and Warps
 - [NVIDIA Hopper Architecture In-Depth](https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/)
-- [Inside NVIDIA Blackwell Ultra: SM architecture and Tensor Core visuals][blackwell-ultra]
-- [Nsight Compute Profiling Guide: memory tables and hardware models][nsight-compute]
-- [Matrix Multiplication Background User's Guide][matrix-multiplication-guide]
-- [TensorRT-LLM Chunked Prefill visual][tensorrt-llm-chunked-prefill]
-- [Mastering LLM Techniques: Inference Optimization, with KV cache visuals][llm-inference-optimization]
+- Inside NVIDIA Blackwell Ultra: SM architecture and Tensor Core visuals
+- Nsight Compute Profiling Guide: memory tables and hardware models
+- Matrix Multiplication Background User's Guide
+- TensorRT-LLM Chunked Prefill visual
+- Mastering LLM Techniques: Inference Optimization, with KV cache visuals
 
 ### Sources
 
@@ -715,45 +715,45 @@ The Markdown above is designed to stand on its own, but these public visuals are
 - [CUDA Programming Guide](https://docs.nvidia.com/cuda/cuda-programming-guide/index.html)
 - [CUDA C++ Best Practices Guide](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html)
 - [CUDA GPU Compute Capability table](https://developer.nvidia.com/cuda/gpus)
-- [CUDA Asynchronous Execution][cuda-async-execution]
-- [CUDA Asynchronous Data Copies][cuda-async-copies]
+- CUDA Asynchronous Execution
+- CUDA Asynchronous Data Copies
 
 #### NVIDIA architecture and hardware references
 
 - [Hopper Tuning Guide](https://docs.nvidia.com/cuda/hopper-tuning-guide/index.html)
 - [Blackwell Tuning Guide](https://docs.nvidia.com/cuda/blackwell-tuning-guide/index.html)
 - [NVIDIA Hopper Architecture In-Depth](https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/)
-- [Inside NVIDIA Blackwell Ultra][blackwell-ultra]
-- [NVIDIA Blackwell Ultra for the Era of AI Reasoning][blackwell-ultra-reasoning]
+- Inside NVIDIA Blackwell Ultra
+- NVIDIA Blackwell Ultra for the Era of AI Reasoning
 
 #### Tensor Cores, GEMM, and precision formats
 
-- [Matrix Multiplication Background User's Guide][matrix-multiplication-guide]
-- [Tips for Optimizing GPU Performance Using Tensor Cores][tensor-core-optimization]
+- Matrix Multiplication Background User's Guide
+- Tips for Optimizing GPU Performance Using Tensor Cores
 - [Efficient GEMM in CUDA, CUTLASS](https://docs.nvidia.com/cutlass/4.2.1/media/docs/cpp/efficient_gemm.html)
-- [Accelerating AI Training with TF32 Tensor Cores][tf32-training]
-- [Floating-Point 8: An Introduction to Efficient, Lower-Precision AI Training][fp8-training]
-- [Introducing NVFP4 for Efficient and Accurate Low-Precision Inference][nvfp4-inference]
+- Accelerating AI Training with TF32 Tensor Cores
+- Floating-Point 8: An Introduction to Efficient, Lower-Precision AI Training
+- Introducing NVFP4 for Efficient and Accurate Low-Precision Inference
 
 #### Profiling and bottleneck analysis
 
 - [Nsight Compute Profiling Guide](https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html)
 - [Getting Started with CUDA Graphs](https://developer.nvidia.com/blog/cuda-graphs/)
-- [CUDA Graphs section in the CUDA Programming Guide][cuda-graphs]
-- [Understanding Overhead and Latency in Nsight Systems][nsight-systems-overhead]
+- CUDA Graphs section in the CUDA Programming Guide
+- Understanding Overhead and Latency in Nsight Systems
 
 #### Transformer and LLM execution references
 
-- [Mastering LLM Techniques: Inference Optimization][llm-inference-optimization]
+- Mastering LLM Techniques: Inference Optimization
 - [TensorRT-LLM: GPT attention and KV cache docs](https://nvidia.github.io/TensorRT-LLM/advanced/gpt-attention.html)
 - [TensorRT-LLM KV Cache System](https://nvidia.github.io/TensorRT-LLM/latest/features/kvcache.html)
-- [TensorRT-LLM Chunked Prefill][tensorrt-llm-chunked-prefill]
-- [Skip Softmax in TensorRT-LLM][tensorrt-llm-skip-softmax]
-- [NVIDIA Dynamo and disaggregated prefill/decode][nvidia-dynamo]
+- TensorRT-LLM Chunked Prefill
+- Skip Softmax in TensorRT-LLM
+- NVIDIA Dynamo and disaggregated prefill/decode
 
 #### Supporting educational material
 
-- [Cornell Virtual Workshop: SIMT and Warps](https://cvw.cac.cornell.edu/gpu-architecture/gpu-characteristics/simt_warp)
+- Cornell Virtual Workshop: SIMT and Warps
 - [UCSD GPU architecture lecture](https://cseweb.ucsd.edu/classes/sp14/cse240A-a/Slides/18_GPUs.pdf)
 
 ### Open questions and limits of this module
@@ -764,21 +764,3 @@ KV-cache engineering. Those are better left to later weeks. Some hardware detail
 Blackwell's newest low-precision paths and specialized memory features, are still evolving across
 toolchain releases, so this module emphasizes the stable CUDA model first and generation-specific
 details second.
-
-[blackwell-ultra]: https://developer.nvidia.com/blog/inside-nvidia-blackwell-ultra-the-chip-powering-the-ai-factory-era/
-[blackwell-ultra-reasoning]: https://developer.nvidia.com/blog/nvidia-blackwell-ultra-for-the-era-of-ai-reasoning/
-[cuda-async-copies]: https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/async-copies.html
-[cuda-async-execution]: https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/asynchronous-execution.html
-[cuda-graphs]: https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/cuda-graphs.html
-[cuda-programming-model]: https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html
-[fp8-training]: https://developer.nvidia.com/blog/floating-point-8-an-introduction-to-efficient-lower-precision-ai-training/
-[llm-inference-optimization]: https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/
-[matrix-multiplication-guide]: https://docs.nvidia.com/deeplearning/performance/dl-performance-matrix-multiplication/index.html
-[nvidia-dynamo]: https://developer.nvidia.com/blog/introducing-nvidia-dynamo-a-low-latency-distributed-inference-framework-for-scaling-reasoning-ai-models/
-[nsight-compute]: https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html
-[nsight-systems-overhead]: https://developer.nvidia.com/blog/understanding-the-visualization-of-overhead-and-latency-in-nsight-systems/
-[nvfp4-inference]: https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/
-[tensor-core-optimization]: https://developer.nvidia.com/blog/optimizing-gpu-performance-tensor-cores/
-[tensorrt-llm-chunked-prefill]: https://developer.nvidia.com/blog/streamlining-ai-inference-performance-and-deployment-with-nvidia-tensorrt-llm-chunked-prefill/
-[tensorrt-llm-skip-softmax]: https://developer.nvidia.com/blog/accelerating-long-context-inference-with-skip-softmax-in-nvidia-tensorrt-llm/
-[tf32-training]: https://developer.nvidia.com/blog/accelerating-ai-training-with-tf32-tensor-cores/

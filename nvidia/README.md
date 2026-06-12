@@ -6,7 +6,7 @@ This directory contains the NVIDIA GPU platform and architecture preparation tra
 
 1. [NVIDIA Learning Path](00_nvidia_learning_path.md)
 2. [Latest NVIDIA Platforms](01_latest_nvidia_platforms.md)
-3. [GPU Architecture for LLMs](02_gpu_architecture_for_llms.md)
+3. [NVIDIA GPU Execution Model](02_gpu_execution_model.md)
 
 ## Planned modules
 
