@@ -1,807 +1,1207 @@
 # NVIDIA GPU Execution Model
 
-## Table of contents
+## Introduction
 
-- [What this module is for](#what-this-module-is-for)
-- [How CUDA execution actually maps work to hardware](#how-cuda-execution-actually-maps-work-to-hardware)
-- [What an SM does and why warps matter](#what-an-sm-does-and-why-warps-matter)
-- [Memory hierarchy and Tensor Cores](#memory-hierarchy-tensor-cores-and-asynchronous-execution)
-- [How a Transformer block becomes GPU work](#how-a-transformer-block-becomes-gpu-work)
-- [Bottlenecks, profiling, and interview-ready reasoning](#bottlenecks-profiling-and-interview-ready-reasoning)
-- [Self-check and sources](#self-check-and-sources)
+Week 2 moves from NVIDIA as a platform to NVIDIA as an execution engine. Week 1 covered racks,
+interconnects, software, and why NVIDIA wins at the platform level. This module goes one level
+deeper: how a single NVIDIA GPU actually executes work, and how that execution model explains real
+Transformer behavior in training and inference. The stable mental model comes from CUDA’s
+programming model and memory model. What changes across generations are capacities, datatypes,
+caches, asynchronous engines, and some scheduling details. Hopper H100/H200 are compute
+capability 9.0, B200/GB200 are 10.0, GB300 is 10.3, and client or workstation Blackwell parts
+also exist at 12.x with different per-SM limits, so interview answers should separate the stable
+CUDA concepts from generation-specific numbers. Week 3 will go deeper into microarchitecture.
 
-## What this module is for
+After this file, you should be able to explain, cleanly and without hand-waving:
 
-Week 1 was about the NVIDIA platform at rack and system level: GB200 NVL72, GB300 NVL72, HBM,
-NVLink, NVSwitch, CUDA, NCCL, and TensorRT-LLM. Week 2 moves one layer down. The goal here is to
-understand how a single NVIDIA GPU actually executes work, and then connect that execution model to
-Transformer training and inference.
-
-After this module, you should be able to explain, in interview language:
-
-- why GPUs are good at Transformer workloads,
-- how a kernel launch becomes a grid of blocks and then warps on SMs,
-- what an SM does,
-- why warps, occupancy, coalescing, and the memory hierarchy matter,
+- why Transformers are such a strong match for GPUs,
+- how a kernel launch becomes blocks, warps, and issued instructions on SMs,
+- why block shape, warp behavior, occupancy, and memory access patterns matter,
 - why Tensor Cores help some Transformer operations much more than others,
-- why prefill and decode behave differently on the same GPU,
-- how to reason about compute-bound, memory-bound, and scheduling-limited behavior, and
-- what to look for in Nsight Compute before guessing at an optimization.
+- why prefill and decode stress a GPU differently, and
+- how to reason from symptoms to likely bottlenecks before touching a profiler.
 
-This file stays at practical ML-systems depth. It is not a CUDA programming manual, and it is not
-yet a full microarchitecture deep dive. Deeper Hopper and Blackwell microarchitecture discussion is
-better left for Week 3.
+### Visual roadmap
 
-**Stable vs. generation-specific note.** The core CUDA execution model is stable: kernel, grid,
-thread block, thread, warp, SM, streams, shared memory, L1/L2/global memory, and occupancy are all
-standard CUDA concepts. What changes by generation are capacities and details: SM counts, L2 size,
-HBM capacity and bandwidth, supported datatypes, cluster features, and newer asynchronous engines
-such as Hopper TMA.
+This file includes these inline visuals at the point of use:
 
-**Real diagrams worth opening alongside this module.**
+- CUDA programming model hierarchy: grid, block, warp, lane, and SM placement.
+- Block scheduling onto SMs.
+- Warp lane behavior.
+- Hopper full-chip and Hopper SM diagrams.
+- Blackwell Ultra full-chip and Blackwell Ultra SM diagrams.
+- Memory hierarchy and coalesced-versus-strided access visuals.
+- GEMM and Tensor Core tiling hierarchy.
+- Transformer block to GPU-work mapping.
+- Prefill versus decode with KV caching.
+- Roofline-guided bottleneck analysis.
 
-- CUDA programming model hierarchy and block-to-SM scheduling:
-  <https://docs.nvidia.com/cuda/cuda-programming-guide/index.html>
-- Hopper full-chip, GH100 SM, Tensor Core, and FP8 visuals:
-  <https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/>
-- Blackwell architecture overview and linked technical brief:
-  <https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/>
-- GEMM tiling visuals:
-  <https://docs.nvidia.com/deeplearning/performance/dl-performance-matrix-multiplication/index.html>
-- Nsight Compute roofline and memory-chart visuals:
-  <https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html>
-- NVIDIA prefill/decode and KV-cache visual:
-  <https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/>
+### Reference generations for this module
 
-**First-principles vocabulary**
+| Family | Representative parts | Compute capability | Why it matters here |
+|---|---|---:|---|
+| Hopper | H100, H200, GH200 | 9.0 | Baseline server reference for many current CUDA and LLM discussions |
+| Blackwell server | B200, GB200 | 10.0 | Same CUDA model, newer server-side limits and memory hierarchy details |
+| Blackwell Ultra | B300, GB300 | 10.3 | Same core execution model, more memory and newer serving-oriented emphasis |
+| Blackwell client/workstation | RTX PRO 6000, RTX 5090 | 12.x | Same model, different limits |
 
-- **Kernel**: a function invoked for execution on the GPU. Launching a kernel starts many GPU
-  threads executing that function in parallel.
-- **Kernel launch**: the host-side act of starting a kernel with an execution configuration such as
-  grid size, block size, and optionally a stream.
-- **Grid**: the full collection of thread blocks created by one kernel launch. All blocks in a grid
-  have the same shape.
-- **Thread block / CTA**: the unit of cooperation and shared-memory locality. All threads in a
-  block execute on one SM, can synchronize efficiently, and share on-chip shared memory. In NVIDIA
-  interview slang, *CTA* means *thread block*.
-- **Thread**: the smallest programmer-visible execution context. A thread has its own indices and
-  private register state.
-- **Warp**: a group of 32 threads inside a block. Warps are the basic scheduling and issue unit
-  inside an SM.
-- **Warp lane**: a thread’s position from 0 to 31 inside its warp.
-- **SM**: a streaming multiprocessor. It contains the per-SM register file, shared-memory/L1
-  resources, functional units, and warp schedulers that issue instructions for resident warps.
-- **Occupancy**: active warps per SM divided by the hardware maximum number of warps per SM.
-  Occupancy helps with latency hiding, but more is not always better.
-- **Eligible warp**: an active warp that is not stalled and is ready to issue its next instruction.
-  This is often a better performance clue than occupancy alone.
-- **Register**: the fastest storage visible to a thread. Thread-local variables normally live here
-  first.
-- **Register file**: the per-SM pool of registers partitioned among resident threads and warps.
-  Too much register use reduces residency and occupancy.
-- **Shared memory**: on-chip memory shared by threads in a block. It is very fast when access
-  patterns avoid bank conflicts.
-- **L1 cache**: the per-SM cache implemented inside the unified data cache. On Hopper and CC 10.0
-  Blackwell server GPUs, this is coupled to the shared-memory carveout.
-- **L2 cache**: the larger on-chip cache shared by all SMs in the GPU.
-- **Global memory**: the GPU-attached DRAM visible to all SMs from device code.
-- **HBM**: stacked high-bandwidth DRAM used as global memory on data-center Hopper and Blackwell
-  GPUs. H100 supports up to 80 GB and 3 TB/s, B200 up to 180 GB, and Blackwell Ultra up to
-  288 GB HBM3e per GPU.
-- **Tensor Core**: specialized matrix-multiply-accumulate hardware for dense AI and HPC math.
-  GEMMs and attention matmuls map here when shapes and software paths line up.
-- **CUDA core**: interview shorthand for the SM’s general-purpose FP and INT execution datapaths,
-  distinct from the specialized Tensor Cores. Hopper H100 exposes 128 FP32 CUDA cores and
-  4 Tensor Cores per SM.
-- **CUDA stream**: an in-order work queue of operations such as kernel launches and copies.
-  Different streams may interleave or overlap if dependencies and hardware resources allow it.
-- **Memory coalescing**: combining a warp’s global-memory accesses into as few memory transactions
-  as possible.
-- **Bank conflict**: multiple threads in a warp hit the same shared-memory bank, so the access is
-  split into serialized requests.
-- **Tiling**: partitioning a larger problem into smaller tiles that fit thread blocks, warps,
-  registers, and shared memory better.
-- **Arithmetic intensity**: work per byte of memory traffic. Roofline analysis uses it to reason
-  about memory-bound versus compute-bound behavior.
+Source note: this table condenses NVIDIA’s compute-capability list and the Hopper and Blackwell
+tuning guides.
 
-**Minimum interview vocabulary**
+## First-principles vocabulary
 
-| Term | One-line definition | LLM relevance | Common mistake |
+The most common way to get lost in GPU interviews is to use words like *grid*, *warp*, *SM*, or
+*occupancy* before you have made them precise. The definitions below are intentionally plain,
+interview-useful, and slightly simplified. Use them first; add detail only if an interviewer asks
+for it.
+
+### Core CUDA and GPU terms
+
+| Term | Plain, interview-useful definition |
+|---|---|
+| kernel | A function executed on the GPU by many threads in parallel |
+| kernel launch | The host-side act of starting a kernel with a grid, block shape, and optional stream |
+| grid | The full set of thread blocks created by one kernel launch |
+| thread block / CTA | A cooperative group of threads that runs on one SM and shares shared memory |
+| thread | The smallest programmer-visible execution context |
+| warp | A group of 32 threads that is the basic scheduling and execution unit inside an SM |
+| warp lane | A thread’s slot index, 0 through 31, inside its warp |
+| SM | A streaming multiprocessor: the GPU execution core that hosts blocks and schedules warps |
+| occupancy | Active warps per SM divided by the hardware maximum active warps per SM |
+| eligible warp | An active warp that is ready to issue its next instruction |
+| register | The fastest thread-local storage location |
+| register file | The per-SM pool of registers partitioned across resident threads |
+| shared memory | On-chip block-scoped scratchpad memory shared by threads in one block |
+| L1 cache | The per-SM data cache; on modern NVIDIA server GPUs it is unified with shared-memory resources |
+| L2 cache | The larger on-chip cache shared by all SMs |
+| global memory | Device memory visible to all SMs; on server GPUs this is typically HBM |
+| local memory | Thread-scoped by name, but physically off-chip and as expensive as global memory |
+| HBM | High-bandwidth stacked DRAM attached to the GPU package and used as global memory |
+| Tensor Core | Specialized matrix multiply-accumulate hardware for AI and HPC math |
+| CUDA core | Interview shorthand for the SM’s general FP and INT execution datapaths |
+| CUDA stream | An in-order work queue for operations such as kernel launches and copies |
+| memory coalescing | Merging a warp’s memory accesses into as few global-memory transactions as possible |
+| bank conflict | Multiple threads in a warp hit the same shared-memory bank, forcing serialization |
+| tiling | Breaking a large problem into smaller tiles that fit blocks, warps, shared memory, and registers |
+| arithmetic intensity | Work done per byte moved; the key concept behind roofline reasoning |
+
+Glossary note: these definitions summarize CUDA’s programming model and hardware model, the CUDA
+Best Practices memory and occupancy sections, Nsight Compute scheduler terminology, the matrix
+multiplication guide’s arithmetic-intensity language, and TensorRT-LLM’s attention and KV-cache
+terminology.
+
+### Minimum interview vocabulary
+
+| Term | One-line definition | Why it matters for LLMs | Common mistake |
 |---|---|---|---|
-| kernel | GPU function launched in parallel | Transformer ops become kernels | Thinking one kernel = one thread |
-| grid | All blocks from one launch | Sets total GPU work | Confusing grid with GPU |
-| block / CTA | Cooperative thread group on one SM | Shared-memory tiling lives here | Mixing block with warp |
-| warp | 32-thread scheduling unit | Coalescing and divergence happen here | Thinking warps are programmer-sized |
-| SM | Execution core that hosts blocks and warps | Work really runs on SMs | Equating one SM with one GPU |
-| occupancy | Active warps / max warps per SM | Helps hide latency | Treating it as utilization |
-| shared memory | Fast block-scoped scratchpad | Enables tiling and reuse | Same thing as L1 cache |
-| HBM | GPU-attached high-bandwidth DRAM | Weights and KV cache live here | Focusing only on FLOPS |
-| Tensor Core | Matrix MMA unit | Powers fast GEMMs and attention | Assuming all ops use it |
-| coalescing | Merges warp accesses | Bad access wastes bandwidth | Thinking cache always fixes it |
-| arithmetic intensity | Work per byte moved | Separates compute from memory limits | Using FLOPS alone |
-| stream | In-order work queue | Helps overlap copies and kernels | Assuming streams force overlap |
-
-## How CUDA execution actually maps work to hardware
-
-Transformer workloads are friendly to GPUs because they contain large amounts of matrix math and
-batched attention work that can be parallelized across many threads, blocks, and SMs. But
-interview-grade understanding starts where the marketing slides stop: high peak FLOPS do not
-guarantee high delivered performance. Real performance depends on how kernels are tiled, whether
-warps stay eligible to issue, how often data is reused in shared memory and cache, and whether the
-work is compute-bound or mostly moving weights and KV state through the memory hierarchy.
-
-A useful mental model is **CPU = latency optimizer** and **GPU = throughput optimizer**. NVIDIA’s
-best-practices guide explicitly contrasts CPU cores, which are designed to minimize latency for a
-small number of threads, with GPUs, which are designed to handle many concurrent lightweight
-threads to maximize throughput. The CUDA programming guide also notes that GPU applications start on
-the CPU, which launches kernels and copies data, while CPU and GPU can execute simultaneously.
-
-The key latency-hiding idea is hardware multithreading. When an SM has many resident warps, a warp
-scheduler can choose a different ready warp when one warp is waiting on memory or dependencies.
-NVIDIA states that the warp execution context is kept on-chip throughout the warp’s lifetime, so
-switching between warps incurs no cost.
-
-**Execution hierarchy in one sentence:** one kernel launch creates one grid; a grid contains thread
-blocks; a block contains threads; threads are grouped into warps of 32; blocks are scheduled onto
-SMs; warps are scheduled inside SMs; the programmer chooses grid and block dimensions, but the
-runtime decides which SM executes which block and in what order.
-
-```mermaid
-flowchart TB
-    Host[Host CPU] -->|launches| Kernel[Kernel]
-    Kernel --> Grid[One grid]
-    Grid --> Block0[Thread block / CTA 0]
-    Grid --> Block1[Thread block / CTA 1]
-    Grid --> BlockN[Thread block / CTA N]
-
-    Block0 --> T0[Threads]
-    T0 --> W0[Warps of 32]
-    W0 --> L0[Lanes 0..31]
-
-    Block1 --> T1[Threads]
-    T1 --> W1[Warps of 32]
-```
-
-This is the programmer-visible hierarchy from the CUDA programming model. NVIDIA’s guide is very
-explicit that a kernel launch creates a grid, grids contain blocks, blocks contain threads, and
-threads inside a block are grouped into warps of 32.
-
-```mermaid
-flowchart LR
-    Grid[Grid of blocks] --> B0[Block 0]
-    Grid --> B1[Block 1]
-    Grid --> B2[Block 2]
-    Grid --> B3[Block 3]
-
-    GPU[GPU] --> GPC[GPCs]
-    GPC --> SM0[SM 0]
-    GPC --> SM1[SM 1]
-
-    B0 --> SM0
-    B1 --> SM1
-    B2 --> SM0
-    B3 --> SM1
-
-    SM0 --> WS0[Warp schedulers]
-    SM1 --> WS1[Warp schedulers]
-```
-
-The important interview point is not the exact placement in the picture. It is the rule behind it:
-blocks are assigned to available SMs in an order not guaranteed to the programmer, while all
-threads of a given block stay on one SM so they can synchronize and use shared memory together.
-
-**Why blocks matter.** Blocks are the unit of cooperation. Shared memory is allocated at block
-scope, and synchronization within a block is efficient because all threads in the block execute on a
-single SM. Different blocks should not rely on each other’s partial results unless you use special
-mechanisms such as clusters.
-
-**Why warps matter.** Warps are the unit the SM actually schedules and issues. If a warp diverges on
-a branch or accesses memory irregularly, the hardware feels it immediately. Coalescing, divergence,
-bank conflicts, and eligible-warps-per-scheduler are all warp-level concerns.
-
-**Common beginner traps**
-
-- **Grid vs. block**: a grid is the whole launch; a block is one cooperative workgroup inside it.
-- **Block vs. warp**: a block is a programmer-chosen grouping for locality and synchronization; a
-  warp is the hardware scheduling unit of 32 threads inside that block.
-- **Thread vs. warp lane**: a lane is just a thread’s position inside its warp, not a separate
-  execution object.
-- **SM vs. GPU**: the GPU is the whole chip; the SM is the execution core that hosts blocks and
-  warps.
-- **Occupancy vs. utilization**: occupancy is how many warps can reside; utilization is whether
-  the machine is actually doing useful work. Low eligible warps can keep utilization poor even at
-  decent occupancy.
-- **Shared memory vs. L1 cache**: shared memory is explicitly managed scratchpad; L1 is hardware
-  cache. Hopper and Blackwell couple them through a shared carveout, but they are not the same
-  thing conceptually.
-- **Global memory vs. local memory**: local memory is thread-scoped by name, but physically off-chip
-  and as expensive as global memory. It commonly appears when register use spills.
-- **CUDA core vs. Tensor Core**: CUDA cores handle general FP and INT execution; Tensor Cores handle
-  matrix MMA math. A kernel may use one, the other, or both.
-- **Bandwidth vs. latency**: bandwidth is how much data per second you can move; latency is how long
-  one access takes. GPUs fight latency with parallelism, but bandwidth ceilings still dominate many
-  LLM decode paths.
-- **Compute-bound vs. memory-bound**: compute-bound means math throughput is the ceiling;
-  memory-bound means data movement is the ceiling. Arithmetic intensity is the bridge concept.
-
-## What an SM does and why warps matter
-
-At practical interview level, an SM is the place where your block lives while it runs. It owns the
-resources that determine how much work can be resident at once: registers, shared memory, L1
-resources, caches, and functional units. When an SM receives one or more blocks, it partitions each
-block into warps, and those warps are then scheduled by warp schedulers.
-
-```mermaid
-flowchart LR
-    SM[Streaming Multiprocessor] --> RF[Register file]
-    SM --> UDC[Unified shared memory / L1]
-    SM --> WS[Warp schedulers]
-    SM --> CC[CUDA cores]
-    SM --> TC[Tensor Cores]
-    SM --> L2[L2 path]
-
-    WS --> AW[Active warps]
-    AW --> EW[Eligible warps]
-    EW --> Issue[Issue next instruction]
-
-    Issue --> CC
-    Issue --> TC
-    L2 --> HBM[HBM / global memory]
-```
-
-This picture captures the interview-relevant idea: an SM is not just “some cores.” It is a
-resource-limited execution island. If a kernel uses too many registers or too much shared memory per
-block, fewer blocks and warps fit. If too few warps remain eligible, the schedulers skip issue
-slots and the GPU stops hiding latency well.
-
-**Warps and SIMT**
-
-CUDA presents a **SIMT** model: single instruction, multiple threads. Within a block, threads are
-grouped into warps of 32. A warp executes the same instruction stream, but different lanes may take
-different control paths. When that happens, NVIDIA masks off inactive lanes while active lanes run
-their branch, which is exactly why divergence hurts utilization.
-
-If a branch is data-dependent and half the warp goes left while half goes right, the warp may
-execute both paths serially with half the lanes idle on each path. This is why regular, dense
-Transformer math behaves well, while irregular graph-style work behaves poorly. Transformer layers
-are much closer to dense matrix math than to branchy pointer chasing.
-
-**Memory coalescing and warp-level efficiency**
-
-Global-memory accesses are formed at warp granularity. NVIDIA’s best-practices guide says global
-loads and stores by threads of a warp are coalesced into as few transactions as possible. Adjacent,
-well-aligned accesses are what you want. Strided or scattered accesses waste bandwidth and make the
-same useful work cost more DRAM traffic.
-
-**Occupancy and latency hiding**
-
-Occupancy is the ratio of active warps per SM to the maximum possible active warps. High occupancy
-usually helps when memory latency is the issue, because a scheduler has more warps to choose from
-while others wait. But NVIDIA also states that higher occupancy does not always translate into
-higher performance, and that low occupancy is always harmful mainly because it reduces the ability to
-hide latency.
-
-A subtle but more practical metric is **eligible warps per scheduler**. Nsight Compute defines
-eligible warps as active warps that are ready to issue, and warns that many skipped issue slots mean
-poor latency hiding. In other words: occupancy tells you how much warps you loaded into the hotel;
-eligible-warps-per-scheduler tells you how many are actually ready to leave their rooms and do work.
-
-**Why maximum occupancy is not always optimal**
-
-This is one of the most common senior-interview questions. The right answer is:
-
-- higher occupancy helps hide latency,
-- but larger tiles and more register use can improve locality, reuse, and Tensor Core efficiency,
-- so the fastest kernel often trades some occupancy for more work per warp and less memory traffic.
-
-CUTLASS says efficient GEMM kernels often have relatively low occupancy because accumulator fragments
-consume a large part of each thread’s register budget. CUTLASS then uses software pipelining and
-double buffering to overlap memory movement with compute instead of relying only on sheer occupancy.
-
-**Generation notes that matter in interviews**
-
-| Item | Hopper H100 | Blackwell B200 / GB200 | Why you care |
-|---|---|---|---|
-| Compute capability | 9.0 | 10.0 | Feature set and tuning guide |
-| Max warps per SM | 64 | 64 on CC 10.0 | Occupancy ceiling |
-| Register file per SM | 64K 32-bit | 64K 32-bit | Register-limited residency |
-| Shared memory per SM | 228 KB | 228 KB on CC 10.0 | Tile and fusion room |
-| Max shared per block | 227 KB | 227 KB on CC 10.0 | Large CTA tiles |
-| L2 cache | 50 MB on H100 SXM5 | 126 MB on GB200 | Global reuse |
-| HBM capacity | up to 80 GB | up to 180 GB | Model fit and KV cache |
-
-Blackwell Ultra is most relevant here as a serving and memory story: NVIDIA states that it offers up
-to 288 GB HBM3e per GPU, 1.5x more AI compute FLOPS than Blackwell, and 2x attention-layer
-acceleration relative to Blackwell. For Week 2, use that as a reminder that the same execution model
-persists while capacities and special acceleration improve.
-
-## Memory hierarchy, Tensor Cores, and asynchronous execution
-
-The memory hierarchy is central to LLM performance because most Transformer layers repeatedly move
-weights, activations, and KV state through a stack of progressively larger and slower storage. From
-device code’s perspective, global memory is the GPU-attached DRAM visible to all SMs. Inside an SM,
-threads get registers, blocks get shared memory, each SM has L1, and the whole GPU shares L2.
-
-```mermaid
-flowchart TB
-    Reg[Registers<br/>thread-private]
-    Sh[Shared memory<br/>block-private scratchpad]
-    L1[L1 / unified data cache<br/>per SM]
-    L2[L2 cache<br/>shared across GPU]
-    HBM[HBM global memory<br/>shared across SMs]
-
-    Reg --> Sh
-    Sh --> L1
-    L1 --> L2
-    L2 --> HBM
-```
-
-Registers are the closest storage. Shared memory is still on-chip and very fast, but it is explicit
-and limited. L1 is per SM and part of the unified data cache. L2 is larger and shared across the
-GPU. HBM is vastly larger and offers enormous bandwidth, but it is still much farther away than any
-on-chip storage. This is why GPU performance is often a story of increasing data reuse before data
-falls all the way back to HBM.
-
-**Bandwidth and latency intuition**
-
-- **Registers**: tiny and fastest. Great for accumulators and thread-local temporaries.
-- **Shared memory**: high bandwidth and low latency when bank conflicts are avoided. Ideal for
-  tiled reuse and local reordering.
-- **L1**: catches per-SM locality and acts as part of the shared-memory/L1 complex.
-- **L2**: catches GPU-wide reuse and can materially reduce HBM traffic. NVIDIA even exposes L2
-  persistence controls for repeated accesses.
-- **HBM / global memory**: huge capacity and huge bandwidth, but still the most expensive place to
-  fetch frequently reused data from.
-
-**Memory access patterns**
-
-Coalescing is the first rule. Threads in a warp should read adjacent, aligned words whenever
-possible, because the hardware coalesces those loads and stores into a small number of transactions.
-This is why tensor layouts, packing, and block sizes matter even when the math is unchanged.
-
-Shared memory helps in two ways. First, it lets a block load global data once and reuse it many
-times. Second, it lets a block load data from global memory in a coalesced pattern and then
-rearrange it locally for the compute phase. NVIDIA’s guide shows both patterns in matrix
-multiplication examples.
-
-Bank conflicts are the shared-memory version of a bad access pattern. Shared memory is divided into
-banks; if multiple lanes in a warp hit the same bank on different addresses, the request is split
-into serialized wavefronts. That reduces effective bandwidth. Padding and layout changes are common
-fixes.
-
-Tiling is the practical bridge between execution and memory. NVIDIA’s matrix-multiplication guides
-describe partitioning GEMMs into thread-block tiles, then warp tiles, then instruction-level MMA
-tiles. CUTLASS shows the same hierarchy and explains that bigger tiles improve reuse, while smaller
-tiles improve parallelism. Interviews reward candidates who can say that this is a tradeoff, not a
-rule.
-
-**Asynchronous data movement**
-
-Modern CUDA lets kernels overlap global-to-shared copies with compute. NVIDIA’s best-practices guide
-says asynchronous copy from global memory to shared memory avoids the intermediate register-file
-access used by the synchronous path. That can reduce register pressure and increase occupancy. On
-Hopper, TMA generalizes this idea further for tensor-shaped transfers.
-
-This matters for interviews because it shows the evolution of the execution model: not only more
-math units, but also better ways to keep those math units fed.
-
-**Tensor Cores**
-
-Tensor Cores are specialized hardware for matrix multiply-accumulate math. Hopper’s architecture
-blog explicitly describes them as specialized high-performance compute cores for MMA operations and
-notes support for FP8, FP16, BF16, TF32, FP64, and INT8 MMA datatypes.
-
-That is the reason dense Transformer linear algebra maps so well: Q/K/V projections, attention
-matmuls, output projections, and MLP projections are all variations of dense matrix multiply. If the
-problem is large enough and the kernel path is tuned, Tensor Cores deliver the bulk of the useful
-math throughput.
-
-**Precision formats at a practical level**
-
-- **FP32**: standard high-precision floating point. Good baseline reference.
-- **TF32**: Tensor Core-friendly format for matrix math that preserves FP32-like range while
-  trading mantissa precision for throughput.
-- **FP16 / BF16**: mainstream 16-bit training and inference formats. FP16 offers more mantissa;
-  BF16 offers more exponent range.
-- **FP8**: Hopper adds FP8 Tensor Core support with E4M3 and E5M2 inputs, which both reduce memory
-  footprint and increase throughput relative to 16-bit formats.
-- **FP4 / NVFP4**: Blackwell extends support below FP8. NVIDIA’s Blackwell page and NVFP4 blog tie
-  this to second-generation Transformer Engine support and improved low-precision serving efficiency.
-
-The interview-safe framing is: **lower precision helps twice**. It reduces bytes moved and often
-increases Tensor Core throughput. But it does not eliminate memory bottlenecks by itself, and it
-usually needs scaling logic or recipes to preserve model quality.
-
-**HBM and why it matters for LLMs**
-
-HBM matters because the main memory consumers in LLM inference are not just weights. NVIDIA’s LLM
-inference optimization blog calls out model weights and the KV cache as the two main contributors to
-GPU memory use. During decode, the speed of moving weights, keys, values, and activations can
-dominate latency.
-
-A useful Week 2 KV-cache formula is:
-
-```text
-KV cache bytes per token
-= 2 * num_layers * (num_heads * dim_head) * bytes_per_element
-```
-
-NVIDIA uses this exact form and then notes that, for many common LLMs, `num_heads * dim_head`
-equals the model hidden size. KV cache therefore grows linearly with batch size and sequence length,
-which is exactly why long-context decode becomes memory-sensitive so quickly.
-
-**CUDA streams and overlap**
-
-A CUDA stream is an in-order queue of operations. NVIDIA says the operations in one stream execute
-in the order they are enqueued, while different streams can be interleaved and, in some cases,
-overlapped. Stream priority is only a hint, not a strict scheduling guarantee.
-
-For host-to-device overlap, `cudaMemcpyAsync` requires pinned host memory. On devices that support
-concurrent copy and compute, overlap also requires non-default streams for the copy and the kernel.
-This is the practical serving lesson: streams are how you pipeline copies, kernels, and auxiliary
-work, but they only help when dependencies and hardware copy engines allow real overlap.
-
-## How a Transformer block becomes GPU work
-
-At a high level, a Transformer block is not “one GPU kernel.” It is a sequence of large GEMMs,
-attention kernels, reductions, elementwise operations, and data movement. Some of those operations
-fit Tensor Cores beautifully. Others are dominated by memory traffic and are worth fusing to avoid
-extra reads and writes.
-
-```mermaid
-flowchart TD
-    X[Input states] --> N1[RMSNorm / LayerNorm]
-    N1 --> QKV[Q / K / V projections]
-    QKV --> Score[Q × K^T]
-    Score --> Mask[Causal mask + softmax]
-    Mask --> AV[Attention × V]
-    AV --> OP[Output projection]
-    OP --> R1[Residual add]
-    R1 --> N2[RMSNorm / LayerNorm]
-    N2 --> UG[MLP up / gate]
-    UG --> Act[SiLU / GELU]
-    Act --> DP[MLP down projection]
-    DP --> R2[Residual add]
-    R2 --> Logits[Final logits projection]
-```
-
-The linear projections and MLP projections are standard “fully connected layer” style matrix
-multiplications. NVIDIA’s matrix-multiplication guide uses exactly that framing when explaining why
-GEMM is foundational to deep learning layers. TensorRT-LLM’s GPT-attention documentation then adds
-the important attention detail: attention is a sequence of a batched matmul, a softmax, and another
-batched matmul.
-
-**Transformer op mapping**
-
-- **Q/K/V projection**: GEMM in prefill; GEMV-ish in tiny decode. Tensor Core friendly. Usually
-  compute-bound in prefill and bandwidth-sensitive in small decode. Sensitive to batch and token
-  count.
-- **Attention score matmul**: batched matmul. Tensor Core friendly. Compute-heavy at large sequence
-  lengths, but underutilized in tiny decode. Sensitive to sequence length.
-- **Causal mask + softmax**: reductions plus elementwise work. No direct Tensor Core path. Usually
-  bandwidth- and latency-sensitive. Highly fusion-friendly.
-- **Attention-value matmul**: batched matmul. Tensor Core friendly. Similar to score matmul and
-  often fused with surrounding attention work.
-- **Output projection**: GEMM or GEMV. Tensor Core friendly. Size-dependent and sensitive to batch.
-- **MLP up / gate / down**: large GEMMs. Tensor Core friendly. Often the main FLOP sink. Sensitive
-  to batch and token count.
-- **LayerNorm / RMSNorm**: reduction plus scale. Not Tensor Core friendly. Bandwidth-sensitive and
-  highly fusion-friendly.
-- **Residual add**: elementwise work. Not Tensor Core friendly. Bandwidth-sensitive and
-  fusion-friendly.
-- **Activation**: elementwise work. Not Tensor Core friendly. Bandwidth-sensitive and often fused.
-- **Logits projection**: GEMM or GEMV into the vocabulary dimension. Usually Tensor Core friendly.
-  Batch-size dependent and sensitive to batch and vocabulary size.
-
-The mapping is a synthesis of NVIDIA’s GEMM background guide, TensorRT-LLM attention docs,
-CUTLASS-style and TensorRT-LLM fused attention paths, and NVIDIA’s prefill/decode inference
-guidance. The main inferential step is that norms, adds, and activations usually have lower
-arithmetic intensity than GEMMs, so they are typically more bandwidth-sensitive and better fusion
-targets.
-
-**Attention is where execution details become obvious**
-
-TensorRT-LLM’s attention documentation is especially helpful because it shows what optimized software
-actually tries to do:
-
-- in the **context phase**, a fused attention path can compute the MHA/MQA block in a single kernel,
-  and for large sequences it uses FlashAttention-style implementations rather than materializing the
-  full `QK^T` tensor,
-- in the **generation phase**, TensorRT-LLM uses a masked MHA kernel and even introduces a
-  multi-block mode when occupancy would otherwise be low, especially when
-  `batch_size * num_heads` is small relative to the number of SMs.
-
-That is a real software example of execution-model reasoning:
-**small decode work can underfill the GPU, so the kernel strategy changes.**
-
-**Prefill versus decode**
-
-```mermaid
-flowchart LR
-    P0[Prefill<br/>full prompt known] --> P1[Large GEMMs and batched attention]
-    P1 --> P2[High parallelism across tokens]
-    P2 --> P3[Good Tensor Core utilization]
-
-    D0[Decode<br/>one token at a time] --> D1[Small GEMV-like steps]
-    D1 --> D2[Weights and KV movement dominate]
-    D2 --> D3[Low utilization at small batch]
-```
-
-NVIDIA’s LLM inference optimization blog puts this very clearly. Prefill processes known input
-tokens and is “at a high level” a matrix-matrix operation that is highly parallelized and can
-saturate GPU utilization. Decode generates one token at a time, behaves more like a matrix-vector
-operation, underutilizes GPU compute, and is memory-bound because moving weights, keys, values, and
-activations dominates latency.
-
-**A strong interview answer sounds like this:**
-
-- **Prefill** is usually easier to parallelize because the prompt tokens are all known.
-- **Decode** is sequential across generated tokens, so parallelism often comes from batching many
-  requests together rather than from a single request.
-- **Small-batch decode** can underutilize Tensor Cores because the effective matrix shapes shrink
-  toward GEMV territory.
-- **KV cache** prevents recomputation, but it also creates large memory traffic and memory-footprint
-  pressure, especially at long context and large batch.
-
-TensorRT-LLM’s KV-cache system reinforces the same lesson. It describes KV cache as a pool of blocks
-that stores previously computed key-value pairs for reuse during generation, and notes that grouped
-query attention saves memory by storing fewer K/V head groups.
-
-## Bottlenecks, profiling, and interview-ready reasoning
-
-The best senior answers are not “this is compute-bound” or “this is memory-bound” said from memory.
-They are **symptom-to-cause** explanations.
-
-```mermaid
-flowchart TD
-    Start[Kernel or model is slow] --> Q1{Memory throughput near ceiling?}
-    Q1 -->|Yes| MB[Memory-bound]
-    Q1 -->|No| Q2{Tensor or math units near ceiling?}
-    Q2 -->|Yes| CB[Compute-bound]
-    Q2 -->|No| Q3{Few eligible warps or many skipped issue slots?}
-    Q3 -->|Yes| LH[Latency-hiding problem]
-    Q3 -->|No| Q4{Many tiny kernels?}
-    Q4 -->|Yes| LO[Launch or fusion problem]
-    Q4 -->|No| Q5{Large multi-GPU waits?}
-    Q5 -->|Yes| COMM[Communication-bound]
-    Q5 -->|No| SW[Kernel maturity or mapping problem]
-```
-
-This is just roofline plus scheduler reasoning. Nsight Compute’s roofline explains how arithmetic
-intensity separates memory-bound from compute-bound regions, while Scheduler Statistics explains
-active, eligible, and issuing warps and warns that skipped issue slots indicate poor latency hiding.
-
-**Practical bottleneck framework**
-
-| Symptom | Likely bottleneck | What to check first |
+| kernel | One GPU function launch | Transformer ops become kernels | Thinking one kernel means one thread |
+| grid | All blocks from one launch | Sets total GPU work | Confusing grid with the whole GPU |
+| block / CTA | One cooperative workgroup on one SM | Shared-memory tiling lives here | Mixing block with warp |
+| warp | 32-thread execution unit | Divergence and coalescing happen here | Treating it as a programmer-chosen group |
+| SM | GPU execution core | Blocks really run here | Equating one SM with one GPU |
+| occupancy | Active warps / max warps | Helps hide latency | Treating it as utilization |
+| shared memory | Fast on-chip scratchpad | Reuse and tiling for GEMMs and attention | Equating it with L1 |
+| HBM / global memory | Large off-chip device memory | Weights and KV cache live here | Focusing only on FLOPS |
+| Tensor Core | Matrix-MMA hardware | Powers high-throughput GEMMs and attention matmuls | Assuming every op uses it |
+| arithmetic intensity | Work per byte moved | Separates compute limits from memory limits | Using peak FLOPS alone |
+
+Source note: the table compresses the CUDA Programming Guide, CUDA Best Practices Guide, Nsight
+Compute Profiling Guide, and NVIDIA matrix-multiplication documentation into interview shorthand.
+
+## Why GPU execution matters for LLMs
+
+Transformer workloads map well to GPUs because they contain large amounts of parallel work over
+many tokens, heads, and hidden dimensions, and because much of the heavy lifting reduces to matrix
+multiplication. NVIDIA’s best-practices guide makes the general point that GPUs are built for very
+large numbers of lightweight concurrent threads, and NVIDIA’s matrix guide shows why GEMMs are the
+fundamental building block for deep-learning layers. That is exactly the pattern you see in Q, K,
+V projections, attention-value products, output projections, and MLP projections.
+
+Peak FLOPS alone is not enough. The matrix guide explicitly uses arithmetic intensity to show why
+some matrix multiplies are math-limited while others are memory-limited, and it notes that GEMV
+cases are always memory-limited. That is one of the cleanest bridges from “GPU architecture” to
+“LLM systems”: large batched GEMMs can keep Tensor Cores busy, while small-batch decode often
+drifts toward matrix-vector-like behavior where memory traffic dominates.
+
+The CUDA Best Practices Guide also says the GPU is ideally suited to computations that can run over
+thousands or tens of thousands of concurrent threads, and that adjacent-thread memory coherence is
+crucial because coalescing and cache locality strongly affect speedup. That is why practical LLM
+performance depends on execution, memory movement, and scheduling together, not on a single spec
+sheet number.
+
+### CPU versus GPU mental model
+
+NVIDIA states the contrast directly: CPU cores are designed to minimize latency for a small number
+of threads, whereas GPUs are designed to handle a large number of concurrent, lightweight threads
+to maximize throughput. On a CPU, threads are relatively heavyweight and context switches are
+expensive. On a GPU, warps are lightweight, and the machine hides latency by switching to other
+ready warps when one warp stalls on memory or dependencies.
+
+That is the right interview mental model:
+
+- **CPU**: spend more transistors making one or a few threads fast.
+- **GPU**: spend more transistors making many threads progress at once.
+- **LLM implication**: large dense phases like prefill and big GEMMs are GPU-friendly; irregular,
+  small, sequential, or memory-dominated phases are harder to sustain at peak efficiency.
+
+![CPU-GPU heterogeneous system and memory path][img-gpu-cpu-system]
+
+*Source: [CUDA Programming Guide][src-cuda-guide], §1.2.2 “GPU Hardware Model,”
+Figure 2 “A GPU has many streaming multiprocessors.”*
+
+> **What it shows:** CPU and GPU are separate processing domains with separate attached memories,
+> and the GPU is built from many SMs behind an L2 and memory controller path.
+>
+> **Why it matters:** it makes the execution model concrete: host launches work, SMs execute it,
+> and data movement between host and device is not free.
+>
+> **Interviewer may ask:** “Why can a fast GPU kernel still produce little end-to-end speedup?”
+
+### Common beginner traps
+
+| Trap | Correct view | Why it matters |
 |---|---|---|
-| DRAM near limit, FLOPS modest | Memory-bound | coalescing, reuse, cache hit rate |
-| Tensor units busy, memory not near roof | Compute-bound | tile shape, TC usage, precision path |
-| Occupancy okay, eligible warps low | Latency hiding issue | warp stalls, dependencies, memory latency |
-| Many tiny kernels | Launch-overhead problem | fusion, persistent kernels, graphs |
-| GEMM dims small or misaligned | Tensor Core underuse | matmul shapes, batch size, alignment |
-| High local memory use | Register spilling | register pressure and launch bounds |
-| Shared-memory wavefront inflation | Bank conflicts | shared layout and padding |
-| Multi-GPU stall time dominates | Communication-bound | NCCL / collectives / partitioning |
+| grid vs block | Grid = full launch; block = one workgroup | Foundation for later reasoning |
+| block vs warp | Block = cooperation; warp = execution unit | Many LLM issues are warp-level |
+| thread vs lane | A lane is just a thread’s slot within a warp | Useful when discussing divergence or lane masking |
+| SM vs GPU | GPU = whole chip; SM = one execution core | More precise than “runs on GPU” |
+| occupancy vs utilization | Occupancy is residency; utilization is useful work | High occupancy can still be slow |
+| shared memory vs L1 | Shared memory is managed; L1 is a cache | Shared silicon, different semantics |
+| global memory vs local memory | Local memory is thread-scoped but off-chip | Spilling can make kernels memory-heavy |
+| CUDA core vs Tensor Core | CUDA cores are general; Tensor Cores do MMA | Not every op is Tensor Core dominated |
+| bandwidth vs latency | Bandwidth is throughput; latency is time per access | Both can limit GPU performance |
+| compute-bound vs memory-bound | Limit may be math rate or data movement | Core bottleneck reasoning |
 
-**Nsight Compute intuition**
+Source note: this table summarizes the CUDA Programming Guide, CUDA Best Practices Guide, Nsight
+Compute’s scheduler and occupancy definitions, and NVIDIA’s matrix and LLM inference documentation.
 
-Nsight Compute is the right tool when the question is “what is this kernel waiting on?” The most
-useful early sections are:
+## CUDA execution hierarchy
 
-- **Scheduler Statistics** for active, eligible, and issued warps.
-- **Memory Workload Analysis** for L1, L2, DRAM, local, and shared activity.
-- **Occupancy** for the resource-limited residency picture.
-- **Roofline Chart** for compute-bound versus memory-bound placement.
-- **Shared-memory table** if you suspect bank conflicts.
+The most important hierarchy statement in this file is this one:
 
-A practical first pass for an LLM kernel is:
+> **One kernel launch creates one grid. A grid contains thread blocks. A thread block contains
+> threads. Threads are grouped into warps of 32. Blocks are scheduled onto SMs. Warps are
+> scheduled inside SMs. The programmer controls grid and block dimensions, but not the exact SM
+> placement or order of block execution.**
 
-1. Is it on the memory-bound or compute-bound side of the roofline?
-2. Are Tensor Cores actually active for the GEMMs you expected them to accelerate?
-3. Is occupancy low because of registers or shared memory?
-4. Even if occupancy is okay, are eligible warps per scheduler low?
-5. Are memory accesses well-coalesced?
-6. Are shared-memory accesses conflict-heavy?
-7. Is the kernel too small to keep the GPU busy at this batch and sequence shape?
+CUDA’s programming-model chapter says a kernel is the function invoked for execution on the GPU,
+and launching the kernel starts many threads in parallel. It then says those threads are organized
+into blocks, and those blocks are organized into a grid. All threads of a thread block execute on a
+single SM, which is why threads in a block can synchronize and share on-chip shared memory
+efficiently. The same guide also says there are no guarantees about block scheduling order across
+SMs, so different blocks must usually be independent.
 
-**Common misconceptions**
+### One kernel launch, one grid
 
-- **“More CUDA cores always means faster.”** Not necessarily. A workload can still be limited by HBM
-  bandwidth, cache behavior, launch overhead, or insufficient parallel work.
-- **“Peak FLOPS predicts real performance.”** No. Roofline analysis exists precisely because
-  performance also depends on memory bandwidth and arithmetic intensity.
-- **“Maximum occupancy is always best.”** No. NVIDIA says it is not always better, and CUTLASS
-  explains why fast GEMMs often spend many registers on accumulators and rely on pipelining instead.
-- **“All Transformer operations are GEMMs.”** No. The projections are GEMMs, but softmax, norms,
-  residual adds, masking, and sampling are not.
-- **“Memory hierarchy only matters to CUDA programmers.”** No. Decode performance, KV-cache growth,
-  and serving economics are directly memory-hierarchy problems.
-- **“Tensor Cores solve every performance problem.”** No. Tensor Cores help dense matmuls, but they
-  do not fix poor coalescing, bank conflicts, tiny decode shapes, or bandwidth-bound elementwise
-  work.
+![CUDA programming model hierarchy: grid of thread blocks][img-grid-of-thread-blocks]
 
-**Senior interview answer patterns**
+*Source: [CUDA Programming Guide][src-cuda-guide], §1.2.2.1 “Thread Blocks and Grids,”
+Figure 3 “Grid of Thread Blocks.”*
 
-- **“Explain the NVIDIA GPU execution model.”**
-  “A kernel launch creates a grid of thread blocks. Blocks are scheduled onto SMs in an order the
-  programmer does not control, and all threads in a block stay on one SM so they can synchronize and
-  use shared memory together. Inside an SM, threads are grouped into warps of 32, and warp
-  schedulers issue instructions for ready warps. Performance then depends on whether warps stay
-  eligible and whether memory traffic is well-structured.”
+> **What it shows:** one kernel launch creates one grid, and that grid consists of many
+> same-shaped thread blocks.
+>
+> **Why it matters:** this is the first correction to many fuzzy interview explanations; you do not
+> “launch warps” or “launch SMs,” you launch a kernel with a grid and block shape.
+>
+> **Interviewer may ask:** “What exactly is a grid, and who chooses its dimensions?”
 
-- **“What is a warp?”**
-  “A warp is a group of 32 threads that the SM schedules together. SIMT means they conceptually
-  execute the same instruction stream, but lanes can diverge on branches and be masked off. Warps
-  are where divergence, coalescing, and most scheduler metrics live.”
+The programmer chooses the execution configuration: grid dimensions and thread-block dimensions.
+Every thread can then compute its identity from built-in CUDA indices such as block index, thread
+index, grid dimensions, and block dimensions. That is how a logical workload gets mapped onto GPU
+threads.
 
-- **“Why does memory coalescing matter?”**
-  “Because global-memory accesses are formed at warp granularity. When lanes access adjacent,
-  aligned addresses, the hardware can service the warp with few transactions. Strided or scattered
-  patterns waste bandwidth and make a memory-bound kernel worse.”
+### Blocks are scheduled onto SMs
 
-- **“Why can decode underutilize a GPU?”**
-  “Decode is sequential across output tokens, so a single request often looks more like repeated
-  matrix-vector work than big batched GEMMs. NVIDIA’s own inference guidance says decode is
-  memory-bound and underutilizes compute compared with prefill, which is highly parallelized.”
+![Block scheduling onto SMs][img-thread-block-scheduling]
 
-- **“How do Tensor Cores help Transformers?”**
-  “They accelerate the dense matrix-multiply-accumulate parts of the model: projections, attention
-  matmuls, and MLPs. That is why throughput jumps when shapes are big enough, alignment is good, and
-  the software path actually lands on Tensor Core kernels.”
+*Source: [CUDA Programming Guide][src-cuda-guide], §1.2.2.1 “Thread Blocks and Grids,”
+Figure 4 “Each SM has one or more active thread blocks.”*
 
-- **“How would you tell if a workload is memory-bound?”**
-  “I would look at roofline placement, achieved memory throughput, and whether the kernel’s
-  arithmetic intensity is low. If DRAM traffic is near the relevant boundary while FLOP utilization
-  is modest, I would call it memory-bound. For decode, that is often the default hypothesis.”
+> **What it shows:** blocks from the grid are assigned to available SMs, and multiple blocks can be
+> active on one SM at the same time.
+>
+> **Why it matters:** block residency is constrained by threads, registers, shared memory, and other
+> SM resources. That is the first bridge to occupancy.
+>
+> **Interviewer may ask:** “Does the programmer choose which SM a block runs on?”
 
-- **“Why is maximum occupancy not always optimal?”**
-  “Because occupancy is only a means to hide latency. Larger GEMM tiles can use more registers and
-  shared memory, lowering occupancy, while still running faster because they improve reuse and Tensor
-  Core efficiency. CUTLASS documents exactly this tradeoff.”
+The answer is **no**. NVIDIA’s programming guide and execution-model material both say the
+scheduler assigns thread blocks to SMs, and applications cannot control or query the exact block to
+SM mapping or rely on a particular scheduling order. That is a core reason why the CUDA model says
+different blocks should generally not depend on one another. Blocks are the unit of cooperation and
+shared-memory locality, not the unit of global ordering.
 
-**Whiteboard explanation**
+### Warps are the execution unit
 
-If you get a whiteboard and 90 seconds, draw this sequence:
+Within a block, threads are organized into warps of 32. CUDA says warps execute in a SIMT
+single-instruction, multiple-threads model: the warp executes one instruction stream, but threads
+inside the warp may take different branches. When they do, the inactive threads are masked off
+while the active subset runs. That is warp divergence. CUDA also notes that block sizes should
+usually be multiples of 32 so you do not waste partially populated warps.
 
-```text
-CPU
-  |
-  | launch kernel
-  v
-Grid
-  |
-  +--> Block --> Warp(32) --> lanes
-  +--> Block --> Warp(32) --> lanes
-  |
-  v
-SM  <--- blocks scheduled here
- |\
- | +-- registers
- | +-- shared memory / L1
- | +-- warp schedulers
- | +-- CUDA cores + Tensor Cores
- |
- v
-L2
- |
- v
-HBM
+![Warp lanes and masking behavior][img-active-warp-lanes]
+
+*Source: [CUDA Programming Guide][src-cuda-guide], §1.2.2.2 “Warps and SIMT,”
+Figure 7 “Only threads with even thread index execute the body of the if statement.”*
+
+> **What it shows:** lanes inside a warp can be active or masked off depending on control flow.
+>
+> **Why it matters:** divergence does not usually break correctness, but it does reduce useful work
+> per issued instruction.
+>
+> **Interviewer may ask:** “What is warp divergence, and why does it hurt performance?”
+
+### Faithful execution-model sketch
+
+```mermaid
+flowchart TB
+    Host[Host CPU]
+    Launch[Kernel launch]
+    Grid[One grid]
+    BlockA[Block / CTA A]
+    BlockB[Block / CTA B]
+    BlockC[Block / CTA C]
+
+    subgraph SA[Block A internals]
+      Warp0[Warp 0 lanes 0..31]
+      Warp1[Warp 1 lanes 32..63]
+    end
+
+    subgraph SM0[SM 0]
+      Sched0[Warp schedulers]
+      Shared0[Shared memory and L1]
+      Reg0[Register file]
+    end
+
+    subgraph SM1[SM 1]
+      Sched1[Warp schedulers]
+      Shared1[Shared memory and L1]
+      Reg1[Register file]
+    end
+
+    Host --> Launch --> Grid
+    Grid --> BlockA
+    Grid --> BlockB
+    Grid --> BlockC
+
+    BlockA --> SA
+    BlockA --> SM0
+    BlockB --> SM1
+    BlockC --> SM0
+
+    SA --> Sched0
 ```
 
-Then overlay a Transformer block:
+*Faithful original diagram based on [CUDA Programming Guide][src-cuda-guide], §1.2.1,
+§1.2.2.1, and §1.2.2.2, plus CUDA’s execution-model appendix on launch configuration and NVIDIA’s
+scheduler-assignment guidance.*
 
-```text
-QKV GEMMs -> attention matmuls -> softmax/mask -> output GEMM -> MLP GEMMs
-              ^ Tensor Core friendly            ^ bandwidth-sensitive
+> **What it shows:** the full interview chain from host launch to grid to block to warp to SM.
+>
+> **Why it matters:** it connects the programmer-visible hierarchy to the hardware-visible
+> scheduling points.
+>
+> **Interviewer may ask:** “If I choose the block size, what exactly is left for the runtime to
+> decide?”
+
+### Optional advanced layer: clusters
+
+On compute capability 9.0 and later, CUDA adds an optional grouping called a thread-block cluster.
+It does **not** replace grid or block; it sits between them as a locality and synchronization
+feature. CUDA says blocks in a cluster are scheduled together within one GPC and can use
+distributed shared memory. This is useful to know, but it is not the first thing to lead with in a
+Week 2 interview answer unless the conversation is already deep into Hopper or Blackwell.
+
+## Streaming multiprocessor intuition
+
+At practical interview depth, an SM is the place where a block lives while it runs. It is the unit
+that owns the resources that cap residency and throughput: registers, shared memory, L1 resources,
+instruction and data paths, warp schedulers, load-store machinery, and Tensor Cores. When an SM has
+resident blocks, it partitions their threads into warps and the warp schedulers issue instructions
+from eligible warps.
+
+### Hopper as the reference baseline
+
+The Hopper architecture blog says a full GH100 has 144 SMs, while shipping H100 products use fewer
+depending on SKU. The same source shows that H100 has 128 FP32 cores and 4 Tensor Cores per SM,
+and the Hopper tuning guide says H100 keeps 64 maximum concurrent warps per SM, 64K 32-bit
+registers per SM, and 228 KB shared memory capacity per SM, with a combined shared-memory, L1, and
+texture structure reaching 256 KB. Hopper’s memory system also raises H100 L2 to 50 MB and HBM
+bandwidth to above 3 TB/s on H100 SXM5.
+
+![GH100 full-chip block diagram][img-gh100-full]
+
+*Source: [NVIDIA Hopper Architecture In-Depth][src-hopper-blog], Figure 3
+“GH100 Full GPU with 144 SMs.”*
+
+> **What it shows:** the whole chip view: many SMs, GPC packaging, large L2, and external memory
+> interfaces.
+>
+> **Why it matters:** it turns “GPU” from an abstraction into a concrete many-SM chip with shared
+> cache and external HBM.
+>
+> **Interviewer may ask:** “At a high level, what sits between an SM and HBM?”
+
+![GH100 streaming multiprocessor][i-h100-sm]
+
+*Source: [NVIDIA Hopper Architecture In-Depth][src-hopper-blog], Figure 4
+“GH100 streaming multiprocessor.”*
+
+> **What it shows:** warp schedulers, dispatch units, register-file partitions, CUDA-core pipelines,
+> Tensor Cores, load-store units, SFUs, TMA, and the unified L1/shared structure.
+>
+> **Why it matters:** this is the best single visual for explaining what an SM contains and why
+> registers, shared memory, and Tensor Cores compete for attention in performance work.
+>
+> **Interviewer may ask:** “What resources inside an SM most directly affect occupancy and tensor
+> kernel efficiency?”
+
+Two interview points matter more than memorizing every box in that diagram:
+
+1. **An SM is a multi-warp issue engine.** Its schedulers look for eligible warps and try to keep
+   execution resources busy.
+2. **An SM is also a resource container.** Too many registers, too much shared memory, or too many
+   threads per block can reduce how many warps and blocks are resident at once.
+
+### Blackwell and Blackwell Ultra in the same mental model
+
+The Blackwell tuning guide says server Blackwell at compute capability 10.0 keeps the same 64
+maximum warps per SM, the same 64K 32-bit registers per SM, and the same 228 KB shared-memory
+capacity per SM as Hopper, with the same 256 KB combined L1, texture, and shared-memory maximum on
+B200. The same guide also notes that workstation or client Blackwell at compute capability 12.0 has
+different limits, including 48 warps per SM and 128 KB shared memory per SM. That is exactly the
+kind of generation-specific detail that should be kept separate from the stable CUDA model.
+
+The Blackwell Ultra deep-dive blog keeps the same core story but adds serving-relevant details. It
+says Blackwell Ultra contains up to 160 SMs, 640 fifth-generation Tensor Cores, 288 GB HBM3E, up
+to 8 TB/s HBM bandwidth, 10 TB/s die-to-die NV-HBI, and 256 KB of Tensor Memory per SM. It also
+shows an SM diagram with four repeated subpartitions, warp schedulers, dispatch, register files,
+CUDA cores, fifth-generation Tensor Cores, Tensor Memory, TMA, and a 256 KB unified L1/shared
+structure.
+
+![Blackwell Ultra full-chip view][i-bwu-chip]
+
+*Source: [Inside NVIDIA Blackwell Ultra][src-bwu-inside], Figure 1
+“NVIDIA Blackwell Ultra GPU chip explained.”*
+
+> **What it shows:** a dual-reticle Blackwell Ultra GPU with GPCs, L2, HBM controllers,
+> NVLink-C2C, PCIe Gen 6, and very large HBM capacity.
+>
+> **Why it matters:** it connects execution-model thinking to current AI-serving hardware:
+> many SMs, large shared cache, and much larger model or KV-cache residency.
+>
+> **Interviewer may ask:** “What changed from Hopper to Blackwell Ultra that most affects long
+> context and high-concurrency inference?”
+
+![Blackwell Ultra SM architecture][i-bwu-sm]
+
+*Source: [Inside NVIDIA Blackwell Ultra][src-bwu-inside], Figure 2
+“Blackwell Ultra SM architecture.”*
+
+> **What it shows:** warp schedulers, dispatch, register files, CUDA cores, fifth-generation Tensor
+> Cores, Tensor Memory, TMA, and the unified shared/L1 structure.
+>
+> **Why it matters:** it shows that the SM is still the main unit of execution and locality, even as
+> the accelerators and memory structures evolve.
+>
+> **Interviewer may ask:** “What is stable across generations, and what changed?”
+
+### Stable concepts versus generation-specific details
+
+The stable concepts are the ones you should lead with:
+
+- kernels launch grids,
+- grids contain blocks,
+- blocks live on SMs,
+- warps are the issue unit,
+- registers and shared memory limit residency,
+- L2 is shared across the GPU,
+- global memory is off-chip and expensive,
+- Tensor Cores accelerate matrix MMA,
+- streams express concurrency and overlap.
+
+The numbers that change with generation are the ones you should mention only when relevant:
+
+- SM count,
+- L2 size,
+- HBM capacity and bandwidth,
+- supported datatypes,
+- asynchronous engines such as TMA,
+- newer serving-oriented features such as Blackwell Ultra TMEM and attention acceleration.
+
+## Warps, SIMT, occupancy, and latency hiding
+
+CUDA’s warp model is the most important GPU execution concept to internalize after grid and block.
+Within a block, threads are grouped into warps of 32. In the programming model, warp threads
+progress together in SIMT style. That means branch behavior, memory access regularity, and
+synchronization cost are all felt at warp granularity, not just at thread granularity.
+
+### SIMT and divergence
+
+CUDA says that if only some threads in a warp take a branch, the other lanes are masked off while
+the taken path executes. This is warp divergence. It does not mean the warp is “broken”; it means
+the machine is doing less useful work per issued instruction during the divergent region. Uniform
+control flow is therefore better for throughput.
+
+For LLMs, the cleanest places where divergence and irregularity hurt are usually not the big dense
+GEMMs. They appear more often in small control-heavy kernels, masking logic, irregular indexing,
+runtime dispatch paths, or serving-time special cases. Most production attention and GEMM kernels
+are engineered to avoid that as much as possible.
+
+### Occupancy versus utilization
+
+NVIDIA defines occupancy as active warps per multiprocessor divided by the maximum possible active
+warps. The purpose of occupancy is latency hiding: when one warp stalls, the SM can issue work from
+another. But the Best Practices Guide also says higher occupancy does not always produce higher
+performance; going from 66% to 100% occupancy does not usually translate into a proportional speed
+increase.
+
+This is one of the most important senior-level distinctions:
+
+- **Occupancy** means the SM could have many warps resident.
+- **Utilization** means the machine is actually issuing useful work at a high rate.
+- **Eligible warps** are often the bridge between the two.
+
+### Eligible warps and warp stalls
+
+Nsight Compute’s Scheduler Statistics section says each scheduler maintains a pool of warps. On
+each cycle, active warps that are not stalled are *eligible*. The scheduler picks from eligible
+warps to issue instructions. If there are no eligible warps, the issue slot is skipped. NVIDIA says
+many skipped issue slots indicate poor latency hiding. That is a much sharper performance clue than
+looking at occupancy by itself.
+
+This gives a clean interview answer to “why can high occupancy still be slow?”:
+
+> Because the resident warps may all be waiting on the same thing: memory, dependencies, barriers,
+> or pipeline availability. High residency is only potential. Eligible warps are the warps that can
+> actually issue now.
+
+### Register pressure and local memory
+
+Register pressure occurs when a kernel needs too many registers per thread. NVIDIA notes that heavy
+register use reduces the number of blocks and warps that can reside on an SM, which lowers
+occupancy. If there is insufficient register space, variables may spill into local memory, which the
+Best Practices Guide emphasizes is off-chip and as expensive as global memory. That is why a
+“compute kernel” can become unexpectedly memory-sensitive when register pressure is high.
+
+CUTLASS makes an important practical point for GEMM kernels: the blocked GEMM structure demands
+large accumulator storage in registers, so occupancy is often lower than in many other GPU
+workloads. CUTLASS then overlaps memory access and compute with software pipelining to compensate.
+This is a useful interview nuance: low occupancy in a high-performance Tensor Core kernel is not
+automatically bad.
+
+## Memory hierarchy and memory access
+
+For ML systems interviews, the memory hierarchy matters even if you never write custom CUDA. It is
+the reason peak compute and delivered performance differ, the reason decode can be slow, and the
+reason tiling, reuse, and fusion change real throughput so much. NVIDIA’s Best Practices Guide says
+global, local, and texture memory have the greatest access latency, followed by constant memory,
+shared memory, and the register file. Hopper and Blackwell tuning guides add that modern server
+GPUs use a unified L1, texture, and shared-memory structure with runtime carveout control, backed
+by a GPU-wide L2 and then HBM.
+
+### Registers to HBM
+
+```mermaid
+flowchart LR
+    T[One thread]
+    R[Registers<br/>thread-local]
+    S[Shared memory<br/>block-scoped on chip]
+    L1[L1 / texture cache<br/>per SM]
+    L2[L2 cache<br/>GPU-wide]
+    H[HBM / global memory<br/>device-wide]
+    Host[Host memory]
+
+    T --> R --> S --> L1 --> L2 --> H
+    Host -. host-device transfer .-> H
 ```
 
-Then end with the punch line:
+*Faithful original diagram based on [CUDA Programming Guide][src-cuda-guide], §1.2.2,
+the [CUDA Best Practices Guide][src-cuda-bpg], memory-spaces table and local/constant/texture
+sections, plus the Hopper and Blackwell tuning guides on unified L1/shared structure.*
 
-```text
-Prefill = large parallel GEMMs
-Decode  = smaller sequential steps + KV traffic
+> **What it shows:** the ladder from per-thread on-chip storage up to GPU-wide off-chip memory,
+> plus the host-device boundary.
+>
+> **Why it matters:** most performance work is some version of “keep data lower in this hierarchy
+> for longer.”
+>
+> **Interviewer may ask:** “Where do weights, activations, tiles, and spilled variables actually
+> live?”
+
+A few interview-clean rules of thumb follow directly from these docs:
+
+- **Registers** are the fastest storage, but private to one thread.
+- **Shared memory** is on-chip, shared by a block, and good for tile reuse.
+- **L1** is per-SM and helps coalesce and cache traffic. On Hopper and B200, it shares physical
+  resources with shared memory.
+- **L2** is shared across the whole GPU, so it is the first useful on-chip reuse point across SMs.
+- **HBM/global memory** is large and high-bandwidth, but still far slower than on-chip storage, so
+  repeated off-chip movement is usually the real tax.
+- **Local memory** is not “fast local scratch.” It is off-chip spill space.
+
+### Coalescing, strides, and bank conflicts
+
+Global-memory coalescing is one of the most important warp-level rules in CUDA. NVIDIA says global
+loads and stores by threads of a warp are combined into as few transactions as possible. For modern
+devices, a simple rule is that the number of transactions is set by how many 32-byte segments are
+needed to cover the addresses touched by the warp. Adjacent-thread, adjacent-word access is the
+best case.
+
+![Coalesced global-memory access][img-coalesced-access]
+
+*Source: [CUDA C++ Best Practices Guide][src-cuda-bpg], §10.2.1.1 “A Simple Access Pattern,”
+Figure 3 “Coalesced access.”*
+
+> **What it shows:** adjacent warp threads touching adjacent words can be served by a small number
+> of aligned memory transactions.
+>
+> **Why it matters:** it is the simplest path to good global-memory efficiency.
+>
+> **Interviewer may ask:** “Why does memory coalescing matter even when the GPU has caches?”
+
+Strided access wastes bandwidth. NVIDIA’s Best Practices Guide shows that a stride of 2 already
+drops load/store efficiency to 50%, and larger strides get progressively worse. This is one of the
+clearest reasons that “same number of FLOPs” does not imply “same runtime.”
+
+See the stride-2 access figure in the [CUDA C++ Best Practices Guide][src-cuda-bpg],
+§10.2.1.4 “Strided Accesses.”
+
+> **What it shows:** consecutive threads touch every other element instead of adjacent elements.
+>
+> **Why it matters:** wasted transactions mean wasted bandwidth, and bandwidth is often the real
+> bottleneck in inference.
+>
+> **Interviewer may ask:** “What happens if a warp walks a tensor with the wrong stride?”
+
+Shared memory is only fast when its bank structure is respected. NVIDIA says shared memory is split
+into banks, and if multiple threads in a warp hit the same bank, the request is split into multiple
+transactions. In the programming guide’s matrix-transpose example, a 32x32 layout creates a
+32-way bank conflict when a warp walks a column, while padding to 32x33 removes the conflict.
+
+**Precise figure reference for bank conflicts:** if you want the clearest official visual, open the
+[CUDA Programming Guide][src-writing-simt-kernels], §2.3.4.2.2 “Shared Memory Bank Conflicts,”
+Figure 17 “Bank structure in a 32 x 32 shared memory array” and Figure 18 “Bank structure in a
+32 x 33 shared memory array.” The left figure shows the 32-way conflict; the right figure shows why
+padding by one column fixes it.
+
+### Shared memory, tiling, and asynchronous copies
+
+NVIDIA’s matrix examples use shared memory for three recurring reasons:
+
+- to turn uncoalesced global patterns into coalesced ones,
+- to eliminate redundant global reads, and
+- to stage tiles that many threads will reuse.
+
+That is why tiling is so central to high-performance GEMM and attention kernels. Load a tile once
+from HBM, keep it in shared memory or registers, and let many multiply-accumulate operations reuse
+it. CUTLASS then pushes this all the way down to CTA tiles, warp tiles, and MMA instruction tiles.
+
+On Hopper, NVIDIA adds the Tensor Memory Accelerator, a more capable asynchronous copy engine for
+moving tensors between global memory and shared memory, including between shared-memory regions of
+different SMs in a cluster. NVIDIA also notes that asynchronous copies can reduce register pressure
+because they avoid the traditional intermediate register step. That is an important modern reason
+why “memory movement” is part of the compute story, not separate from it.
+
+### CUDA streams and overlap
+
+CUDA’s programming guide defines a stream as a sequence of operations, effectively a work queue,
+executed in order. Operations in the same stream are sequential. Different streams may overlap or
+interleave if hardware resources and dependencies allow it. The Best Practices Guide shows the
+basic pattern for overlapping asynchronous copies with kernel execution by using different streams,
+and it notes that `cudaMemcpyAsync` requires pinned host memory.
+
+```mermaid
+flowchart LR
+    H2D[Stream 1<br/>H2D copy]
+    K[Stream 2<br/>Kernel]
+    D2H[Stream 3<br/>D2H copy]
+    Ev[CUDA event]
+
+    H2D --> Ev
+    Ev -. dependency .-> K
+    K --> D2H
 ```
 
-That sequence is usually enough to answer three interview questions at once: GPU execution model,
-why memory matters, and why decode underutilizes.
+*Faithful original sketch based on [CUDA Programming Guide][src-cuda-async], §2.5,
+and [CUDA C++ Best Practices Guide][src-cuda-bpg], §10.1.2
+“Asynchronous and Overlapping Transfers with Computation.”*
 
-## Self-check and sources
+> **What it shows:** streams express ordered queues; events express dependencies; overlap happens
+> only when dependencies and hardware permit it.
+>
+> **Why it matters:** serving systems often need to overlap copies, pre/post-processing, and kernel
+> execution to reduce latency and improve throughput.
+>
+> **Interviewer may ask:** “If I use two streams, do I automatically get overlap?”
 
-**Week 2 self-check**
+### Why HBM matters for LLMs
 
-Answer these without notes:
+For LLM inference, the two biggest memory consumers are usually **model weights** and the
+**KV cache**. NVIDIA’s LLM inference optimization post says exactly that, and gives the simple KV
+cache scaling formula:
 
-1. What is the difference between a kernel, a grid, a block, a warp, and a thread?
-2. Why is a block the unit of cooperation, but a warp the unit of scheduling?
-3. Why does the programmer choose grid and block size but not exact SM placement?
-4. What does an SM contain that matters for performance?
-5. What is occupancy, and why is it not the same as utilization?
-6. What is an eligible warp, and why can it matter more than occupancy?
-7. Why does branch divergence hurt throughput?
-8. Why does memory coalescing matter for global-memory bandwidth?
-9. What is a shared-memory bank conflict?
-10. Why can a fast GEMM run well even at less than maximum occupancy?
-11. What is arithmetic intensity, and how does it connect to roofline analysis?
-12. Which Transformer operations are Tensor Core friendly, and which are more bandwidth-sensitive?
-13. Why is prefill usually easier to utilize on a GPU than decode?
-14. Why can KV cache make decode memory-sensitive?
-15. What would you check first in Nsight Compute for a suspiciously slow attention kernel?
+```text
+Total KV cache bytes
+≈ batch_size × sequence_length × 2 × num_layers × hidden_size × bytes_per_element
+```
 
-**Sources**
+That linear growth with batch size and sequence length is why long-context and high-concurrency
+serving can become memory dominated even when the raw compute hardware is extremely fast.
 
-**Official NVIDIA CUDA documentation**
+Blackwell Ultra makes this system-level point especially visible. NVIDIA says it pushes per-GPU HBM
+to 288 GB and up to 8 TB/s, explicitly tying that capacity and bandwidth to larger KV caches,
+larger models, and higher concurrency. That is a good example of why Week 1 platform-level thinking
+and Week 2 execution-level thinking must connect.
 
-- *CUDA Programming Guide*
-  <https://docs.nvidia.com/cuda/cuda-programming-guide/index.html>
-  Programming model, grids, blocks, warps, SMs, memory, and streams.
-- *CUDA C++ Best Practices Guide*
-  <https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html>
-  Coalescing, shared memory, bank conflicts, occupancy, async copy, and overlap with streams.
-- *CUDA GPU Compute Capability*
-  <https://developer.nvidia.com/cuda/gpus>
-  Current compute-capability mapping for Hopper, Blackwell, and Blackwell Ultra family products.
+## Tensor Cores and GEMM mapping
 
-**NVIDIA architecture references**
+Tensor Cores are specialized hardware for matrix multiply-accumulate operations. They are not a
+separate programming model from CUDA; they are execution resources inside the SM that optimized
+libraries and kernels target when datatypes, shapes, and software paths line up. Hopper’s
+fourth-generation Tensor Cores support FP8, FP16, BF16, TF32, FP64, and INT8 MMA modes, and
+Blackwell adds newer formats such as MXFP8 and NVFP4.
 
-- *NVIDIA Hopper Tuning Guide*
-  <https://docs.nvidia.com/cuda/hopper-tuning-guide/index.html>
-  SM resource limits, TMA, and the H100 memory system.
-- *NVIDIA Blackwell Tuning Guide*
-  <https://docs.nvidia.com/cuda/blackwell-tuning-guide/index.html>
-  Blackwell resource limits, distributed shared memory, and the B200/GB200 memory system.
-- *NVIDIA Hopper Architecture In-Depth*
-  <https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/>
-  GH100 full-chip diagram, GH100 SM diagram, Tensor Core diagrams, HBM, and L2 details.
-- *NVIDIA Blackwell Architecture*
-  <https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/>
-  Blackwell architectural overview and linked technical brief.
-- *NVIDIA Blackwell Ultra for the Era of AI Reasoning*
-  <https://developer.nvidia.com/blog/nvidia-blackwell-ultra-for-the-era-of-ai-reasoning/>
-  Blackwell Ultra memory and attention-layer acceleration data for long-context serving.
+### Why GEMM is the center of gravity
 
-**Tensor Core, GEMM, and precision references**
+NVIDIA’s matrix guide says GEMMs are the building block for many neural-network operations. That is
+why so much of Transformer acceleration is really “better GEMM mapping” plus “less memory
+movement.” Tensor Cores matter because they raise throughput on the dense linear algebra that
+dominates QKV projections, output projections, and MLP projections.
 
-- *Matrix Multiplication Background User's Guide*
-  <https://docs.nvidia.com/deeplearning/performance/dl-performance-matrix-multiplication/index.html>
-  Arithmetic intensity, GEMM tiling, Tensor Core alignment, and large-vs-small GEMM behavior.
-- *CUTLASS Efficient GEMM in CUDA*
-  <https://docs.nvidia.com/cutlass/4.2.1/media/docs/cpp/efficient_gemm.html>
-  Hierarchical GEMM mapping, software pipelining, occupancy vs register pressure, and warp
-  specialization.
-- *Floating-Point 8: An Introduction to Efficient, Lower-Precision AI Training*
-  <https://developer.nvidia.com/blog/floating-point-8-an-introduction-to-efficient-lower-precision-ai-training/>
-  FP8, E4M3/E5M2, and Hopper and Blackwell low-precision context.
-- *Using FP8 and FP4 with Transformer Engine*
-  <https://docs.nvidia.com/deeplearning/transformer-engine/user-guide/examples/fp8_primer.html>
-  Practical FP8 and FP4/NVFP4 tooling context.
-- *Introducing NVFP4 for Efficient and Accurate Low-Precision Inference*
-  <https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/>
-  NVFP4 memory-efficiency framing and Blackwell inference context.
+### GEMM tiling hierarchy
 
-**Profiling references**
+CUTLASS provides one of the cleanest official explanations of how GEMM maps to the CUDA execution
+hierarchy. It shows a blocked loop nest where CTA tiles map to thread blocks, warp tiles map to
+warps, and instruction-level MMA tiles map to Tensor Core instructions. The core idea is nested
+tiling for concurrency and locality.
 
-- *Nsight Compute Profiling Guide*
-  <https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html>
-  Scheduler statistics, eligible warps, roofline, memory chart, and shared-memory analysis.
+![CUTLASS GEMM hierarchy with epilogue][img-cutlass-gemm]
 
-**Transformer and LLM inference references**
+*Source: [CUTLASS Efficient GEMM in CUDA][src-cutlass-gemm], “Hierarchical Structure,” image
+“gemm-hierarchy-with-epilogue.”*
 
-- *Mastering LLM Techniques: Inference Optimization*
-  <https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/>
-  Prefill vs decode, KV cache, memory-bound decode, and long-context implications.
-- *TensorRT-LLM GPT Attention*
-  <https://nvidia.github.io/TensorRT-LLM/advanced/gpt-attention.html>
-  Context vs generation kernels, packed mode, FMHA, and multi-block decode attention.
-- *TensorRT-LLM KV Cache System*
-  <https://nvidia.github.io/TensorRT-LLM/latest/features/kvcache.html>
-  Block-based KV cache, reuse, memory allocation, and GQA/MQA savings.
+> **What it shows:** CTA-level tiling, warp-level tiling, MMA instruction tiles, and how data moves
+> from global memory through shared memory into registers and accumulation.
+>
+> **Why it matters:** it is the most concrete bridge from CUDA hierarchy to Tensor Core work.
+>
+> **Interviewer may ask:** “How does a large GEMM break down across blocks, warps, and Tensor
+> Cores?”
 
-**Supporting educational references**
+```mermaid
+flowchart LR
+    HBM[HBM / global memory]
+    CTA[CTA tile<br/>thread block]
+    SMEM[Shared-memory tiles]
+    Warp[Warp tile]
+    Reg[Register fragments]
+    MMA[MMA / Tensor Core tile]
 
-- *Attention Is All You Need*
-  <https://arxiv.org/abs/1706.03762>
-  Supporting Transformer algorithm context.
-- *FlashAttention papers*
-  <https://arxiv.org/abs/2205.14135>
-  Supporting attention-kernel algorithm context.
+    HBM --> CTA --> SMEM --> Warp --> Reg --> MMA
+    MMA --> Reg
+```
+
+*Faithful original sketch based on [CUTLASS Efficient GEMM in CUDA][src-cutlass-gemm], the
+[NVIDIA Matrix Multiplication Background User's Guide][src-matrix-guide], and Hopper or Blackwell
+SM documentation.*
+
+> **What it shows:** the nested reuse path that lets the GPU do many FMAs per byte loaded.
+>
+> **Why it matters:** this is the mechanical reason Tensor Core kernels can be compute-dense even
+> though HBM is still relatively “far away.”
+>
+> **Interviewer may ask:** “Why do tiling and shared memory matter for Tensor Cores?”
+
+### Precision formats that matter in interviews
+
+A good interview answer does **not** need instruction mnemonics. It does need a clear precision
+story:
+
+| Format | High-level role | Interview-safe takeaway |
+|---|---|---|
+| FP32 | General-purpose floating point | Common for numerically sensitive paths and accumulation |
+| TF32 | Tensor Core-friendly FP32-style mode | Easier high-throughput path for many FP32 workloads |
+| FP16 | Standard mixed-precision workhorse | Common for training and inference GEMMs |
+| BF16 | FP16-like footprint with wider range | Widely used in modern training and inference |
+| FP8 | Hopper-era low precision | Higher Tensor Core throughput when software and numerics allow |
+| MXFP8 | Blackwell microscaled FP8 | Uses finer-grained scaling than plain FP8 |
+| FP4 / NVFP4 | Blackwell-era ultra-low precision | Useful for inference memory efficiency |
+
+NVIDIA’s Transformer Engine docs say H100 introduced FP8, and Blackwell added MXFP8 and NVFP4.
+The same docs explain E4M3 and E5M2 as the two Hopper FP8 formats, with E4M3 favored for forward
+precision and E5M2 favored for greater dynamic range. Blackwell’s NVFP4 and MXFP8 then push lower
+precision with finer-grained scaling.
+
+![Hopper FP8 formats and accumulator path][img-hopper-fp8]
+
+*Source: [NVIDIA Hopper Architecture In-Depth][src-hopper-blog], Figure 6
+“New NVIDIA Hopper FP8 precisions.”*
+
+> **What it shows:** FP8 format choices and the mixed-precision accumulator/output story.
+>
+> **Why it matters:** it reminds you that “low precision” is not one thing; format and accumulator
+> policy matter.
+>
+> **Interviewer may ask:** “What is the practical difference between FP16, BF16, and FP8 in a
+> Transformer system?”
+
+## From Transformer block to GPU work
+
+A decoder-only Transformer block is a mix of dense linear algebra, reductions, elementwise math,
+and memory traffic. In interview language, the key split is this:
+
+- **Large dense projections and matmuls** are usually Tensor Core friendly.
+- **Norms, softmax, residuals, masking, and various elementwise paths** are often more
+  bandwidth-sensitive or latency-sensitive.
+- **Kernel fusion** matters most for the smaller memory-heavy pieces.
+
+### Transformer block to GPU-work sketch
+
+```mermaid
+flowchart TB
+    X[Hidden states]
+    QKV[Q K V projections<br/>large GEMMs]
+    Scores[QK^T<br/>attention-score matmul]
+    Softmax[Causal mask and softmax<br/>reduction and SFU-heavy]
+    AV[Attention-value matmul]
+    O[Output projection GEMM]
+    Norm1[RMSNorm / LayerNorm]
+    MLP1[Up and gate projections<br/>large GEMMs]
+    Act[Activation]
+    MLP2[Down projection GEMM]
+    Res[Residual adds]
+    Logits[Logits projection]
+
+    X --> QKV --> Scores --> Softmax --> AV --> O --> Norm1 --> MLP1 --> Act --> MLP2 --> Res --> Logits
+```
+
+*Faithful original sketch based on the [NVIDIA Matrix Multiplication Background User's Guide]
+[src-matrix-guide], [TensorRT-LLM attention documentation][src-trt-llm-attention], and NVIDIA’s
+LLM inference optimization post.*
+
+> **What it shows:** the sequence of major operations in a Transformer block and where the big
+> dense matmuls sit relative to the memory-sensitive pieces.
+>
+> **Why it matters:** it helps you answer “which parts are compute-heavy and which parts are
+> memory-heavy?” without hand-waving.
+>
+> **Interviewer may ask:** “Which Transformer operations are usually Tensor Core limited, and which
+> ones are not?”
+
+### Interview heuristic for common Transformer operators
+
+The table below is deliberately heuristic. Exact behavior depends on shapes, batch size, sequence
+length, precision, fusion, and software stack. The point is not to memorize “always” rules. The
+point is to classify operators the way a performance engineer would. This classification is an
+interview-oriented inference from NVIDIA’s matrix, TensorRT-LLM, and LLM inference optimization
+docs.
+
+Useful operator classifications:
+
+- **Q/K/V projection**: large GEMMs. High Tensor Core friendliness, medium bandwidth sensitivity,
+  and one of the main dense compute phases.
+- **Attention score matmul**: batched matmul. High Tensor Core friendliness and strong sequence
+  length sensitivity because work grows with token and head dimensions.
+- **Causal mask + softmax**: reduction, elementwise, and special-function work. Low Tensor Core
+  friendliness, high bandwidth sensitivity, and high fusion sensitivity.
+- **Attention-value matmul**: batched matmul. Often Tensor Core friendly and sequence-length
+  sensitive, especially inside fused attention paths.
+- **Output projection**: GEMM. High Tensor Core friendliness and similar behavior to QKV
+  projections.
+- **MLP up / gate / down projections**: GEMMs. High Tensor Core friendliness and often a major
+  dense compute sink.
+- **Activation function**: elementwise. Low Tensor Core friendliness, high bandwidth sensitivity,
+  and expensive if it forces extra memory traffic.
+- **RMSNorm / LayerNorm**: reduction plus elementwise work. Usually limited by memory movement and
+  reduction behavior rather than dense math.
+- **Residual add**: elementwise. Low Tensor Core friendliness, high bandwidth sensitivity, and a
+  classic fusion target.
+- **Logits projection**: GEMM in prefill, GEMV-like in small decode. Batch-size sensitive and less
+  compute-efficient in small-batch decode.
+
+A few interview-grade takeaways matter more than the whole table:
+
+- QKV, output, and MLP projections are the obvious Tensor Core targets.
+- Softmax and norms are often more about memory traffic, reductions, and special-function behavior
+  than pure dense-math throughput. Blackwell Ultra’s own attention-layer-acceleration story calls
+  out softmax-related transcendental work explicitly.
+- Fusion matters because small or elementwise operators often spend too much time moving data
+  between memory levels relative to the amount of math they do. TRT-LLM’s generation-phase
+  attention kernel is a good example: it fuses bias, RoPE, and quantization-related work into the
+  attention kernel rather than paying separate kernel overheads.
+
+## Prefill versus decode on GPUs
+
+NVIDIA’s LLM inference optimization guide gives the cleanest high-level split between the two
+phases. In prefill, the full input is known, so the work is highly parallel and looks like
+matrix-matrix computation. In decode, tokens are generated autoregressively one step at a time, so
+the work becomes much closer to matrix-vector behavior and the speed of moving weights, keys,
+values, and activations through memory can dominate latency. NVIDIA explicitly calls decode
+memory-bound in this sense.
+
+### Why prefill usually scales better
+
+During prefill, the model processes many known tokens at once. That creates broad parallelism across
+tokens and usually produces larger, denser GEMM shapes. Those are the conditions where Tensor Core
+paths shine and the GPU can sustain high utilization. NVIDIA says prefill is highly parallelized and
+effectively saturates GPU utilization.
+
+### Why decode is harder to keep full
+
+During decode, each new token depends on all prior KV state. That reduces parallelism across time
+steps, and for small batch sizes many dense operations become much less favorable from an arithmetic
+intensity perspective. NVIDIA’s matrix guide says GEMV is always memory-limited, and NVIDIA’s LLM
+inference guide says decode is analogous to matrix-vector behavior where data movement dominates.
+That is the right interview explanation for “why can decode underutilize a big GPU?”
+
+### KV cache is the bridge between the phases
+
+KV caching avoids recomputing old K and V tensors. The inference-optimization guide describes it as
+a standard decode optimization, and TensorRT-LLM’s KV-cache documentation says it stores previously
+computed key-value pairs for reuse during generation. This saves compute, but it also creates a
+large memory footprint that grows with batch size and sequence length, and it shifts pressure
+toward memory capacity, bandwidth, and cache-management policy.
+
+![Prefill, decode, and KV caching][img-kv-caching]
+
+*Source: [Mastering LLM Techniques: Inference Optimization][src-llm-inference-blog],
+Figure 1 “An illustration of the key-value caching mechanism.”*
+
+> **What it shows:** prefill computes and stores KV state in parallel; decode reuses cached K and V
+> while generating the next token step by step.
+>
+> **Why it matters:** it is the clearest single visual for why prefill and decode stress the GPU
+> differently.
+>
+> **Interviewer may ask:** “Why does KV caching help decode, and why can it still make decode a
+> memory problem?”
+
+### TensorRT-LLM details worth knowing at Week 2 depth
+
+TensorRT-LLM’s attention docs give several practical serving-level details that are excellent
+interview material:
+
+- In the **context phase**, the fast path uses one attention kernel, and for larger sequences it
+  uses FlashAttention-style IO-aware attention.
+- In the **generation phase**, TensorRT-LLM uses a single masked-MHA kernel that can fuse
+  preprocessing work like QKV bias and RoPE.
+- TensorRT-LLM also adds **multi-block** masked-MHA when occupancy is low, especially in some
+  small-batch and small-head-count cases.
+- It supports **in-flight batching** and **chunked context** to interleave context and generation
+  work and improve serving throughput.
+
+That is enough for Week 2. The deeper details of paged KV cache, scheduling policy, long-context
+sharding, and distributed serving belong in later weeks.
+
+## Bottleneck reasoning and profiling intuition
+
+A strong senior answer does not jump from a symptom straight to a fix. It first asks: *what class of
+bottleneck is most plausible?* NVIDIA’s roofline and Nsight documentation, plus the CUDA best
+practices and matrix guides, make that reasoning framework quite crisp.
+
+### Practical bottleneck framework
+
+Useful symptom-to-cause checks:
+
+- **High FLOP demand with good arithmetic intensity**: likely compute-bound. Inspect Tensor Core
+  utilization and SM pipeline utilization.
+- **High memory traffic with low arithmetic intensity**: likely memory-bound. Inspect DRAM
+  throughput, cache hit rates, and bytes moved.
+- **Decent occupancy but few eligible warps**: likely latency-hiding trouble. Inspect scheduler
+  stats, warp stalls, and dependency reasons.
+- **Small kernels dominate the timeline**: likely launch overhead. Inspect kernel count, fusion
+  opportunities, and later CUDA Graph options.
+- **Multi-GPU step slows badly**: likely communication-bound. Inspect communication/compute
+  overlap, NVLink timing, and NCCL timing.
+- **Many small elementwise kernels between GEMMs**: likely fusion trouble. Inspect framework or
+  runtime fusion opportunities.
+- **Low Tensor Core use on GEMM-like ops**: likely shape, datatype, or software-path mismatch.
+  Inspect precision path, tile shape, batch size, and sequence size.
+- **Decode slow at small batch**: likely low arithmetic intensity or GEMV-like execution. Inspect
+  batch size, in-flight batching, and tokens per step.
+- **Poor global-memory efficiency**: likely poor coalescing. Inspect coalescing metrics, access
+  stride, and layout.
+- **Unexpectedly low occupancy**: likely register or shared-memory pressure. Inspect registers per
+  thread and shared memory per block.
+- **Shared-memory-heavy kernel stalls**: likely bank conflicts. Inspect shared-memory metrics,
+  access pattern, and padding.
+
+Source note: this table is a direct synthesis of the roofline guide, Nsight Compute scheduler and
+memory-workload sections, the CUDA Best Practices Guide, CUTLASS, and NVIDIA’s matrix guide.
+
+### Roofline and arithmetic intensity
+
+Nsight Compute says a roofline chart combines the GPU’s peak performance and memory bandwidth with
+arithmetic intensity into one chart. The ridge point separates the memory-bound region from the
+compute-bound region. The achieved point shows where the kernel actually lands and how far it is
+from the limiting roof. That is exactly the right first-principles tool for LLM kernel reasoning.
+
+![Nsight Compute roofline overview][img-roofline-overview]
+
+*Source: [Nsight Compute Profiling Guide][src-nsight-guide], §2.9.1 “Roofline Chart,”
+image “roofline-overview.”*
+
+> **What it shows:** the sloped memory-bandwidth roof, the flat peak-performance roof, the ridge
+> point, and the achieved kernel point.
+>
+> **Why it matters:** it gives you a fast visual answer to “should I chase memory traffic or math
+> throughput first?”
+>
+> **Interviewer may ask:** “How would you tell whether a kernel is memory-bound?”
+
+A very practical interview shorthand follows directly from NVIDIA’s matrix guide:
+
+- large dense GEMMs can be math-limited,
+- smaller or skinnier GEMMs can become memory-limited,
+- GEMV-like cases are always memory-limited.
+
+### Nsight Compute: what to look at first
+
+You do not need to be an Nsight power user for Week 2, but you should know what it is for.
+Nsight Compute’s profiling guide highlights a few sections that matter immediately:
+
+- **Launch statistics** and **occupancy** for launch shape and residency.
+- **Scheduler Statistics** for active, eligible, and issuing warps.
+- **Compute workload analysis** for which SM pipelines are hot.
+- **Memory workload analysis** for DRAM, L2, L1/TEX, and shared-memory traffic.
+- **Roofline** for arithmetic-intensity-based bottleneck reasoning.
+- **Warp stall reasons** for barriers, dependencies, scoreboard waits, and similar symptoms.
+
+A good interview answer to “How would you profile this?” is:
+
+> I would first classify the kernel as likely compute-bound, memory-bound, or latency-hiding
+> limited. Then I would check launch configuration and occupancy, Scheduler Statistics for eligible
+> warps and skipped issue slots, Tensor Core or SM pipeline utilization, and memory-workload
+> sections for DRAM and cache pressure. Only then would I choose an optimization direction.
+>
+
+### Common misconceptions
+
+- **“More CUDA cores always means faster.”**
+  Not by itself. Memory system behavior, Tensor Core use, launch shape, and kernel quality matter
+  heavily.
+
+- **“Peak FLOPS predicts real performance.”**
+  Roofline and arithmetic intensity exist precisely because it does not.
+
+- **“Maximum occupancy is always best.”**
+  NVIDIA explicitly says higher occupancy does not always equal better performance.
+
+- **“All Transformer operations are GEMMs.”**
+  Softmax, norms, masking, residuals, and activation paths are not.
+
+- **“Memory hierarchy only matters for CUDA programmers.”**
+  It matters to anyone reasoning about LLM latency, throughput, KV cache, or serving cost.
+
+- **“Tensor Cores solve every performance problem.”**
+  They help dense MMA-heavy phases, not every reduction, elementwise path, or memory-bound decode
+  kernel.
+
+## Senior interview answer patterns
+
+### Explain the NVIDIA GPU execution model
+
+A clean senior answer is:
+
+> A CUDA kernel launch creates one grid. That grid is made of many thread blocks. Each block runs
+> on one SM and uses that SM’s registers and shared memory while it is resident. Threads inside a
+> block are grouped into warps of 32, and warps are the execution and scheduling unit the SM issues.
+> The programmer chooses grid and block sizes, but the runtime decides which SM gets which block and
+> in what order. Performance then depends on how many warps stay eligible, how much data reuse you
+> create in registers and shared memory, and how much pressure you put on L2 and HBM.
+>
+
+### What is a warp
+
+> A warp is a group of 32 threads from the same block. It is the basic scheduling and issue unit
+> inside an SM. Coalescing, divergence, and many scheduling effects are felt at warp granularity.
+>
+
+### Why does memory coalescing matter
+
+> Because global-memory accesses are serviced in transactions. If a warp touches adjacent words in a
+> well-aligned pattern, the hardware can serve the request with a small number of transactions. If
+> the pattern is strided or badly aligned, you move more bytes than you use, so effective bandwidth
+> falls.
+
+### Why can decode underutilize a GPU
+
+> Prefill has broad parallelism over many known input tokens and tends to look like matrix-matrix
+> work. Decode generates one token at a time, relies on KV cache, and often behaves more like
+> matrix-vector work, which NVIDIA’s matrix guide says is always memory-limited. That reduces Tensor
+> Core efficiency and shifts the bottleneck toward memory movement and latency hiding.
+>
+
+### How do Tensor Cores help Transformers
+
+> They accelerate the dense matrix multiply-accumulate operations that dominate QKV projections,
+> attention matmuls, output projections, and MLP projections. They do not automatically fix norm,
+> softmax, masking, or other memory-heavy or reduction-heavy paths.
+
+### How would you tell if a workload is memory-bound
+
+> I would look at arithmetic intensity relative to the roofline, then at achieved memory throughput,
+> cache behavior, and whether the kernel sits in the memory-bound region. If the kernel is moving a
+> lot of bytes for little math, or looks GEMV-like, I would expect it to be memory-bound.
+>
+
+### Why is maximum occupancy not always optimal
+
+> Because occupancy only measures residency. A kernel with lower occupancy can still be faster if it
+> uses registers and shared memory to raise reuse, reduce memory traffic, or keep Tensor Cores fed.
+> CUTLASS GEMM kernels are a good mental model here.
+
+## Whiteboard explanation
+
+If you have two minutes and a marker, draw the explanation in this order:
+
+```text
+1. Host CPU -> launches kernel
+2. One kernel -> one grid
+3. Grid -> many thread blocks
+4. One block -> one SM
+5. One block -> warps of 32
+6. SM -> warp schedulers + registers + shared/L1 + Tensor Cores + path to L2 -> HBM
+7. Transformer block:
+   QKV GEMMs -> attention score matmul -> softmax -> AV matmul -> MLP GEMMs
+8. Annotate:
+   big GEMMs = Tensor Core friendly
+   softmax/norm/residual = more memory/fusion sensitive
+   prefill = parallel and compute-dense
+   decode = sequential and often memory-sensitive
+```
+
+The final spoken summary should be even shorter:
+
+> Blocks are the unit of cooperation and shared-memory locality. Warps are the unit of scheduling
+> and issue. SM resources determine occupancy. Memory movement determines much of real performance.
+> Transformers are fast when their dense matmuls stay on good Tensor Core paths and when the rest of
+> the block avoids wasting bandwidth.
+
+## Week 2 self-check
+
+Try to answer these without notes:
+
+1. What exactly does one CUDA kernel launch create?
+2. What is the difference between a grid and a block?
+3. Why do all threads in a block execute on one SM?
+4. What is a warp, and why is it the performance-critical unit?
+5. What is a warp lane?
+6. What is the difference between occupancy and utilization?
+7. What is an eligible warp?
+8. Why can higher occupancy fail to improve performance?
+9. Why can register pressure reduce occupancy?
+10. Why is local memory dangerous despite its name?
+11. What are the main levels of the NVIDIA memory hierarchy that matter for LLMs?
+12. Why does memory coalescing matter?
+13. What is a shared-memory bank conflict?
+14. Why are large GEMMs Tensor Core friendly?
+15. Why are softmax and norms often less compute-dense than GEMMs?
+16. Why does prefill usually use a GPU better than decode?
+17. Why can decode become memory-bound?
+18. What are the two biggest memory consumers in LLM inference?
+19. How would you tell if a kernel is memory-bound?
+20. What would you look at first in Nsight Compute?
+
+## Sources
+
+### Exact visual references used inline
+
+- [CUDA Programming Guide][src-cuda-guide], §1.2.2 “GPU Hardware Model,” Figure 2.
+  Image used inline: [gpu-cpu-system-diagram][img-gpu-cpu-system]
+- [CUDA Programming Guide][src-cuda-guide], §1.2.2.1 “Thread Blocks and Grids,” Figure 3.
+  Image used inline: [grid-of-thread-blocks][img-grid-of-thread-blocks]
+- [CUDA Programming Guide][src-cuda-guide], §1.2.2.1 “Thread Blocks and Grids,” Figure 4.
+  Image used inline: [thread-block-scheduling][img-thread-block-scheduling]
+- [CUDA Programming Guide][src-cuda-guide], §1.2.2.2 “Warps and SIMT,” Figure 7.
+  Image used inline: [active-warp-lanes][img-active-warp-lanes]
+- [NVIDIA Hopper Architecture In-Depth][src-hopper-blog], Figure 3.
+  Image used inline: [GH100 full-chip block diagram][img-gh100-full]
+- [NVIDIA Hopper Architecture In-Depth][src-hopper-blog], Figure 4.
+  Image used inline: [GH100 SM block diagram][i-h100-sm]
+- [NVIDIA Hopper Architecture In-Depth][src-hopper-blog], Figure 6.
+  Image used inline: [Hopper FP8 precisions][img-hopper-fp8]
+- [Inside NVIDIA Blackwell Ultra][src-bwu-inside], Figure 1.
+  Image used inline: [Blackwell Ultra GPU chip explained][i-bwu-chip]
+- [Inside NVIDIA Blackwell Ultra][src-bwu-inside], Figure 2.
+  Image used inline: [Blackwell Ultra SM architecture][i-bwu-sm]
+- [CUDA C++ Best Practices Guide][src-cuda-bpg], §10.2.1.1, Figure 3.
+  Image used inline: [coalesced-access][img-coalesced-access]
+- [CUTLASS Efficient GEMM in CUDA][src-cutlass-gemm], “Hierarchical Structure.”
+  Image used inline: [gemm-hierarchy-with-epilogue][img-cutlass-gemm]
+- [Mastering LLM Techniques: Inference Optimization][src-llm-inference-blog], Figure 1.
+  Image used inline: [key-value-caching][img-kv-caching]
+- [Nsight Compute Profiling Guide][src-nsight-guide], §2.9.1 “Roofline Chart.”
+  Image used inline: [roofline-overview][img-roofline-overview]
+
+### Official NVIDIA CUDA documentation
+
+- [CUDA Programming Guide][src-cuda-guide]
+- [CUDA Programming Guide, Programming Model chapter][src-cuda-model]
+- [CUDA Programming Guide, Writing SIMT Kernels][src-writing-simt-kernels]
+- [CUDA Programming Guide, Asynchronous Execution][src-cuda-async]
+- [CUDA C++ Best Practices Guide][src-cuda-bpg]
+- [Hopper Tuning Guide][src-hopper-tuning]
+- [Blackwell Tuning Guide][src-blackwell-tuning]
+- [CUDA GPU Compute Capability list][src-cuda-gpus]
+
+### NVIDIA architecture references
+
+- [NVIDIA Hopper Architecture In-Depth][src-hopper-blog]
+- [NVIDIA Blackwell Architecture][src-blackwell-architecture]
+- [Inside NVIDIA Blackwell Ultra: The Chip Powering the AI Factory Era][src-bwu-inside]
+- [NVIDIA Blackwell Ultra for the Era of AI Reasoning][src-blackwell-ultra-blog]
+
+### Tensor Core, GEMM, and precision references
+
+- [Matrix Multiplication Background User's Guide][src-matrix-guide]
+- [CUTLASS Efficient GEMM in CUDA][src-cutlass-gemm]
+- [Transformer Engine: Using FP8 and FP4][src-te-fp8]
+
+### Profiling references
+
+- [Nsight Compute Profiling Guide][src-nsight-guide]
+
+### Transformer and LLM inference references
+
+- [Mastering LLM Techniques: Inference Optimization][src-llm-inference-blog]
+- [TensorRT-LLM attention documentation][src-trt-llm-attention]
+- [TensorRT-LLM KV cache documentation][src-trt-llm-kvcache]
+
+## Link references
+
+[src-cuda-guide]: https://docs.nvidia.com/cuda/cuda-programming-guide/index.html
+[src-cuda-model]: https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html
+[src-writing-simt-kernels]: https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html
+[src-cuda-async]: https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/asynchronous-execution.html
+[src-cuda-bpg]: https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html
+[src-hopper-tuning]: https://docs.nvidia.com/cuda/hopper-tuning-guide/index.html
+[src-blackwell-tuning]: https://docs.nvidia.com/cuda/blackwell-tuning-guide/index.html
+[src-cuda-gpus]: https://developer.nvidia.com/cuda/gpus
+[src-hopper-blog]: https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/
+[src-blackwell-architecture]: https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/
+[src-bwu-inside]: https://developer.nvidia.com/blog/inside-nvidia-blackwell-ultra-the-chip-powering-the-ai-factory-era/
+[src-blackwell-ultra-blog]: https://developer.nvidia.com/blog/nvidia-blackwell-ultra-for-the-era-of-ai-reasoning/
+[src-nsight-guide]: https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html
+[src-matrix-guide]: https://docs.nvidia.com/deeplearning/performance/dl-performance-matrix-multiplication/index.html
+[src-cutlass-gemm]: https://docs.nvidia.com/cutlass/4.2.1/media/docs/cpp/efficient_gemm.html
+[src-te-fp8]: https://docs.nvidia.com/deeplearning/transformer-engine/user-guide/examples/fp8_primer.html
+[src-llm-inference-blog]: https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/
+[src-trt-llm-attention]: https://nvidia.github.io/TensorRT-LLM/advanced/gpt-attention.html
+[src-trt-llm-kvcache]: https://nvidia.github.io/TensorRT-LLM/latest/features/kvcache.html
+
+[img-gpu-cpu-system]: https://docs.nvidia.com/cuda/cuda-programming-guide/_images/gpu-cpu-system-diagram.png
+[img-grid-of-thread-blocks]: https://docs.nvidia.com/cuda/cuda-programming-guide/_images/grid-of-thread-blocks.png
+[img-thread-block-scheduling]: https://docs.nvidia.com/cuda/cuda-programming-guide/_images/thread-block-scheduling.png
+[img-active-warp-lanes]: https://docs.nvidia.com/cuda/cuda-programming-guide/_images/active-warp-lanes.png
+[img-gh100-full]: https://developer-blogs.nvidia.com/wp-content/uploads/2022/03/Full-H100-GPU-with-144-SMs-625x279.png
+[i-h100-sm]: https://developer-blogs.nvidia.com/wp-content/uploads/2022/03/H100-Streaming-Multiprocessor-SM-625x869.png
+[img-hopper-fp8]: https://developer-blogs.nvidia.com/wp-content/uploads/2022/03/New-Hopper-FP8-Precisions-625x340.jpg
+[i-bwu-chip]: https://developer-blogs.nvidia.com/wp-content/uploads/2025/08/NVIDIA-Blackwell-Ultra-GPU-chip-png.webp
+[i-bwu-sm]: https://developer-blogs.nvidia.com/wp-content/uploads/2025/08/Blackwell-Ultra-SM-architecture-png.webp
+[img-coalesced-access]: https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/_images/coalesced-access.png
+[img-cutlass-gemm]: https://docs.nvidia.com/cutlass/4.2.1/_images/gemm-hierarchy-with-epilogue.png
+[img-kv-caching]: https://developer-blogs.nvidia.com/wp-content/uploads/2023/11/key-value-caching_.png
+[img-roofline-overview]: https://docs.nvidia.com/nsight-compute/_images/roofline-overview.png
