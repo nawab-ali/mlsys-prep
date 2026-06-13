@@ -1,5 +1,23 @@
 # NVIDIA GPU Execution Model
 
+## Table of contents
+
+- [Introduction](#introduction)
+- [First-principles vocabulary](#first-principles-vocabulary)
+- [Why GPU execution matters for LLMs](#why-gpu-execution-matters-for-llms)
+- [CUDA execution hierarchy](#cuda-execution-hierarchy)
+- [Streaming multiprocessor intuition](#streaming-multiprocessor-intuition)
+- [Warps, SIMT, occupancy, and latency hiding](#warps-simt-occupancy-and-latency-hiding)
+- [Memory hierarchy and memory access](#memory-hierarchy-and-memory-access)
+- [Tensor Cores and GEMM mapping](#tensor-cores-and-gemm-mapping)
+- [From Transformer block to GPU work](#from-transformer-block-to-gpu-work)
+- [Prefill versus decode on GPUs](#prefill-versus-decode-on-gpus)
+- [Bottleneck reasoning and profiling intuition](#bottleneck-reasoning-and-profiling-intuition)
+- [Senior interview answer patterns](#senior-interview-answer-patterns)
+- [Whiteboard explanation](#whiteboard-explanation)
+- [Week 2 self-check](#week-2-self-check)
+- [Sources](#sources)
+
 ## Introduction
 
 Week 2 moves from NVIDIA as a platform to NVIDIA as an execution engine. Week 1 covered racks,
@@ -1169,8 +1187,6 @@ Try to answer these without notes:
 - [Mastering LLM Techniques: Inference Optimization][src-llm-inference-blog]
 - [TensorRT-LLM attention documentation][src-trt-llm-attention]
 - [TensorRT-LLM KV cache documentation][src-trt-llm-kvcache]
-
-## Link references
 
 [src-cuda-guide]: https://docs.nvidia.com/cuda/cuda-programming-guide/index.html
 [src-cuda-model]: https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html
