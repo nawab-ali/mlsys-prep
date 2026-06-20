@@ -11,6 +11,7 @@ curriculum later.
 - Pre-training
 - Post-training
 - Backpropagation
+- Systolic arrays
 - RLHF
 - DeepSeek
 - Chain of Thought (CoT)
