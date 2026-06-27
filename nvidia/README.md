@@ -19,3 +19,4 @@ This directory contains the NVIDIA GPU platform and architecture preparation tra
 - [Training Clusters](09_training_clusters.md)
 - [Inference Clusters](10_inference_clusters.md)
 - [Performance Modeling](11_performance_modeling.md)
+- [Roofline Model](12_roofline_model.md)
