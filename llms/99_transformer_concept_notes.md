@@ -122,6 +122,8 @@ Useful approximation:
 GELU(x) ~= 0.5 * x * (1 + tanh(sqrt(2/pi) * (x + 0.044715 * x^3)))
 ```
 
+![GELU activation curve](images/gelu_activation.svg)
+
 ## SwiGLU
 
 SwiGLU is a gated MLP activation used in many modern decoder-only models.
@@ -142,6 +144,11 @@ output = SwiGLU(x) * W_down
 
 The multiplication lets one projected path control how much of another projected path passes
 through.
+
+![SwiGLU gate slice](images/swiglu_activation.svg)
+
+The plot shows one-dimensional slices with fixed feature-path values because full SwiGLU depends on
+both the gate projection `a` and the feature projection `b`.
 
 ## Normalization
 
