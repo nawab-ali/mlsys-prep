@@ -20,3 +20,4 @@ This directory contains the LLM preparation track.
 - [Evaluation and Benchmarks](10_evaluation_benchmarks.md)
 - [Production LLM Systems](11_production_llm_systems.md)
 - [LLM Topic Backlog](99_llm_topic_backlog.md)
+- [Transformer Concept Notes](99_transformer_concept_notes.md)
