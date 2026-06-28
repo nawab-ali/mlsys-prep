@@ -147,10 +147,71 @@ through.
 
 Normalization keeps hidden-state scale stable across many Transformer layers.
 
-Common variants:
+In a Transformer, normalization is applied independently to each token's hidden vector. It does not
+normalize across the sequence.
 
-- LayerNorm normalizes using mean and variance.
-- RMSNorm normalizes using root mean square scale and skips mean subtraction.
+### LayerNorm
+
+LayerNorm subtracts the mean and divides by the standard deviation of one token's hidden vector.
+
+For hidden vector `x`:
+
+```text
+mean = average(x)
+var  = average((x - mean)^2)
+y    = (x - mean) / sqrt(var + eps)
+out  = gamma * y + beta
+```
+
+Example with `x = [1, 2, 3]`, ignoring `eps`, with `gamma = 1` and `beta = 0`:
+
+```text
+mean = (1 + 2 + 3) / 3 = 2
+var  = ((1 - 2)^2 + (2 - 2)^2 + (3 - 2)^2) / 3
+     = (1 + 0 + 1) / 3
+     = 2 / 3
+std  = sqrt(2 / 3) ~= 0.816
+
+LayerNorm(x) = [
+  (1 - 2) / 0.816,
+  (2 - 2) / 0.816,
+  (3 - 2) / 0.816
+]
+~= [-1.225, 0, 1.225]
+```
+
+### RMSNorm
+
+RMSNorm divides by the root mean square of the hidden vector. It does not subtract the mean.
+
+For hidden vector `x`:
+
+```text
+rms = sqrt(average(x^2) + eps)
+y   = x / rms
+out = gamma * y
+```
+
+Example with `x = [1, 2, 3]`, ignoring `eps`, with `gamma = 1`:
+
+```text
+rms = sqrt((1^2 + 2^2 + 3^2) / 3)
+    = sqrt((1 + 4 + 9) / 3)
+    = sqrt(14 / 3)
+    ~= 2.160
+
+RMSNorm(x) = [
+  1 / 2.160,
+  2 / 2.160,
+  3 / 2.160
+]
+~= [0.463, 0.926, 1.389]
+```
+
+Key difference:
+
+- LayerNorm recenters the vector around zero, then rescales it.
+- RMSNorm only rescales the vector.
 
 In modern decoder-only models, normalization is often placed before attention and before the MLP:
 
