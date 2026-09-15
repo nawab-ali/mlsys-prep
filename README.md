@@ -144,13 +144,7 @@ Update:
 
 [Progress Tracker](plan/04_progress_tracker.md)
 
-Record:
-
-- quiz scores,
-- weak areas,
-- follow-up actions,
-- behavioral stories that need work,
-- topics to revisit before Week 2.
+Update the Week 1 topic and quiz statuses.
 
 ## Week 1 completion criteria
 
@@ -191,7 +185,7 @@ Future weeks should match or exceed this standard.
 | `behavioral/00_behavioral_strategy.md` | Behavioral interview foundation |
 | `assessments/weekly_quizzes/week_01_quiz.md` | Week 1 diagnostic |
 | `references/sources.md` | Source and research policy |
-| `plan/04_progress_tracker.md` | Study tracking and weak-area log |
+| `plan/04_progress_tracker.md` | Week 1 topic and quiz statuses |
 
 ## What not to do in Week 1
 
