@@ -23,6 +23,30 @@ Which phase are we optimizing?
 Those questions are the foundation for NVIDIA, OpenAI, and Anthropic systems
 interviews.
 
+## Table of contents
+
+- [Learning goals](#learning-goals)
+- [The Week 1 mental model](#the-week-1-mental-model)
+- [The three bottleneck questions](#the-three-bottleneck-questions)
+- [Training, prefill, and decode](#training-prefill-and-decode)
+- [Prefill versus decode](#prefill-versus-decode)
+- [Why GPUs fit LLMs](#why-gpus-fit-llms)
+- [Why peak FLOPS is insufficient](#why-peak-flops-is-insufficient)
+- [Memory pressure](#memory-pressure)
+- [KV cache intuition](#kv-cache-intuition)
+- [Communication pressure](#communication-pressure)
+- [Worked example 1: decode bottleneck](#worked-example-1-decode-bottleneck)
+- [Worked example 2: model parallel bottleneck](#worked-example-2-model-parallel-bottleneck)
+- [Worked example 3: accelerator comparison](#worked-example-3-accelerator-comparison)
+- [Roofline intuition](#roofline-intuition)
+- [Software is part of the system](#software-is-part-of-the-system)
+- [Behavioral connection](#behavioral-connection)
+- [Senior/principal answer patterns](#seniorprincipal-answer-patterns)
+- [Interview checklist](#interview-checklist)
+- [Week 1 self-check](#week-1-self-check)
+- [What belongs in later weeks](#what-belongs-in-later-weeks)
+- [Sources](#sources)
+
 ## Learning goals
 
 By the end of this module, you should be able to:

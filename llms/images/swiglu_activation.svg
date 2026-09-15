@@ -1,0 +1,227 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="420" viewBox="0 0 760 420">
+  <rect width="760" height="420" fill="#ffffff"/>
+  <text x="380" y="34" text-anchor="middle" font-family="Arial, sans-serif" font-size="22"
+        font-weight="700" fill="#111827">
+    SwiGLU Gate Slice
+  </text>
+  <text x="380" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="15"
+        fill="#374151">
+    output = SiLU(a) * b, shown for fixed feature-path values b
+  </text>
+
+  <line x1="90" y1="76.4" x2="690" y2="76.4" stroke="#e5e7eb" stroke-width="1"/>
+  <line x1="90" y1="140.7" x2="690" y2="140.7" stroke="#e5e7eb" stroke-width="1"/>
+  <line x1="90" y1="205" x2="690" y2="205" stroke="#111827" stroke-width="2"/>
+  <line x1="90" y1="269.3" x2="690" y2="269.3" stroke="#e5e7eb" stroke-width="1"/>
+  <line x1="90" y1="333.6" x2="690" y2="333.6" stroke="#e5e7eb" stroke-width="1"/>
+
+  <line x1="90" y1="70" x2="90" y2="340" stroke="#e5e7eb" stroke-width="1"/>
+  <line x1="240" y1="70" x2="240" y2="340" stroke="#e5e7eb" stroke-width="1"/>
+  <line x1="390" y1="70" x2="390" y2="340" stroke="#111827" stroke-width="2"/>
+  <line x1="540" y1="70" x2="540" y2="340" stroke="#e5e7eb" stroke-width="1"/>
+  <line x1="690" y1="70" x2="690" y2="340" stroke="#e5e7eb" stroke-width="1"/>
+
+  <rect x="90" y="70" width="600" height="270" fill="none" stroke="#9ca3af" stroke-width="1"/>
+
+  <path d="
+      M 90,207.3
+      L 97.5,207.5
+      L 105,207.7
+      L 112.5,207.9
+      L 120,208.1
+      L 127.5,208.3
+      L 135,208.5
+      L 142.5,208.8
+      L 150,209
+      L 157.5,209.3
+      L 165,209.6
+      L 172.5,209.9
+      L 180,210.2
+      L 187.5,210.5
+      L 195,210.8
+      L 202.5,211.1
+      L 210,211.4
+      L 217.5,211.7
+      L 225,212.1
+      L 232.5,212.4
+      L 240,212.7
+      L 247.5,212.9
+      L 255,213.2
+      L 262.5,213.4
+      L 270,213.6
+      L 277.5,213.8
+      L 285,213.9
+      L 292.5,213.9
+      L 300,213.9
+      L 307.5,213.8
+      L 315,213.6
+      L 322.5,213.4
+      L 330,213
+      L 337.5,212.5
+      L 345,211.8
+      L 352.5,211.1
+      L 360,210.2
+      L 367.5,209.1
+      L 375,207.9
+      L 382.5,206.5
+      L 390,205
+      L 397.5,203.3
+      L 405,201.5
+      L 412.5,199.5
+      L 420,197.3
+      L 427.5,195
+      L 435,192.5
+      L 442.5,190
+      L 450,187.3
+      L 457.5,184.4
+      L 465,181.5
+      L 472.5,178.5
+      L 480,175.4
+      L 487.5,172.2
+      L 495,168.9
+      L 502.5,165.6
+      L 510,162.2
+      L 517.5,158.8
+      L 525,155.3
+      L 532.5,151.9
+      L 540,148.4
+      L 547.5,144.9
+      L 555,141.3
+      L 562.5,137.8
+      L 570,134.3
+      L 577.5,130.7
+      L 585,127.2
+      L 592.5,123.7
+      L 600,120.2
+      L 607.5,116.6
+      L 615,113.1
+      L 622.5,109.7
+      L 630,106.2
+      L 637.5,102.7
+      L 645,99.2
+      L 652.5,95.8
+      L 660,92.4
+      L 667.5,88.9
+      L 675,85.5
+      L 682.5,82.1
+      L 690,78.7"
+        fill="none" stroke="#16a34a" stroke-width="4" stroke-linecap="round"/>
+
+  <path d="
+      M 90,202.7
+      L 97.5,202.5
+      L 105,202.3
+      L 112.5,202.1
+      L 120,201.9
+      L 127.5,201.7
+      L 135,201.5
+      L 142.5,201.2
+      L 150,201
+      L 157.5,200.7
+      L 165,200.4
+      L 172.5,200.1
+      L 180,199.8
+      L 187.5,199.5
+      L 195,199.2
+      L 202.5,198.9
+      L 210,198.6
+      L 217.5,198.3
+      L 225,197.9
+      L 232.5,197.6
+      L 240,197.3
+      L 247.5,197.1
+      L 255,196.8
+      L 262.5,196.6
+      L 270,196.4
+      L 277.5,196.2
+      L 285,196.1
+      L 292.5,196.1
+      L 300,196.1
+      L 307.5,196.2
+      L 315,196.4
+      L 322.5,196.6
+      L 330,197
+      L 337.5,197.5
+      L 345,198.2
+      L 352.5,198.9
+      L 360,199.8
+      L 367.5,200.9
+      L 375,202.1
+      L 382.5,203.5
+      L 390,205
+      L 397.5,206.7
+      L 405,208.5
+      L 412.5,210.5
+      L 420,212.7
+      L 427.5,215
+      L 435,217.5
+      L 442.5,220
+      L 450,222.7
+      L 457.5,225.6
+      L 465,228.5
+      L 472.5,231.5
+      L 480,234.6
+      L 487.5,237.8
+      L 495,241.1
+      L 502.5,244.4
+      L 510,247.8
+      L 517.5,251.2
+      L 525,254.7
+      L 532.5,258.1
+      L 540,261.6
+      L 547.5,265.1
+      L 555,268.7
+      L 562.5,272.2
+      L 570,275.7
+      L 577.5,279.3
+      L 585,282.8
+      L 592.5,286.3
+      L 600,289.8
+      L 607.5,293.4
+      L 615,296.9
+      L 622.5,300.3
+      L 630,303.8
+      L 637.5,307.3
+      L 645,310.8
+      L 652.5,314.2
+      L 660,317.6
+      L 667.5,321.1
+      L 675,324.5
+      L 682.5,327.9
+      L 690,331.3"
+        fill="none" stroke="#dc2626" stroke-width="4" stroke-linecap="round"
+        stroke-dasharray="8 7"/>
+
+  <rect x="110" y="88" width="165" height="60" rx="4" fill="#ffffff" stroke="#d1d5db"/>
+  <line x1="125" y1="108" x2="163" y2="108" stroke="#16a34a" stroke-width="4"/>
+  <text x="173" y="113" font-family="Arial, sans-serif" font-size="14" fill="#111827">
+    b = 1
+  </text>
+  <line x1="125" y1="130" x2="163" y2="130" stroke="#dc2626" stroke-width="4"
+        stroke-dasharray="8 7"/>
+  <text x="173" y="135" font-family="Arial, sans-serif" font-size="14" fill="#111827">
+    b = -1
+  </text>
+
+  <text x="700" y="81" font-family="Arial, sans-serif" font-size="14" fill="#374151">4</text>
+  <text x="700" y="145" font-family="Arial, sans-serif" font-size="14" fill="#374151">2</text>
+  <text x="700" y="210" font-family="Arial, sans-serif" font-size="14" fill="#374151">0</text>
+  <text x="700" y="274" font-family="Arial, sans-serif" font-size="14" fill="#374151">-2</text>
+  <text x="700" y="338" font-family="Arial, sans-serif" font-size="14" fill="#374151">-4</text>
+
+  <text x="90" y="362" text-anchor="middle" font-family="Arial, sans-serif" font-size="14"
+        fill="#374151">-4</text>
+  <text x="240" y="362" text-anchor="middle" font-family="Arial, sans-serif" font-size="14"
+        fill="#374151">-2</text>
+  <text x="390" y="362" text-anchor="middle" font-family="Arial, sans-serif" font-size="14"
+        fill="#374151">0</text>
+  <text x="540" y="362" text-anchor="middle" font-family="Arial, sans-serif" font-size="14"
+        fill="#374151">2</text>
+  <text x="690" y="362" text-anchor="middle" font-family="Arial, sans-serif" font-size="14"
+        fill="#374151">4</text>
+
+  <text x="390" y="394" text-anchor="middle" font-family="Arial, sans-serif" font-size="17"
+        fill="#111827">gate preactivation a</text>
+  <text x="30" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="17"
+        fill="#111827" transform="rotate(-90 30 205)">SiLU(a) * b</text>
+</svg>

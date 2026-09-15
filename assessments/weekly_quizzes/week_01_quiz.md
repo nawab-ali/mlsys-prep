@@ -19,7 +19,7 @@ Use this sequence:
 1. Answer without notes.
 2. Score yourself with the rubric.
 3. Review the answer key.
-4. Mark weak areas in the progress tracker.
+4. Note weak areas for review.
 5. Repeat missed questions out loud.
 
 Recommended time:

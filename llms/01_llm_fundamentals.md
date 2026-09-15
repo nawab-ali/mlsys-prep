@@ -9,6 +9,30 @@ correct mental model that supports later modules on attention, KV cache,
 training, inference serving, quantization, GPU architecture, and cluster-scale
 systems.
 
+## Table of contents
+
+- [Learning goals](#learning-goals)
+- [Why this matters for interviews](#why-this-matters-for-interviews)
+- [What an LLM is](#what-an-llm-is)
+- [What large means](#what-large-means)
+- [Tokens versus words](#tokens-versus-words)
+- [Token IDs](#token-ids)
+- [Embeddings](#embeddings)
+- [Transformer purpose](#transformer-purpose)
+- [Why Transformers became dominant](#why-transformers-became-dominant)
+- [Logits and probabilities](#logits-and-probabilities)
+- [Autoregressive generation](#autoregressive-generation)
+- [Training versus inference preview](#training-versus-inference-preview)
+- [Production intuition for a hardware architect](#production-intuition-for-a-hardware-architect)
+- [Why LLMs are not databases](#why-llms-are-not-databases)
+- [Where the simple mental model breaks](#where-the-simple-mental-model-breaks)
+- [Common misconceptions](#common-misconceptions)
+- [What can go wrong in interviews](#what-can-go-wrong-in-interviews)
+- [Interviewer questions to expect](#interviewer-questions-to-expect)
+- [Senior/principal answer patterns](#seniorprincipal-answer-patterns)
+- [Week 1 self-check](#week-1-self-check)
+- [Sources](#sources)
+
 ## Learning goals
 
 By the end of this module, you should be able to:
