@@ -12,7 +12,7 @@ the README.
 3. Read [LLM and GPU Bridge](../systems/00_llm_gpu_bridge.md).
 4. Complete [Behavioral Strategy](../behavioral/00_behavioral_strategy.md).
 5. Take the [Week 1 Baseline Diagnostic](../assessments/weekly_quizzes/week_01_quiz.md).
-6. Record weak areas in the [Progress Tracker](../plan/04_progress_tracker.md).
+6. Update topic statuses in the [Progress Tracker](../plan/04_progress_tracker.md).
 
 ## How to study
 
@@ -34,13 +34,7 @@ A score of 4 means you can teach the concept and defend tradeoffs.
 
 ## How to use the progress tracker
 
-At the end of each week, update:
-
-- Concepts you can explain.
-- Concepts you can apply.
-- Concepts that remain weak.
-- Behavioral stories that need evidence.
-- Follow-up topics for the next week.
+Update the Week 1 topic and quiz statuses as you study.
 
 ## Repository development
 

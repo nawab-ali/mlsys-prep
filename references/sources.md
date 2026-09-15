@@ -353,3 +353,35 @@ The Week 1 gold-standard content set is:
 - `references/sources.md`
 
 Together, these files define the Week 1 baseline for future modules.
+
+## Week 2: GEMM Tiling Hierarchy
+
+The seven-panel explanation in [NVIDIA GPU Execution Model](../nvidia/02_gpu_execution_model.md)
+uses these primary NVIDIA sources:
+
+- [CUTLASS Efficient GEMM in CUDA][gemm-efficient]: hierarchy diagram, mainloop, pipelining, and epilogue exchange.
+- [CUTLASS GEMM API][gemm-api]: CTA/warp/thread operators, register fragments, and boundary predication.
+- [CUTLASS: Fast Linear Algebra in CUDA C++][gemm-blog]: thread outer products and fused epilogue examples.
+- [Matrix Multiplication Background User's Guide][gemm-background]: dimensions, output tiling, and reuse tradeoffs.
+- [CUDA C++ Best Practices Guide][gemm-practices]: shared-memory reuse, synchronization, and coalesced accesses.
+- [CUTLASS 3.0 Design][gemm-design] and [PTX ISA][gemm-ptx]: instruction scope and modern-architecture limitations.
+
+Numerical tile sizes are an illustrative mapping, not a hardware specification or benchmark.
+The original diagram's classic register hierarchy is not a universal Hopper or Blackwell operand path.
+
+[gemm-efficient]: https://docs.nvidia.com/cutlass/4.2.1/media/docs/cpp/efficient_gemm.html
+[gemm-api]: https://docs.nvidia.com/cutlass/4.2.1/media/docs/cpp/gemm_api.html
+[gemm-blog]: https://developer.nvidia.com/blog/cutlass-linear-algebra-cuda/
+[gemm-background]: https://docs.nvidia.com/deeplearning/performance/dl-performance-matrix-multiplication/index.html
+[gemm-practices]: https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html
+[gemm-design]: https://docs.nvidia.com/cutlass/4.2.1/media/docs/cpp/cutlass_3x_design.html
+[gemm-ptx]: https://docs.nvidia.com/cuda/parallel-thread-execution/index.html
+
+## Week 2: Decode Performance Case Study
+
+[Applied Decode-Performance Case Study](../systems/02_decode_performance_case_study.md) uses
+[NVIDIA's inference optimization guidance][decode-inference] for decode, batching, KV memory, and quantization.
+The worked calculations and both figures use the exercise's explicit hypothetical assumptions.
+They are not measured H100 performance, and a latency lower bound below the SLA does not guarantee compliance.
+
+[decode-inference]: https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/
