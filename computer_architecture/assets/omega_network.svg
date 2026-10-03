@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="550" viewBox="0 0 1000 550">
+<title>Omega network: a shared-link conflict</title>
+<desc>Four inputs, two stages, four 2x2 switches; traffic flows left to right.</desc>
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#24343d}</style>
+<defs>
+<marker id="ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#24343d"/></marker>
+<marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2267a5"/></marker>
+<marker id="teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#087f7a"/></marker>
+<marker id="red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b34939"/></marker>
+</defs>
+<text x="32" y="42" font-size="28" text-anchor="start" font-weight="700" style="fill:#24343d">Omega network: a shared-link conflict</text>
+<text x="32" y="73" font-size="17" text-anchor="start" font-weight="400" style="fill:#24343d">Four inputs, two stages, four 2x2 switches; traffic flows left to right.</text>
+<path d="M32 94 H968" fill="none" stroke="#dce4e8" stroke-width="1"/>
+<text x="75" y="130" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">Input</text>
+<text x="300" y="130" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">High-bit stage</text>
+<text x="660" y="130" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">Low-bit stage</text>
+<text x="925" y="130" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">Output</text>
+<text x="65" y="186" font-size="20" text-anchor="middle" font-weight="400" style="fill:#24343d">0</text>
+<text x="936" y="186" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">0 (00)</text>
+<text x="65" y="256" font-size="20" text-anchor="middle" font-weight="400" style="fill:#24343d">1</text>
+<text x="936" y="256" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">1 (01)</text>
+<text x="65" y="356" font-size="20" text-anchor="middle" font-weight="400" style="fill:#24343d">2</text>
+<text x="936" y="356" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">2 (10)</text>
+<text x="65" y="426" font-size="20" text-anchor="middle" font-weight="400" style="fill:#24343d">3</text>
+<text x="936" y="426" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">3 (11)</text>
+<path d="M95 180 H245 M95 250 L245 350 M95 350 L245 250 M95 420 H245" fill="none" stroke="#86949b" stroke-width="2"/>
+<path d="M355 180 H605 M355 250 L605 350 M355 350 L605 250 M355 420 H605" fill="none" stroke="#86949b" stroke-width="2"/>
+<path d="M715 180 H885" fill="none" stroke="#24343d" stroke-width="2.3" marker-end="url(#ink)"/>
+<path d="M715 250 H885" fill="none" stroke="#24343d" stroke-width="2.3" marker-end="url(#ink)"/>
+<path d="M715 350 H885" fill="none" stroke="#24343d" stroke-width="2.3" marker-end="url(#ink)"/>
+<path d="M715 420 H885" fill="none" stroke="#24343d" stroke-width="2.3" marker-end="url(#ink)"/>
+<path d="M355 180 H605" fill="none" stroke="#b34939" stroke-width="5" marker-end="url(#red)"/>
+<rect x="245" y="155" width="110" height="120" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="300.0" y="221.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">S0</text>
+<rect x="245" y="325" width="110" height="120" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="300.0" y="391.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">S1</text>
+<rect x="605" y="155" width="110" height="120" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="660.0" y="221.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">T0</text>
+<rect x="605" y="325" width="110" height="120" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="660.0" y="391.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">T1</text>
+<text x="480" y="164" font-size="18" text-anchor="middle" font-weight="700" style="fill:#b34939">Shared link</text>
+<text x="480" y="223" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">0 -&gt; 0 and 2 -&gt; 1</text>
+<text x="40" y="483" font-size="19" text-anchor="start" font-weight="400" style="fill:#24343d">Each destination bit selects an upper (0) or lower (1) output.</text>
+<text x="40" y="519" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Different destinations still contend here. Crossings without nodes are not connections.</text>
+</svg>

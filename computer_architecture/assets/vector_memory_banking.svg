@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="620" height="331" viewBox="0 0 620 331">
+  <rect width="620" height="331" fill="white" />
+  <defs>
+    <clipPath id="clip_1">
+      <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M100 50.275575H720V381.27558H100Z" />
+    </clipPath>
+    <clipPath id="clip_2">
+      <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M0 0H841.8898V595.2756H0Z" />
+    </clipPath>
+    <clipPath id="clip_3">
+      <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M60.945 567.639H780.945V27.638978H60.945Z" />
+    </clipPath>
+  </defs>
+  <g clip-path="url(#clip_1)">
+    <g clip-path="url(#clip_2)">
+      <g clip-path="url(#clip_3)">
+        <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M60.945 567.639H780.945V27.638978H60.945Z" fill="#ffffff" fill-rule="evenodd" />
+        <text fill="#006633" xml:space="preserve" transform="matrix(1 0 -0 1 -100 381.27558)" font-size="40" font-family="Times New Roman, serif">
+          <tspan y="-513.8874" x="86.14622 121.70622 139.42623 170.50623 190.50623 203.82624 223.82624 233.82624 260.34626 278.06626 298.06626 318.06626 329.14625 349.14625">Memory Banking</tspan>
+        </text>
+        <text fill="#cc9900" xml:space="preserve" transform="matrix(1 0 -0 1 -100 381.27558)" font-size="15.5" font-family="Times New Roman, serif">
+          <tspan y="-463.20805" x="86.14567 97.77067">■■</tspan>
+        </text>
+        <text xml:space="preserve" transform="matrix(1 0 -0 1 -100 381.27558)" font-size="24.000002" font-family="Times New Roman, serif">
+          <tspan y="-463.20805" x="121.14567 134.60967 146.48967 159.06568 179.20168 192.37767 197.84967 210.47368 218.94568 226.43369 239.51369 252.52169 260.00968 273.2577 285.83369 299.1297 311.0817 321.7857 330.25773 337.74574 348.80973 361.31373 374.68174 382.16975 392.87376 400.88975 413.39375 422.03376 430.04975 437.53776 450.54576 463.91377 476.46577 483.95378 497.20179 509.77778 523.0737 535.02578 542.51376 555.0897 566.15377 577.2178 589.8418 600.47378 611.17776 618.6657 631.9137 644.5377 653.17776 660.6657 671.6577 683.60977 694.67379 700.14578">Example: 16 banks; can start one bank access per cycle</tspan>
+        </text>
+        <text fill="#cc9900" xml:space="preserve" transform="matrix(1 0 -0 1 -100 381.27558)" font-size="15.5" font-family="Times New Roman, serif">
+          <tspan y="-429.75804" x="86.14567 97.77067">■■</tspan>
+        </text>
+        <text xml:space="preserve" transform="matrix(1 0 -0 1 -100 381.27558)" font-size="24.000002" font-family="Times New Roman, serif">
+          <tspan y="-429.75804" x="121.14567 135.28168 147.85768 161.22568 173.17768 180.66568 186.06568 198.64168 206.65769 219.2817 232.64969 243.64168 255.59368 264.06568 271.55369 284.63368 297.6417 305.1297 316.1937 328.1457 339.2097 344.6817 357.3057">Bank latency: 11 cycles</tspan>
+        </text>
+        <text fill="#cc9900" xml:space="preserve" transform="matrix(1 0 -0 1 -100 381.27558)" font-size="15.5" font-family="Times New Roman, serif">
+          <tspan y="-394.75804" x="86.14567 97.77067">■■</tspan>
+        </text>
+        <text xml:space="preserve" transform="matrix(1 0 -0 1 -100 381.27558)" font-size="24.000002" font-family="Times New Roman, serif">
+          <tspan y="-394.75804" x="121.14567 135.54567 148.12168 161.48967 168.90567 179.60967 192.97766 203.68166 211.69766 224.27367 229.67366 243.04166 250.52967 263.60969 276.6177 284.1057 297.35374 309.92973 318.56974 331.07374 336.54576 342.01777 354.64176 360.11378 367.60179 380.10578 391.16978 402.23377 414.85777 425.56178 436.26579 448.88978 459.5218 467.0098 472.4818 480.1138 487.6018 495.6178 508.91383 521.53787 533.48989 540.97787 554.2258 567.2338 574.6498 582.6658 595.67379 603.16177 616.3377 621.8097 629.4417 637.0737 649.69778 658.33779 670.9618 684.3298 692.27377 699.7617 713.0097 725.5857 738.88168 750.8337">Can sustain 16 parallel accesses if they go to different banks</tspan>
+        </text>
+        <text xml:space="preserve" transform="matrix(1 0 -0 1 -100 381.27558)" font-size="16.000002" font-family="Times New Roman, serif">
+          <tspan y="-41.827856" x="740.7699 748.7699">19</tspan>
+        </text>
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M109.445 223.137H204.445V306.137H109.445Z" />
+        <text xml:space="preserve" transform="matrix(1 0 -0 1 -100 381.27558)" font-size="18.000002" font-family="Times New Roman, serif">
+          <tspan y="-333.1078" x="116.54481 128.5328 136.5068 145.5068 154.5068 159.0068">Bank  </tspan>
+          <tspan y="-307.6078" x="116.54481">0</tspan>
+        </text>
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M211.445 223.137H306.445V306.137H211.445Z" />
+        <text xml:space="preserve" transform="matrix(1 0 -0 1 -100 381.27558)" font-size="18.000002" font-family="Times New Roman, serif">
+          <tspan y="-333.1078" x="218.54489 230.5329 238.5069 247.5069 256.5069 261.0069">Bank  </tspan>
+          <tspan y="-307.6078" x="218.54489">1</tspan>
+        </text>
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width="3.998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M416.07 258.637H608.07" />
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M109.445 331.137H150.445V360.137H109.445Z" />
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M157.445 331.137H204.445V360.137H157.445Z" />
+        <text xml:space="preserve" transform="matrix(1 0 -0 1 -100 381.27558)" font-size="12" font-family="Times New Roman, serif">
+          <tspan x="116.56985" y="-243.40779">MDR</tspan>
+          <tspan x="162.05587" y="-243.40779">MAR</tspan>
+        </text>
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M313.445 223.137H408.445V306.137H313.445Z" />
+        <text xml:space="preserve" transform="matrix(1 0 -0 1 -100 381.27558)" font-size="18.000002" font-family="Times New Roman, serif">
+          <tspan y="-333.1078" x="320.5448 332.5328 340.5068 349.5068 358.5068 363.0068">Bank  </tspan>
+          <tspan y="-307.6078" x="320.5448">2</tspan>
+        </text>
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M613.445 223.137H708.445V306.137H613.445Z" />
+        <text xml:space="preserve" transform="matrix(1 0 -0 1 -100 381.27558)" font-size="18.000002" font-family="Times New Roman, serif">
+          <tspan y="-333.1078" x="620.54476 632.5327 640.5067 649.5067 658.5067 663.0067">Bank  </tspan>
+          <tspan y="-307.6078" x="620.54476 629.54476">15</tspan>
+        </text>
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M211.445 331.137H252.445V360.137H211.445Z" />
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M259.445 331.137H306.445V360.137H259.445Z" />
+        <text xml:space="preserve" transform="matrix(1 0 -0 1 -100 381.27558)" font-size="12" font-family="Times New Roman, serif">
+          <tspan x="218.56984" y="-243.40779">MDR</tspan>
+          <tspan x="264.05586" y="-243.40779">MAR</tspan>
+        </text>
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M313.445 331.137H354.445V360.137H313.445Z" />
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M361.445 331.137H408.445V360.137H361.445Z" />
+        <text xml:space="preserve" transform="matrix(1 0 -0 1 -100 381.27558)" font-size="12" font-family="Times New Roman, serif">
+          <tspan x="320.56986" y="-243.40779">MDR</tspan>
+          <tspan x="366.05589" y="-243.40779">MAR</tspan>
+        </text>
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M613.445 331.137H654.445V360.137H613.445Z" />
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M661.445 331.137H708.445V360.137H661.445Z" />
+        <text xml:space="preserve" transform="matrix(1 0 -0 1 -100 381.27558)" font-size="12" font-family="Times New Roman, serif">
+          <tspan x="620.5698" y="-243.40779">MDR</tspan>
+          <tspan x="666.05587" y="-243.40779">MAR</tspan>
+        </text>
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width="3.998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M108.945 420.637H708.945" />
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width="3.998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M132.945 364.637V416.637" />
+        <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M132.945 234.639 126.945 222.639H138.945ZM132.945 234.639" fill-rule="evenodd" />
+        <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M138.945 186.639H126.945L132.945 174.639ZM138.945 186.639" fill-rule="evenodd" />
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width="3.998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M234.945 364.637V416.637" />
+        <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M234.945 234.639 228.945 222.639H240.945ZM234.945 234.639" fill-rule="evenodd" />
+        <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M240.945 186.639H228.945L234.945 174.639ZM240.945 186.639" fill-rule="evenodd" />
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width="3.998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M336.945 364.637V416.637" />
+        <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M336.945 234.639 330.945 222.639H342.945ZM336.945 234.639" fill-rule="evenodd" />
+        <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M342.945 186.639H330.945L336.945 174.639ZM342.945 186.639" fill-rule="evenodd" />
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width="3.998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M636.945 364.637V416.637" />
+        <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M636.945 234.639 630.945 222.639H642.945ZM636.945 234.639" fill-rule="evenodd" />
+        <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M642.945 186.639H630.945L636.945 174.639ZM642.945 186.639" fill-rule="evenodd" />
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M180.945 362.637V444.637" />
+        <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M180.945 234.639 177.945 228.639H183.945ZM180.945 234.639" fill-rule="evenodd" />
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M282.945 362.637V444.637" />
+        <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M282.945 234.639 279.945 228.639H285.945ZM282.945 234.639" fill-rule="evenodd" />
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M384.945 362.637V444.637" />
+        <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M384.945 234.639 381.945 228.639H387.945ZM384.945 234.639" fill-rule="evenodd" />
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M684.945 362.637V444.637" />
+        <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M684.945 234.639 681.945 228.639H687.945ZM684.945 234.639" fill-rule="evenodd" />
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M108.945 444.637H708.945" />
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M265.445 505.137H384.445V534.13699H265.445Z" />
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M409.445 505.137H528.445V534.13699H409.445Z" />
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width="3.998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M324.945 424.637V500.637" />
+        <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M324.945 174.639 318.945 162.639H330.945ZM324.945 174.639" fill-rule="evenodd" />
+        <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M330.945 102.639H318.945L324.945 90.639ZM330.945 102.639" fill-rule="evenodd" />
+        <path transform="matrix(1,0,0,1,-100,-214)" stroke-width=".998032" stroke-linecap="butt" stroke-linejoin="round" fill="none" stroke="#000000" d="M438.945 446.637V504.637" />
+        <path transform="matrix(1,0,0,-1,-100,381.27558)" d="M438.945 150.639 435.945 144.639H441.945ZM438.945 150.639" fill-rule="evenodd" />
+        <text xml:space="preserve" transform="matrix(1 0 -0 1 -100 381.27558)" font-size="18.000002" font-family="Times New Roman, serif">
+          <tspan y="-191.98282" x="456.81986 469.81587 477.78987 482.77586 490.69587 495.19587 504.19587 513.19589">Data bus</tspan>
+          <tspan y="-123.7328" x="456.81986 469.81587 478.81587 487.81587 493.80986 501.78385 508.78587 515.78787 520.28787 529.28787 538.28787">Address bus</tspan>
+          <tspan y="-62.5828" x="583.4542 595.4422 605.4502">CPU</tspan>
+        </text>
+        <text xml:space="preserve" transform="matrix(1 0 -0 1 -100 381.27558)" font-size="10" font-family="Times New Roman, serif">
+          <tspan y="-40.062807" x="80.14488 86.804889 89.02489 91.24489 96.804889 102.36488 105.13488 110.13488 113.46488 118.99488 124.55488 126.77488 129.54488 132.31488 135.08489 142.27489 147.83489 151.16489 156.72489 161.72489 164.49489 171.71489 177.27489 179.49489 185.05489">Slide credit: Derek Chiou</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+  <title>Independent vector-memory banks with shared address and data buses</title>
+  <metadata>Diagram credit: Derek Chiou. Source: https://www.cse.iitd.ac.in/~rijurekha/col380/col380_class5.pdf, physical page 12, slide 19. Cropped vector artwork; MAR/MDR labels resized; connections unchanged.</metadata>
+</svg>

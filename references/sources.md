@@ -385,3 +385,143 @@ The worked calculations and both figures use the exercise's explicit hypothetica
 They are not measured H100 performance, and a latency lower bound below the SLA does not guarantee compliance.
 
 [decode-inference]: https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/
+
+## Computer Architecture
+
+Content basis: the computer-architecture material in the user-provided *Notes for Technical Interviews*,
+PDF pages 74-217 (printed pages 73-216). The PDF is local source material, not a committed repository asset.
+
+Coverage additions in [Computer Architecture](../computer_architecture/README.md) restore these teaching details:
+
+- Dataflow operators and node state: PDF pages 75-76 and 114-115.
+- Dataflow worked graph, parallelism examples, banking, SPMD, and compiler techniques: pages 115, 117, 121, 123,
+  131, and 135.
+- Addressing modes: page 81; pipeline/frontend mechanisms: pages 93 and 97-101.
+- Delay-slot limits, execution-unit pipelining, event timing, ROB operand reads, and Tomasulo memory paths:
+  pages 98, 106, 109, 111, and 113.
+- Cache placement and optimizations: pages 137-142; coherence transactions and filters: pages 146-151.
+- DRAM transfer organization and scheduling: pages 158-163 and 168-172.
+- Prefetching mechanisms, examples, and metric definitions: pages 178-189.
+- Consistency and interconnect examples: pages 197-217.
+
+The notes distinguish teaching assumptions from implementation guarantees. New network diagrams are simplified
+reconstructions of the chapter's concepts; numerical illustrations are not hardware benchmark results.
+
+### Figure Attribution
+
+For this topic, prefer accurate, clearly licensed public artwork before creating a new diagram.
+Captions in the study modules link to the original artwork and record author attribution, licenses, and adaptations.
+The foundations dataflow graph uses [Dive into Deep Learning, Fig. 13.1.1][architecture-dataflow-source],
+by Aston Zhang, Zachary C. Lipton, Mu Li, and Alexander J. Smola. Its
+[CC BY-SA 4.0 license](../computer_architecture/assets/dataflow_model_license.txt) is retained beside the asset.
+The vector labels, nodes, and arrows are unchanged; a white background was added for legibility.
+The source depicts data dependencies in an imperative program; the module explains how a dataflow executor
+can use the two independent branches concurrently, rather than claiming that the source Python code does so.
+The foundations Von Neumann overview uses [Kapooht's Wikimedia Commons vector artwork][architecture-von-neumann],
+licensed under [CC BY-SA 3.0][architecture-von-neumann-license]. It is rasterized at 2400 pixels wide on a white
+background; the original labels, blocks, and arrows are unchanged. The module retains the detailed register and
+fetch/execute explanation that the overview omits.
+Public illustrations do not override the curriculum's topic coverage.
+Numerical chapter prefixes are not used in headings.
+
+The [DRAM/HBM module](../computer_architecture/05_dram_hbm_memory_systems.md) uses four public-source figures:
+
+- DRAM hierarchy: Kim, Seshadri, Lee, Liu, and Mutlu, [SALP, Fig. 2][arch-dram-hierarchy-figure].
+  The original vector figure is cropped and rasterized at 2460 pixels wide; labels and connections are unchanged.
+- HBM packaging: Shmuel Csaba Otto Traian (ScotXW), [Wikimedia Commons artwork][arch-hbm-packaging-figure],
+  [CC BY-SA 4.0][arch-figure-cc-by-sa]. Rasterized at 2400 pixels wide with a white background, otherwise unchanged.
+  Its historical rate and memory-side base-die label are qualified in the module.
+- Memory controller: Zhuorui Liu, Yan Li, and Xiaoyang Zeng, [ADPO, Fig. 5][arch-controller-figure],
+  [CC BY 4.0][arch-figure-cc-by]. The original 2000-by-1510-pixel figure is retained unchanged.
+  This illustrates a specific controller implementation, not mandatory universal block boundaries.
+- Prefetching: [IIT Kanpur CS422, lecture 5, slide 3][arch-prefetch-engine-figure].
+  The original slide is rasterized at 3840 pixels wide without changing its labels, arrows, or numbered steps.
+
+The SALP paper and IIT Kanpur lecture do not state an open-reuse license in the source files;
+their artwork retains its original authors' rights and is not relicensed as repository-created work.
+
+Additional retained artwork restores mechanisms that broader replacement pictures did not show:
+
+- The full ALU instruction path, vector-lane mapping, and conceptual warp
+  scheduling reuse existing artwork from the approved local notes; no chapter heading or page furniture is retained.
+- The crossbar matrix and H-tree/fat-tree panels reuse [CMU's interconnection-network lecture][architecture-networks].
+  The crossbar is cropped; the tree panels are cropped and arranged side by side without changing their connections.
+- The vector-bank diagram reuses Derek Chiou's artwork from [IIT Delhi's vector-processing slides][arch-vector-banks],
+  physical PDF page 12 (slide 19). It is cropped to the diagram with MAR/MDR label sizes adjusted;
+  bank boxes, buses, and arrow connections are retained. The six-operation dataflow graph is a reconstruction
+  of the approved notes' worked example, with register-value versions distinguished explicitly.
+
+SPMD barrier scope and memory visibility follow [NVIDIA's synchronization guidance][arch-cuda-sync].
+Compiler-technique reuse follows [Clang's loop optimizations][arch-clang-loops] and
+[LLVM's software-pipelining discussion][arch-llvm-pipelining].
+
+Worked encoding details use [RISC-V instruction listings][architecture-encodings]; cache-miss reference-model
+qualifications use [CMU's memory-hierarchy lecture][arch-cache]. Prefetch locality hints are qualified against
+[Intel's instruction reference][arch-prefetch-isa] and [intrinsic mapping][architecture-prefetch-hints].
+Routing tradeoffs follow [CMU's routing discussion][architecture-routing]. Numerical teaching examples are not
+vendor specifications.
+
+The multiprocessor notes' TSO/store-buffer explanation follows [Sewell et al., x86-TSO][arch-x86-tso], scoped to
+ordinary coherent write-back memory rather than arbitrary device or streaming accesses. Synchronization examples
+use the C++ specifications for [condition variables][arch-condition-variables] and [semaphores][arch-semaphores].
+The unidirectional-ring mean, local 2x2 switching function, and buffered-crossbar scheduling tradeoffs follow
+the same [CMU interconnect lecture][architecture-routing]. Speedup timings are illustrative, not benchmark results.
+
+Cache valid/tag checks follow [Cornell's cache lookup explanation][arch-cache-lookup]; bus serialization follows
+[Stanford's coherence lecture][arch-coherence]. Owned-state sharing and write permissions follow
+[AMD's MOESI discussion][arch-moesi], printed pages 205-206. The approved notes' O-to-S clean-and-retain example
+is qualified by protocol support rather than presented as a mandatory hardware operation.
+
+DRAM cell sensing follows [CMU's memory-hierarchy lecture][arch-dram-cells]. The controller/PHY distinction follows
+[DFI][arch-dram-phy], and the low-latency memory category uses [Micron's RLDRAM overview][arch-rldram].
+Triad's multiply-add purpose and byte/FLOP accounting follow the [STREAM reference][arch-stream-accounting] and
+[benchmark motivation][arch-stream-motivation]. Block-address stride table fields follow
+[ShanghaiTech's architecture lecture][arch-stride-models], based on CMU ECE447 material.
+Buffer sizing and trained-entry examples are explicit teaching examples, not vendor specifications.
+
+The ISA scope and bit/byte/word addressability distinctions retain the approved notes' introductory coverage.
+Plain-store versus base-register-writeback behavior is checked against
+[Arm's store-instruction guidance][arch-arm-stores].
+
+Historical result-in-ROB operand sourcing is checked against [Maryland's RiSC-oo teaching report][arch-rob-operands].
+Tagged load results, store-data capture, and functional-unit overlap follow
+[Edinburgh's HASE Tomasulo model][arch-tomasulo]. Event-delivery terminology and masking are qualified against
+[Intel's system programming manual][arch-event-delivery]; urgent-event behavior is ISA/platform-specific.
+
+[arch-rob-operands]: https://user.eng.umd.edu/~blj/risc/RiSC-oo.1.pdf
+[arch-tomasulo]: https://www.icsa.inf.ed.ac.uk/research/groups/hase/models/tomasulo/tomasulo.html
+[arch-event-delivery]: https://cdrdv2-public.intel.com/819714/253668-sdm-vol-3a.pdf
+[architecture-dataflow-source]: https://d2l.ai/chapter_computational-performance/hybridize.html#fig-computegraph
+[architecture-von-neumann]: https://commons.wikimedia.org/wiki/File:Von_Neumann_Architecture.svg
+[architecture-von-neumann-license]: https://creativecommons.org/licenses/by-sa/3.0/
+[architecture-networks]: https://www.cs.cmu.edu/afs/cs/academic/class/15418-s12/www/lectures/18_interconnects.pdf
+[architecture-encodings]: https://docs.riscv.org/reference/isa/unpriv/rv-32-64g.html
+[arch-cache]: https://www.cs.cmu.edu/afs/cs/academic/class/15740-s18/www/lectures/03-04-memory-hierarchy.pdf
+[architecture-prefetch-hints]: https://www.intel.com/content/dam/develop/external/us/en/documents/18072-347603.pdf
+[arch-prefetch-isa]: https://cdrdv2-public.intel.com/782151/253667-sdm-vol-2b.pdf
+[architecture-routing]: https://www.cs.cmu.edu/afs/cs/academic/class/15740-f14/www/lectures/08-interconnect.pdf
+[arch-arm-stores]: https://documentation-service.arm.com/static/680122175b1a8c5a27aa1aa7#page=18
+[arch-vector-banks]: https://www.cse.iitd.ac.in/~rijurekha/col380/col380_class5.pdf#page=12
+[arch-cuda-sync]:
+  https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/advanced-kernel-programming.html
+[arch-clang-loops]: https://clang.llvm.org/docs/LanguageExtensions.html#extensions-for-loop-hint-optimizations
+[arch-llvm-pipelining]: https://llvm.org/pubs/2005-06-17-LattnerMSThesis.pdf
+[arch-cache-lookup]: https://www.cs.cornell.edu/courses/cs3410/2026sp/notes/caches.html
+[arch-coherence]: https://gfxcourses.stanford.edu/cs149/fall24content/media/cachecoherence/13_coherence.pdf
+[arch-moesi]:
+  https://www.amd.com/content/dam/amd/en/documents/archived-tech-docs/software-optimization-guides/40546.pdf
+[arch-dram-cells]: https://course.ece.cmu.edu/~ece600/fall17/lectures/lecture10.pdf
+[arch-dram-phy]: https://ddr-phy.org/
+[arch-rldram]: https://www.micron.com/products/memory/dram-components/rldram-memory
+[arch-stream-accounting]: https://www.cs.virginia.edu/stream/ref.html
+[arch-stream-motivation]: https://www.cs.virginia.edu/~mccalpin/papers/bandwidth/node3.html
+[arch-stride-models]: https://robotics.shanghaitech.edu.cn/courses/ca/20s/lectures/2020-CA-L23_Advanced_Cache.pdf
+[arch-dram-hierarchy-figure]: https://users.ece.cmu.edu/~omutlu/pub/salp-dram_isca12.pdf
+[arch-hbm-packaging-figure]: https://commons.wikimedia.org/wiki/File:High_Bandwidth_Memory_schematic.svg
+[arch-controller-figure]: https://doi.org/10.3390/mi16040409
+[arch-prefetch-engine-figure]: https://www.cse.iitk.ac.in/users/biswap/CS422-2019/L5.pdf
+[arch-figure-cc-by]: https://creativecommons.org/licenses/by/4.0/
+[arch-figure-cc-by-sa]: https://creativecommons.org/licenses/by-sa/4.0/
+[arch-x86-tso]: https://www.cl.cam.ac.uk/~pes20/weakmemory/cacm.pdf
+[arch-condition-variables]: https://eel.is/c++draft/thread.condition.condvar
+[arch-semaphores]: https://eel.is/c++draft/thread.sema.cnt

@@ -20,6 +20,8 @@ Begin Week 1 in this order:
 
 Do not browse directories manually. Start with the list above.
 
+Additional study material: [Computer Architecture Interview Notes](computer_architecture/README.md).
+
 Week 2 systems: [Applied Decode-Performance Case Study](systems/02_decode_performance_case_study.md).
 
 ## Week 1 goal
