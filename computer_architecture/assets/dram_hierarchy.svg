@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="590" viewBox="0 0 1180 590">
+<title>DRAM hierarchy</title><rect width="100%" height="100%" fill="#fff"/>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#222"/></marker></defs>
+<style>
+.t{font-family:Arial,Helvetica,sans-serif;fill:#111}.h{font-family:Arial,Helvetica,sans-serif;fill:#111;font-weight:700}
+.b{fill:#f7f7f7;stroke:#222;stroke-width:1.5}.a{fill:none;stroke:#222;stroke-width:1.6;marker-end:url(#arrow)}
+</style>
+<text x="590" y="30" font-size="24" class="h" text-anchor="middle">DDR-Style DRAM Organization</text>
+<rect x="20" y="88" width="125" height="66" rx="6" class="b"/><text x="82" y="116" font-size="15" class="t" text-anchor="middle">Memory</text><text x="82" y="136" font-size="15" class="t" text-anchor="middle">controller</text>
+<rect x="175" y="88" width="135" height="66" rx="6" class="b"/><text x="242" y="116" font-size="15" class="t" text-anchor="middle">Channel /</text><text x="242" y="136" font-size="15" class="t" text-anchor="middle">subchannel</text>
+<rect x="340" y="88" width="135" height="66" rx="6" class="b"/><text x="407" y="116" font-size="15" class="t" text-anchor="middle">DIMM /</text><text x="407" y="136" font-size="15" class="t" text-anchor="middle">package</text>
+<rect x="505" y="88" width="120" height="66" rx="6" class="b"/><text x="565" y="127" font-size="16" class="t" text-anchor="middle">Rank</text>
+<rect x="655" y="88" width="130" height="66" rx="6" class="b"/><text x="720" y="116" font-size="15" class="t" text-anchor="middle">DRAM</text><text x="720" y="136" font-size="15" class="t" text-anchor="middle">device</text>
+<rect x="815" y="88" width="140" height="66" rx="6" class="b"/><text x="885" y="116" font-size="15" class="t" text-anchor="middle">Bank group</text><text x="885" y="136" font-size="13" class="t" text-anchor="middle">where defined</text>
+<rect x="985" y="88" width="120" height="66" rx="6" class="b"/><text x="1045" y="127" font-size="16" class="t" text-anchor="middle">Bank</text>
+<line x1="145" y1="121" x2="175" y2="121" class="a"/><line x1="310" y1="121" x2="340" y2="121" class="a"/><line x1="475" y1="121" x2="505" y2="121" class="a"/><line x1="625" y1="121" x2="655" y2="121" class="a"/><line x1="785" y1="121" x2="815" y2="121" class="a"/><line x1="955" y1="121" x2="985" y2="121" class="a"/>
+<text x="590" y="192" font-size="13" class="t" text-anchor="middle">A rank comprises devices that transfer data in parallel; each device contains multiple banks.</text>
+<rect x="230" y="270" width="180" height="70" rx="6" class="b"/><text x="320" y="300" font-size="16" class="t" text-anchor="middle">Bank A</text><text x="320" y="320" font-size="16" class="t" text-anchor="middle">row buffer</text>
+<rect x="500" y="270" width="180" height="70" rx="6" class="b"/><text x="590" y="300" font-size="16" class="t" text-anchor="middle">Bank B</text><text x="590" y="320" font-size="16" class="t" text-anchor="middle">row buffer</text>
+<rect x="770" y="270" width="180" height="70" rx="6" class="b"/><text x="860" y="300" font-size="16" class="t" text-anchor="middle">Bank C</text><text x="860" y="320" font-size="16" class="t" text-anchor="middle">row buffer</text>
+<rect x="250" y="405" width="140" height="65" rx="6" class="b"/><text x="320" y="434" font-size="14" class="t" text-anchor="middle">Cell array</text><text x="320" y="452" font-size="14" class="t" text-anchor="middle">rows x columns</text>
+<rect x="520" y="405" width="140" height="65" rx="6" class="b"/><text x="590" y="434" font-size="14" class="t" text-anchor="middle">Cell array</text><text x="590" y="452" font-size="14" class="t" text-anchor="middle">rows x columns</text>
+<rect x="790" y="405" width="140" height="65" rx="6" class="b"/><text x="860" y="434" font-size="14" class="t" text-anchor="middle">Cell array</text><text x="860" y="452" font-size="14" class="t" text-anchor="middle">rows x columns</text>
+<line x1="320" y1="405" x2="320" y2="340" class="a"/><line x1="590" y1="405" x2="590" y2="340" class="a"/><line x1="860" y1="405" x2="860" y2="340" class="a"/>
+<text x="590" y="520" font-size="14" class="t" text-anchor="middle">ACT opens a row into a bank's row buffer; READ/WRITE select columns; PRE closes the row.</text>
+<text x="590" y="548" font-size="14" class="h" text-anchor="middle">Independent banks expose bank-level parallelism; row hits are cheaper than row conflicts.</text>
+</svg>

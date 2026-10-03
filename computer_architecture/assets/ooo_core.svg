@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="620" viewBox="0 0 1160 620">
+<title>Out-of-order core with in-order retirement</title>
+<rect width="100%" height="100%" fill="#fff"/>
+<defs>
+  <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+    <path d="M0,0 L8,4 L0,8 z" fill="#222"/>
+  </marker>
+</defs>
+<style>
+  .t{font-family:Arial,Helvetica,sans-serif;fill:#111}.h{font-family:Arial,Helvetica,sans-serif;fill:#111;font-weight:700}
+  .b{fill:#f7f7f7;stroke:#222;stroke-width:1.5}.a{fill:none;stroke:#222;stroke-width:1.6;marker-end:url(#arrow)}
+  .d{fill:none;stroke:#666;stroke-width:1.4;stroke-dasharray:6 5;marker-end:url(#arrow)}
+</style>
+<text x="580" y="34" font-size="25" class="h" text-anchor="middle">Out-of-Order Execution with In-Order Retirement</text>
+
+<!-- Main pipeline -->
+<rect x="35" y="90" width="110" height="60" rx="6" class="b"/>
+<rect x="180" y="90" width="110" height="60" rx="6" class="b"/>
+<rect x="325" y="90" width="110" height="60" rx="6" class="b"/>
+<rect x="470" y="90" width="110" height="60" rx="6" class="b"/>
+<rect x="635" y="70" width="175" height="100" rx="6" class="b"/>
+<rect x="855" y="70" width="145" height="100" rx="6" class="b"/>
+<rect x="1035" y="90" width="95" height="60" rx="6" class="b"/>
+<text x="90" y="126" font-size="16" class="t" text-anchor="middle">Fetch</text>
+<text x="235" y="126" font-size="16" class="t" text-anchor="middle">Decode</text>
+<text x="380" y="126" font-size="16" class="t" text-anchor="middle">Rename</text>
+<text x="525" y="126" font-size="16" class="t" text-anchor="middle">Dispatch</text>
+<text x="722" y="108" font-size="16" class="h" text-anchor="middle">Issue queues / RS</text>
+<text x="722" y="137" font-size="14" class="t" text-anchor="middle">ready operands + FU selection</text>
+<text x="927" y="106" font-size="16" class="h" text-anchor="middle">Execute</text>
+<text x="927" y="132" font-size="13" class="t" text-anchor="middle">ALU / FP / vector</text>
+<text x="927" y="151" font-size="13" class="t" text-anchor="middle">branch / load-store</text>
+<text x="1082" y="116" font-size="15" class="h" text-anchor="middle">Writeback</text>
+<text x="1082" y="137" font-size="13" class="t" text-anchor="middle">results</text>
+<path d="M145 120 L180 120" class="a"/><path d="M290 120 L325 120" class="a"/>
+<path d="M435 120 L470 120" class="a"/><path d="M580 120 L635 120" class="a"/>
+<path d="M810 120 L855 120" class="a"/><path d="M1000 120 L1035 120" class="a"/>
+
+<!-- Rename structures -->
+<rect x="250" y="250" width="260" height="92" rx="6" class="b"/>
+<text x="380" y="282" font-size="16" class="h" text-anchor="middle">Rename map + free list</text>
+<text x="380" y="310" font-size="13" class="t" text-anchor="middle">architectural reg -> physical reg</text>
+<text x="380" y="330" font-size="13" class="t" text-anchor="middle">allocate new physical destinations</text>
+<path d="M380 150 L380 250" class="a"/>
+
+<rect x="555" y="250" width="220" height="92" rx="6" class="b"/>
+<text x="665" y="282" font-size="17" class="h" text-anchor="middle">ROB</text>
+<text x="665" y="308" font-size="13" class="t" text-anchor="middle">program order + completion</text>
+<text x="665" y="328" font-size="13" class="t" text-anchor="middle">exception / speculation status</text>
+<path d="M405 150 C445 205 515 235 555 270" class="a"/>
+
+<rect x="820" y="250" width="220" height="92" rx="6" class="b"/>
+<text x="930" y="282" font-size="17" class="h" text-anchor="middle">Physical register file</text>
+<text x="930" y="308" font-size="13" class="t" text-anchor="middle">renamed values</text>
+<text x="930" y="328" font-size="13" class="t" text-anchor="middle">producer results</text>
+<path d="M1082 150 C1080 205 1035 230 1005 250" class="a"/>
+<path d="M1048 150 C985 205 870 210 775 285" class="d"/>
+
+<!-- LSQ and commit -->
+<rect x="555" y="405" width="220" height="92" rx="6" class="b"/>
+<text x="665" y="437" font-size="17" class="h" text-anchor="middle">Load/store queue</text>
+<text x="665" y="463" font-size="13" class="t" text-anchor="middle">memory dependence + forwarding</text>
+<text x="665" y="483" font-size="13" class="t" text-anchor="middle">committed stores become eligible to drain</text>
+<path d="M525 150 C525 260 585 340 625 405" class="a"/>
+<path d="M875 170 C820 250 755 330 705 405" class="d"/>
+
+<rect x="850" y="420" width="190" height="72" rx="6" class="b"/>
+<text x="945" y="450" font-size="17" class="h" text-anchor="middle">Commit / retire</text>
+<text x="945" y="476" font-size="13" class="t" text-anchor="middle">oldest completed instruction</text>
+<path d="M775 296 C835 315 900 355 930 420" class="a"/>
+<path d="M850 456 C800 450 795 450 775 450" class="d"/>
+<path d="M900 492 C820 555 510 560 390 342" class="d"/>
+<text x="650" y="548" font-size="12" class="t" text-anchor="middle">retirement frees old physical registers</text>
+
+<text x="580" y="575" font-size="14" class="h" text-anchor="middle">
+Rename removes WAR/WAW name dependences; true RAW dependences remain.
+</text>
+<text x="580" y="600" font-size="14" class="t" text-anchor="middle">
+Instructions execute when operands/resources are ready, but architectural state is retired in program order.
+</text>
+</svg>

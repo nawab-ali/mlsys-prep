@@ -20,6 +20,8 @@ Begin Week 1 in this order:
 
 Do not browse directories manually. Start with the list above.
 
+Additional study material: [Computer Architecture Interview Notes](computer_architecture/README.md).
+
 ## Week 1 goal
 
 The goal of Week 1 is to build a shared mental model for the rest of the

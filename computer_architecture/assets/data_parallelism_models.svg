@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620">
+<title>SIMD vector and SIMT execution models</title><rect width="100%" height="100%" fill="#fff"/>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#222"/></marker></defs>
+<style>
+.t{font-family:Arial,Helvetica,sans-serif;fill:#111}
+.h{font-family:Arial,Helvetica,sans-serif;fill:#111;font-weight:700}
+.b{fill:#f7f7f7;stroke:#222;stroke-width:1.7}
+.s{fill:#fff;stroke:#222;stroke-width:1.4}
+.a{fill:none;stroke:#222;stroke-width:1.7;marker-end:url(#arrow)}
+.d{fill:none;stroke:#666;stroke-width:1.5;stroke-dasharray:6 5;marker-end:url(#arrow)}
+.thin{fill:none;stroke:#444;stroke-width:1.2}
+</style>
+
+<text x="600" y="34" font-size="26" class="h" text-anchor="middle">Data-Parallel Execution Models</text>
+<text x="200" y="88" font-size="20" class="h" text-anchor="middle">SIMD</text>
+<rect x="70" y="115" width="260" height="62" rx="8" class="b"/>
+<text x="200" y="152" font-size="16" class="t" text-anchor="middle">one packed / vector instruction</text>
+<rect x="55" y="240" width="70" height="58" rx="7" class="s"/>
+<text x="90" y="275" font-size="15" class="t" text-anchor="middle">lane 0</text>
+<line x1="200" y1="177" x2="90" y2="240" class="a"/>
+<rect x="145" y="240" width="70" height="58" rx="7" class="s"/>
+<text x="180" y="275" font-size="15" class="t" text-anchor="middle">lane 1</text>
+<line x1="200" y1="177" x2="180" y2="240" class="a"/>
+<rect x="235" y="240" width="70" height="58" rx="7" class="s"/>
+<text x="270" y="275" font-size="15" class="t" text-anchor="middle">lane 2</text>
+<line x1="200" y1="177" x2="270" y2="240" class="a"/>
+<rect x="325" y="240" width="70" height="58" rx="7" class="s"/>
+<text x="360" y="275" font-size="15" class="t" text-anchor="middle">lane 3</text>
+<line x1="200" y1="177" x2="360" y2="240" class="a"/>
+
+<text x="200" y="335" font-size="15" class="t" text-anchor="middle">fixed-width packed lanes</text>
+<text x="200" y="360" font-size="14" class="t" text-anchor="middle">software sees vector width</text>
+<text x="600" y="88" font-size="20" class="h" text-anchor="middle">Vector processor</text>
+<rect x="495" y="115" width="210" height="62" rx="8" class="b"/>
+<text x="600" y="143" font-size="16" class="t" text-anchor="middle">vector op + VL</text>
+<text x="600" y="163" font-size="14" class="t" text-anchor="middle">architectural vector state</text>
+<rect x="515" y="230" width="170" height="58" rx="7" class="s"/>
+<text x="600" y="265" font-size="15" class="t" text-anchor="middle">pipelined element lanes</text>
+<line x1="600" y1="177" x2="600" y2="230" class="a"/>
+<text x="600" y="326" font-size="15" class="t" text-anchor="middle">elements 0 ... VL-1 stream through</text>
+<text x="600" y="351" font-size="14" class="t" text-anchor="middle">one or more physical lanes over time</text>
+<text x="1000" y="88" font-size="20" class="h" text-anchor="middle">SIMT</text>
+<rect x="895" y="115" width="210" height="62" rx="8" class="b"/>
+<text x="1000" y="143" font-size="16" class="t" text-anchor="middle">warp: 32 scalar threads</text>
+<text x="1000" y="163" font-size="14" class="t" text-anchor="middle">common issued instruction</text>
+<rect x="825" y="240" width="60" height="58" rx="7" class="s"/>
+<text x="855" y="275" font-size="15" class="t" text-anchor="middle">T0</text>
+<line x1="1000" y1="177" x2="855" y2="240" class="a"/>
+<rect x="895" y="240" width="60" height="58" rx="7" class="s"/>
+<text x="925" y="275" font-size="15" class="t" text-anchor="middle">T1</text>
+<line x1="1000" y1="177" x2="925" y2="240" class="a"/>
+<rect x="965" y="240" width="60" height="58" rx="7" class="s"/>
+<text x="995" y="275" font-size="15" class="t" text-anchor="middle">T2</text>
+<line x1="1000" y1="177" x2="995" y2="240" class="a"/>
+<rect x="1035" y="240" width="60" height="58" rx="7" class="s"/>
+<text x="1065" y="275" font-size="15" class="t" text-anchor="middle">...</text>
+<rect x="1105" y="240" width="60" height="58" rx="7" class="s"/>
+<text x="1135" y="275" font-size="15" class="t" text-anchor="middle">T31</text>
+<line x1="1000" y1="177" x2="1135" y2="240" class="a"/>
+
+<text x="1000" y="335" font-size="15" class="t" text-anchor="middle">per-thread registers + control state</text>
+<text x="1000" y="360" font-size="14" class="t" text-anchor="middle">divergent paths execute with masks/state</text>
+<text x="600" y="455" font-size="16" class="h" text-anchor="middle">Key distinction</text>
+<text x="600" y="487" font-size="15" class="t" text-anchor="middle">SIMD/vector ISAs expose vector operations to software; SIMT exposes scalar threads and groups them in hardware.</text>
+<text x="600" y="520" font-size="15" class="t" text-anchor="middle">Modern machines often combine these ideas: vector operations execute on lanes; GPUs use SIMD-like datapaths under SIMT.</text>
+</svg>

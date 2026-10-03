@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1220" height="650" viewBox="0 0 1220 650">
+<title>Simple RISC load and store datapath</title>
+<rect width="100%" height="100%" fill="#fff"/>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#222"/></marker></defs>
+
+<style>
+  .t{font-family:Arial,Helvetica,sans-serif;fill:#111}
+  .h{font-family:Arial,Helvetica,sans-serif;fill:#111;font-weight:700}
+  .b{fill:#f7f7f7;stroke:#222;stroke-width:1.7}
+  .s{fill:#fff;stroke:#222;stroke-width:1.4}
+  .a{fill:none;stroke:#222;stroke-width:1.7;marker-end:url(#arrow)}
+  .d{fill:none;stroke:#666;stroke-width:1.5;stroke-dasharray:6 5;marker-end:url(#arrow)}
+  .thin{fill:none;stroke:#444;stroke-width:1.2}
+</style>
+
+<text x="610" y="34" font-size="26" class="h" text-anchor="middle">Simple RISC Load / Store Datapath</text>
+<rect x="35" y="235" width="90" height="68" rx="7" class="b"/>
+<text x="80" y="276" font-size="18" class="h" text-anchor="middle">PC</text>
+<rect x="175" y="205" width="185" height="128" rx="7" class="b"/>
+<text x="268" y="252" font-size="18" class="h" text-anchor="middle">Instruction memory</text>
+<text x="268" y="280" font-size="14" class="t" text-anchor="middle">rs1 / rs2 / rd / imm</text>
+<rect x="430" y="145" width="220" height="210" rx="7" class="b"/>
+<text x="540" y="182" font-size="18" class="h" text-anchor="middle">Register file</text>
+<text x="458" y="225" font-size="14" class="t">rs1: base</text>
+<text x="458" y="270" font-size="14" class="t">rs2: store data</text>
+<text x="458" y="318" font-size="14" class="t">rd: load destination</text>
+<rect x="430" y="405" width="220" height="78" rx="7" class="b"/>
+<text x="540" y="438" font-size="17" class="h" text-anchor="middle">Immediate generator</text>
+<text x="540" y="462" font-size="14" class="t" text-anchor="middle">sign-extend displacement</text>
+<rect x="735" y="205" width="170" height="130" rx="7" class="b"/>
+<text x="820" y="245" font-size="20" class="h" text-anchor="middle">Address ALU</text>
+<text x="820" y="276" font-size="14" class="t" text-anchor="middle">base + offset</text>
+<rect x="975" y="175" width="200" height="190" rx="7" class="b"/>
+<text x="1075" y="213" font-size="19" class="h" text-anchor="middle">Data cache / memory</text>
+<text x="1005" y="255" font-size="14" class="t">address</text>
+<text x="1005" y="298" font-size="14" class="t">store write data</text>
+<text x="1005" y="338" font-size="14" class="t">load read data</text>
+<rect x="735" y="430" width="170" height="68" rx="7" class="b"/>
+<text x="820" y="471" font-size="17" class="h" text-anchor="middle">Load writeback</text>
+
+<line x1="125" y1="269" x2="175" y2="269" class="a"/>
+<line x1="360" y1="235" x2="430" y2="225" class="a"/>
+<line x1="360" y1="287" x2="430" y2="445" class="a"/>
+<line x1="650" y1="225" x2="735" y2="240" class="a"/>
+<line x1="650" y1="445" x2="735" y2="300" class="a"/>
+<line x1="905" y1="270" x2="975" y2="255" class="a"/>
+<line x1="650" y1="270" x2="975" y2="298" class="a"/>
+<path d="M1175 338 L1190 338 L1190 464 L905 464" class="a"/>
+<path d="M735 464 L690 464 L690 318 L650 318" class="a"/>
+<text x="930" y="232" font-size="13" class="t">effective address</text>
+<text x="1090" y="390" font-size="13" class="t" text-anchor="middle">store: MemWrite</text>
+<text x="1090" y="414" font-size="13" class="t" text-anchor="middle">load: MemRead + RegWrite</text>
+<text x="610" y="555" font-size="14" class="h" text-anchor="middle">Load: compute address -> read memory -> write rd. Store: compute address -> write rs2 data; no destination register.</text>
+<text x="610" y="585" font-size="14" class="t" text-anchor="middle">Real OoO cores add TLB/cache hierarchy, an LSQ, memory-dependence prediction, and store-to-load forwarding.</text>
+</svg>

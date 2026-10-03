@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="400" viewBox="0 0 980 400">
+<title>Five-stage pipeline timing</title>
+<rect width="100%" height="100%" fill="#fff" data-background="true"/>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#222"/></marker></defs>
+
+<style>
+  .t { font-family: Arial, Helvetica, sans-serif; fill: #111; }
+  .h { font-family: Arial, Helvetica, sans-serif; fill: #111; font-weight: 700; }
+  .b { fill: #f7f7f7; stroke: #222; stroke-width: 1.5; }
+  .a { fill: none; stroke: #222; stroke-width: 1.6; marker-end: url(#arrow); }
+  .d { fill: none; stroke: #555; stroke-width: 1.4; stroke-dasharray: 5 4; marker-end: url(#arrow); }
+  .s { fill: #fff; stroke: #222; stroke-width: 1.2; }
+</style>
+
+<text x="490" y="30" font-size="24" class="h" text-anchor="middle">Classic Five-Stage Pipeline</text>
+<rect x="70" y="70" width="120" height="55" rx="6" class="b"/>
+<text x="130.0" y="103.8" font-size="18" class="t" text-anchor="middle">IF</text>
+<line x1="190" y1="98" x2="225" y2="98" class="a"/>
+<rect x="230" y="70" width="120" height="55" rx="6" class="b"/>
+<text x="290.0" y="103.8" font-size="18" class="t" text-anchor="middle">ID/RF</text>
+<line x1="350" y1="98" x2="385" y2="98" class="a"/>
+<rect x="390" y="70" width="120" height="55" rx="6" class="b"/>
+<text x="450.0" y="103.8" font-size="18" class="t" text-anchor="middle">EX</text>
+<line x1="510" y1="98" x2="545" y2="98" class="a"/>
+<rect x="550" y="70" width="120" height="55" rx="6" class="b"/>
+<text x="610.0" y="103.8" font-size="18" class="t" text-anchor="middle">MEM</text>
+<line x1="670" y1="98" x2="705" y2="98" class="a"/>
+<rect x="710" y="70" width="120" height="55" rx="6" class="b"/>
+<text x="770.0" y="103.8" font-size="18" class="t" text-anchor="middle">WB</text>
+<text x="140.0" y="173" font-size="13" class="t" text-anchor="middle">C0</text>
+<text x="230.0" y="173" font-size="13" class="t" text-anchor="middle">C1</text>
+<text x="320.0" y="173" font-size="13" class="t" text-anchor="middle">C2</text>
+<text x="410.0" y="173" font-size="13" class="t" text-anchor="middle">C3</text>
+<text x="500.0" y="173" font-size="13" class="t" text-anchor="middle">C4</text>
+<text x="590.0" y="173" font-size="13" class="t" text-anchor="middle">C5</text>
+<text x="680.0" y="173" font-size="13" class="t" text-anchor="middle">C6</text>
+<text x="770.0" y="173" font-size="13" class="t" text-anchor="middle">C7</text>
+<text x="860.0" y="173" font-size="13" class="t" text-anchor="middle">C8</text>
+<text x="45" y="210" font-size="14" class="h" text-anchor="middle">I0</text>
+<rect x="95" y="185" width="86" height="34" class="s"/>
+<text x="138.0" y="209" font-size="13" class="t" text-anchor="middle">IF</text>
+<rect x="185" y="185" width="86" height="34" class="s"/>
+<text x="228.0" y="209" font-size="13" class="t" text-anchor="middle">ID/RF</text>
+<rect x="275" y="185" width="86" height="34" class="s"/>
+<text x="318.0" y="209" font-size="13" class="t" text-anchor="middle">EX</text>
+<rect x="365" y="185" width="86" height="34" class="s"/>
+<text x="408.0" y="209" font-size="13" class="t" text-anchor="middle">MEM</text>
+<rect x="455" y="185" width="86" height="34" class="s"/>
+<text x="498.0" y="209" font-size="13" class="t" text-anchor="middle">WB</text>
+<text x="45" y="248" font-size="14" class="h" text-anchor="middle">I1</text>
+<rect x="185" y="223" width="86" height="34" class="s"/>
+<text x="228.0" y="247" font-size="13" class="t" text-anchor="middle">IF</text>
+<rect x="275" y="223" width="86" height="34" class="s"/>
+<text x="318.0" y="247" font-size="13" class="t" text-anchor="middle">ID/RF</text>
+<rect x="365" y="223" width="86" height="34" class="s"/>
+<text x="408.0" y="247" font-size="13" class="t" text-anchor="middle">EX</text>
+<rect x="455" y="223" width="86" height="34" class="s"/>
+<text x="498.0" y="247" font-size="13" class="t" text-anchor="middle">MEM</text>
+<rect x="545" y="223" width="86" height="34" class="s"/>
+<text x="588.0" y="247" font-size="13" class="t" text-anchor="middle">WB</text>
+<text x="45" y="286" font-size="14" class="h" text-anchor="middle">I2</text>
+<rect x="275" y="261" width="86" height="34" class="s"/>
+<text x="318.0" y="285" font-size="13" class="t" text-anchor="middle">IF</text>
+<rect x="365" y="261" width="86" height="34" class="s"/>
+<text x="408.0" y="285" font-size="13" class="t" text-anchor="middle">ID/RF</text>
+<rect x="455" y="261" width="86" height="34" class="s"/>
+<text x="498.0" y="285" font-size="13" class="t" text-anchor="middle">EX</text>
+<rect x="545" y="261" width="86" height="34" class="s"/>
+<text x="588.0" y="285" font-size="13" class="t" text-anchor="middle">MEM</text>
+<rect x="635" y="261" width="86" height="34" class="s"/>
+<text x="678.0" y="285" font-size="13" class="t" text-anchor="middle">WB</text>
+<text x="45" y="324" font-size="14" class="h" text-anchor="middle">I3</text>
+<rect x="365" y="299" width="86" height="34" class="s"/>
+<text x="408.0" y="323" font-size="13" class="t" text-anchor="middle">IF</text>
+<rect x="455" y="299" width="86" height="34" class="s"/>
+<text x="498.0" y="323" font-size="13" class="t" text-anchor="middle">ID/RF</text>
+<rect x="545" y="299" width="86" height="34" class="s"/>
+<text x="588.0" y="323" font-size="13" class="t" text-anchor="middle">EX</text>
+<rect x="635" y="299" width="86" height="34" class="s"/>
+<text x="678.0" y="323" font-size="13" class="t" text-anchor="middle">MEM</text>
+<rect x="725" y="299" width="86" height="34" class="s"/>
+<text x="768.0" y="323" font-size="13" class="t" text-anchor="middle">WB</text>
+<text x="45" y="362" font-size="14" class="h" text-anchor="middle">I4</text>
+<rect x="455" y="337" width="86" height="34" class="s"/>
+<text x="498.0" y="361" font-size="13" class="t" text-anchor="middle">IF</text>
+<rect x="545" y="337" width="86" height="34" class="s"/>
+<text x="588.0" y="361" font-size="13" class="t" text-anchor="middle">ID/RF</text>
+<rect x="635" y="337" width="86" height="34" class="s"/>
+<text x="678.0" y="361" font-size="13" class="t" text-anchor="middle">EX</text>
+<rect x="725" y="337" width="86" height="34" class="s"/>
+<text x="768.0" y="361" font-size="13" class="t" text-anchor="middle">MEM</text>
+<rect x="815" y="337" width="86" height="34" class="s"/>
+<text x="858.0" y="361" font-size="13" class="t" text-anchor="middle">WB</text>
+<text x="490" y="387" font-size="14" class="t" text-anchor="middle">After fill: ideal throughput = 1 instruction/cycle; latency remains about 5 stages.</text>
+</svg>

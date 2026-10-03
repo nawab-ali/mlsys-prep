@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="520" viewBox="0 0 1040 520">
+<title>Memory consistency and ordering</title>
+<rect width="100%" height="100%" fill="#fff" data-background="true"/>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#222"/></marker></defs>
+
+<style>
+  .t { font-family: Arial, Helvetica, sans-serif; fill: #111; }
+  .h { font-family: Arial, Helvetica, sans-serif; fill: #111; font-weight: 700; }
+  .b { fill: #f7f7f7; stroke: #222; stroke-width: 1.5; }
+  .a { fill: none; stroke: #222; stroke-width: 1.6; marker-end: url(#arrow); }
+  .d { fill: none; stroke: #555; stroke-width: 1.4; stroke-dasharray: 5 4; marker-end: url(#arrow); }
+  .s { fill: #fff; stroke: #222; stroke-width: 1.2; }
+</style>
+
+<text x="520" y="28" font-size="24" class="h" text-anchor="middle">Coherence vs. Consistency</text>
+<rect x="60" y="90" width="400" height="85" rx="6" class="b"/>
+<text x="260.0" y="121.25" font-size="15" class="t" text-anchor="middle">Cache coherence</text>
+<text x="260.0" y="137.75" font-size="15" class="t" text-anchor="middle">One address at a time</text>
+<text x="260.0" y="154.25" font-size="15" class="t" text-anchor="middle">Single-writer / multiple-reader + write serialization</text>
+<rect x="580" y="90" width="400" height="85" rx="6" class="b"/>
+<text x="780.0" y="121.25" font-size="15" class="t" text-anchor="middle">Memory consistency</text>
+<text x="780.0" y="137.75" font-size="15" class="t" text-anchor="middle">Ordering across different addresses</text>
+<text x="780.0" y="154.25" font-size="15" class="t" text-anchor="middle">What outcomes may multiple threads observe?</text>
+<text x="520" y="220" font-size="18" class="h" text-anchor="middle">Example: message passing</text>
+<rect x="100" y="255" width="300" height="120" rx="6" class="b"/>
+<text x="250.0" y="303.0" font-size="16" class="t" text-anchor="middle">Core 0</text>
+<text x="250.0" y="320.6" font-size="16" class="t" text-anchor="middle">X = 1</text>
+<text x="250.0" y="338.2" font-size="16" class="t" text-anchor="middle">release: flag = 1</text>
+<rect x="640" y="255" width="300" height="120" rx="6" class="b"/>
+<text x="790.0" y="303.0" font-size="16" class="t" text-anchor="middle">Core 1</text>
+<text x="790.0" y="320.6" font-size="16" class="t" text-anchor="middle">acquire: r1 = flag</text>
+<text x="790.0" y="338.2" font-size="16" class="t" text-anchor="middle">if r1 == 1: r2 = X</text>
+<line x1="400" y1="315" x2="640" y2="315" class="a"/>
+<text x="520" y="420" font-size="14" class="h" text-anchor="middle">Acquire/release or fences constrain reordering so synchronization establishes happens-before.</text>
+<text x="520" y="450" font-size="14" class="t" text-anchor="middle">x86 is relatively strong (TSO-like); Arm and RISC-V expose weaker ordering and explicit fences.</text>
+</svg>

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="600" viewBox="0 0 1180 600">
+<title>Branch prediction front end</title>
+<rect width="100%" height="100%" fill="#fff"/>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#222"/></marker></defs>
+
+<style>
+  .t{font-family:Arial,Helvetica,sans-serif;fill:#111}
+  .h{font-family:Arial,Helvetica,sans-serif;fill:#111;font-weight:700}
+  .b{fill:#f7f7f7;stroke:#222;stroke-width:1.7}
+  .s{fill:#fff;stroke:#222;stroke-width:1.4}
+  .a{fill:none;stroke:#222;stroke-width:1.7;marker-end:url(#arrow)}
+  .d{fill:none;stroke:#666;stroke-width:1.5;stroke-dasharray:6 5;marker-end:url(#arrow)}
+  .thin{fill:none;stroke:#444;stroke-width:1.2}
+</style>
+
+<text x="590" y="34" font-size="26" class="h" text-anchor="middle">Branch-Prediction Front End</text>
+<rect x="45" y="210" width="145" height="72" rx="8" class="b"/>
+<text x="118" y="253" font-size="19" class="h" text-anchor="middle">Fetch PC</text>
+
+<rect x="250" y="90" width="235" height="82" rx="8" class="b"/>
+<text x="368" y="123" font-size="16" class="h" text-anchor="middle">Direction predictor</text>
+<text x="368" y="147" font-size="14" class="t" text-anchor="middle">bimodal / gshare / TAGE</text>
+<rect x="250" y="210" width="235" height="82" rx="8" class="b"/>
+<text x="368" y="243" font-size="16" class="h" text-anchor="middle">BTB / indirect target</text>
+<text x="368" y="267" font-size="14" class="t" text-anchor="middle">target prediction</text>
+<rect x="250" y="330" width="235" height="82" rx="8" class="b"/>
+<text x="368" y="363" font-size="16" class="h" text-anchor="middle">Return-address stack</text>
+<text x="368" y="387" font-size="14" class="t" text-anchor="middle">RET target</text>
+
+<rect x="555" y="205" width="190" height="92" rx="8" class="b"/>
+<text x="650" y="258" font-size="18" class="h" text-anchor="middle">Next-PC select</text>
+<rect x="815" y="205" width="145" height="92" rx="8" class="b"/>
+<text x="888" y="258" font-size="18" class="h" text-anchor="middle">I-cache</text>
+<rect x="1010" y="205" width="125" height="92" rx="8" class="b"/>
+<text x="1072" y="258" font-size="18" class="h" text-anchor="middle">Decode</text>
+
+<line x1="190" y1="246" x2="250" y2="131" class="a"/>
+<line x1="190" y1="246" x2="250" y2="251" class="a"/>
+<line x1="190" y1="246" x2="250" y2="371" class="a"/>
+<line x1="485" y1="131" x2="555" y2="225" class="a"/>
+<line x1="485" y1="251" x2="555" y2="251" class="a"/>
+<line x1="485" y1="371" x2="555" y2="277" class="a"/>
+<line x1="745" y1="251" x2="815" y2="251" class="a"/>
+<line x1="960" y1="251" x2="1010" y2="251" class="a"/>
+
+<rect x="640" y="430" width="250" height="78" rx="8" class="b"/>
+<text x="765" y="460" font-size="16" class="h" text-anchor="middle">Branch resolution</text>
+<text x="765" y="484" font-size="14" class="t" text-anchor="middle">actual direction + target</text>
+<path d="M1072 297 C1072 370 900 390 825 430" class="d"/>
+<path d="M640 468 C455 520 255 500 185 282" class="d"/>
+<path d="M720 430 C650 355 560 190 485 135" class="d"/>
+<path d="M765 430 C710 360 620 285 485 252" class="d"/>
+<text x="395" y="535" font-size="13" class="t" text-anchor="middle">mispredict redirects fetch</text>
+<text x="690" y="385" font-size="13" class="t" text-anchor="middle">train/update predictors</text>
+
+<text x="590" y="572" font-size="14" class="t" text-anchor="middle">Fetch predicts early; the later pipeline resolves the branch, trains predictor state, and redirects on a miss.</text>
+</svg>

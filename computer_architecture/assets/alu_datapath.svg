@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="540" viewBox="0 0 1180 540">
+<title>Simple RISC ALU datapath</title><rect width="100%" height="100%" fill="#fff"/>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#222"/></marker></defs>
+<style>
+.t{font-family:Arial,Helvetica,sans-serif;fill:#111}.h{font-family:Arial,Helvetica,sans-serif;fill:#111;font-weight:700}
+.b{fill:#f7f7f7;stroke:#222;stroke-width:1.7}.a{fill:none;stroke:#222;stroke-width:1.7;marker-end:url(#arrow)}
+</style>
+<text x="590" y="34" font-size="26" class="h" text-anchor="middle">Simple RISC ALU Datapath</text>
+<rect x="45" y="205" width="95" height="72" rx="7" class="b"/><text x="92" y="248" font-size="19" class="h" text-anchor="middle">PC</text>
+<rect x="205" y="180" width="190" height="122" rx="7" class="b"/>
+<text x="300" y="227" font-size="18" class="h" text-anchor="middle">Instruction memory</text>
+<text x="300" y="255" font-size="14" class="t" text-anchor="middle">instruction bits</text>
+<rect x="470" y="140" width="235" height="200" rx="7" class="b"/>
+<text x="588" y="178" font-size="18" class="h" text-anchor="middle">Register file</text>
+<text x="500" y="218" font-size="14" class="t">rs1</text><text x="500" y="258" font-size="14" class="t">rs2</text>
+<text x="500" y="303" font-size="14" class="t">rd + write data</text>
+<rect x="795" y="165" width="180" height="150" rx="7" class="b"/>
+<text x="885" y="205" font-size="20" class="h" text-anchor="middle">ALU</text>
+<text x="885" y="235" font-size="14" class="t" text-anchor="middle">add / sub / logic ...</text>
+<text x="885" y="268" font-size="14" class="t" text-anchor="middle">ALUControl</text>
+<rect x="500" y="405" width="175" height="62" rx="7" class="b"/>
+<text x="588" y="443" font-size="16" class="h" text-anchor="middle">Writeback path</text>
+<rect x="205" y="405" width="145" height="62" rx="7" class="b"/>
+<text x="278" y="434" font-size="17" class="h" text-anchor="middle">Sequential</text>
+<text x="278" y="454" font-size="17" class="h" text-anchor="middle">next PC</text>
+<line x1="140" y1="241" x2="205" y2="241" class="a"/><line x1="395" y1="215" x2="470" y2="215" class="a"/>
+<line x1="705" y1="210" x2="795" y2="210" class="a"/><line x1="705" y1="270" x2="795" y2="270" class="a"/>
+<path d="M975 240 L1040 240 L1040 436 L675 436" class="a"/><path d="M500 436 L430 436 L430 315 L470 315" class="a"/>
+<path d="M92 277 L92 436 L205 436" class="a"/><path d="M350 436 L385 436 L385 95 L92 95 L92 205" class="a"/>
+<text x="1010" y="220" font-size="13" class="t">ALU result</text><text x="452" y="297" font-size="13" class="t" text-anchor="end">RegWrite</text>
+<text x="590" y="505" font-size="14" class="t" text-anchor="middle">Teaching datapath: decode selects register operands and ALU function; result writes rd.</text>
+<text x="590" y="526" font-size="14" class="t" text-anchor="middle">Sequential control advances by the ISA instruction length; branches/jumps redirect the PC.</text>
+</svg>

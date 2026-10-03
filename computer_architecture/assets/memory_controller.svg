@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="540" viewBox="0 0 1120 540">
+<title>Memory controller scheduling</title>
+<rect width="100%" height="100%" fill="#fff" data-background="true"/>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#222"/></marker></defs>
+
+<style>
+  .t { font-family: Arial, Helvetica, sans-serif; fill: #111; }
+  .h { font-family: Arial, Helvetica, sans-serif; fill: #111; font-weight: 700; }
+  .b { fill: #f7f7f7; stroke: #222; stroke-width: 1.5; }
+  .a { fill: none; stroke: #222; stroke-width: 1.6; marker-end: url(#arrow); }
+  .d { fill: none; stroke: #555; stroke-width: 1.4; stroke-dasharray: 5 4; marker-end: url(#arrow); }
+  .s { fill: #fff; stroke: #222; stroke-width: 1.2; }
+</style>
+
+<text x="560" y="28" font-size="24" class="h" text-anchor="middle">Memory Controller: Reorder for DRAM Efficiency and QoS</text>
+<rect x="35" y="130" width="180" height="80" rx="6" class="b"/>
+<text x="125.0" y="166.6" font-size="17" class="t" text-anchor="middle">Core / LLC</text>
+<text x="125.0" y="185.3" font-size="17" class="t" text-anchor="middle">requests</text>
+<rect x="290" y="85" width="210" height="85" rx="6" class="b"/>
+<text x="395.0" y="124.10000000000001" font-size="17" class="t" text-anchor="middle">Read queue</text>
+<text x="395.0" y="142.8" font-size="17" class="t" text-anchor="middle">+ write queue</text>
+<rect x="290" y="215" width="210" height="85" rx="6" class="b"/>
+<text x="395.0" y="254.5" font-size="15" class="t" text-anchor="middle">Address mapping</text>
+<text x="395.0" y="271.0" font-size="15" class="t" text-anchor="middle">channel/rank/bank/row</text>
+<rect x="585" y="85" width="230" height="100" rx="6" class="b"/>
+<text x="700.0" y="131.6" font-size="17" class="t" text-anchor="middle">Scheduler</text>
+<text x="700.0" y="150.3" font-size="17" class="t" text-anchor="middle">FR-FCFS / QoS policy</text>
+<rect x="585" y="230" width="230" height="85" rx="6" class="b"/>
+<text x="700.0" y="269.3" font-size="16" class="t" text-anchor="middle">Timing + command</text>
+<text x="700.0" y="286.90000000000003" font-size="16" class="t" text-anchor="middle">legality</text>
+<rect x="900" y="145" width="170" height="90" rx="6" class="b"/>
+<text x="985.0" y="196.3" font-size="18" class="t" text-anchor="middle">DRAM channels</text>
+<line x1="215" y1="170" x2="290" y2="128" class="a"/>
+<line x1="215" y1="170" x2="290" y2="258" class="a"/>
+<line x1="500" y1="128" x2="585" y2="130" class="a"/>
+<line x1="500" y1="258" x2="585" y2="270" class="a"/>
+<line x1="700" y1="185" x2="700" y2="230" class="a"/>
+<line x1="815" y1="270" x2="900" y2="190" class="a"/>
+<text x="560" y="390" font-size="14" class="h" text-anchor="middle">FR-FCFS: among ready requests, prefer row hits; otherwise prefer older requests.</text>
+<text x="560" y="418" font-size="14" class="t" text-anchor="middle">Open-page policy favors locality; closed/adaptive policies can reduce row conflicts.</text>
+<text x="560" y="446" font-size="14" class="t" text-anchor="middle">Multicore controllers must balance throughput with fairness, priorities, and isolation.</text>
+</svg>

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560">
+<title>Cache address mapping</title>
+<rect width="100%" height="100%" fill="#fff"/>
+<defs>
+  <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+    <path d="M0,0 L8,4 L0,8 z" fill="#222"/>
+  </marker>
+</defs>
+<style>
+  .t{font-family:Arial,Helvetica,sans-serif;fill:#111}.h{font-family:Arial,Helvetica,sans-serif;fill:#111;font-weight:700}
+  .b{fill:#f7f7f7;stroke:#222;stroke-width:1.5}.a{fill:none;stroke:#222;stroke-width:1.6;marker-end:url(#arrow)}
+  .d{fill:none;stroke:#666;stroke-width:1.4;stroke-dasharray:6 5;marker-end:url(#arrow)}
+</style>
+<text x="500" y="34" font-size="25" class="h" text-anchor="middle">Cache Address Mapping</text>
+<text x="190" y="82" font-size="16" class="h" text-anchor="middle">Address</text>
+<rect x="70" y="100" width="170" height="56" rx="5" class="b"/>
+<rect x="240" y="100" width="140" height="56" rx="5" class="b"/>
+<rect x="380" y="100" width="150" height="56" rx="5" class="b"/>
+<text x="155" y="134" font-size="16" class="t" text-anchor="middle">tag</text>
+<text x="310" y="134" font-size="16" class="t" text-anchor="middle">set index</text>
+<text x="455" y="134" font-size="16" class="t" text-anchor="middle">block offset</text>
+
+<rect x="90" y="245" width="250" height="150" rx="7" class="b"/>
+<text x="215" y="286" font-size="18" class="h" text-anchor="middle">Tag array</text>
+<text x="215" y="320" font-size="14" class="t" text-anchor="middle">selected set: N candidate tags</text>
+<text x="215" y="350" font-size="14" class="t" text-anchor="middle">valid / coherence metadata</text>
+
+<rect x="405" y="245" width="250" height="150" rx="7" class="b"/>
+<text x="530" y="286" font-size="18" class="h" text-anchor="middle">Data array</text>
+<text x="530" y="320" font-size="14" class="t" text-anchor="middle">selected set: N candidate lines</text>
+<text x="530" y="350" font-size="14" class="t" text-anchor="middle">one line per way</text>
+
+<rect x="720" y="225" width="200" height="78" rx="7" class="b"/>
+<text x="820" y="256" font-size="16" class="h" text-anchor="middle">Tag compare</text>
+<text x="820" y="281" font-size="14" class="t" text-anchor="middle">hit + matching way</text>
+
+<rect x="720" y="340" width="200" height="70" rx="7" class="b"/>
+<text x="820" y="382" font-size="17" class="h" text-anchor="middle">Way MUX</text>
+
+<rect x="720" y="455" width="200" height="62" rx="7" class="b"/>
+<text x="820" y="482" font-size="15" class="h" text-anchor="middle">Offset select</text>
+<text x="820" y="503" font-size="13" class="t" text-anchor="middle">requested bytes / word</text>
+
+<path d="M310 156 L310 210 L215 210 L215 245" class="a"/>
+<path d="M310 156 L310 210 L530 210 L530 245" class="a"/>
+<path d="M340 320 L720 255" class="a"/>
+<path d="M240 128 C500 150 650 170 720 245" class="d"/>
+<path d="M655 320 L720 365" class="a"/>
+<path d="M820 303 L820 340" class="a"/>
+<path d="M820 410 L820 455" class="a"/>
+<path d="M455 156 C575 205 690 300 750 455" class="d"/>
+
+<text x="500" y="542" font-size="14" class="h" text-anchor="middle">
+Direct mapped = 1 way; N-way = N candidate lines per set; fully associative = one set.
+</text>
+</svg>

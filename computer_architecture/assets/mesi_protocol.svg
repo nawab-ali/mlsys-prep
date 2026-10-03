@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="760" viewBox="0 0 1240 760">
+<title>Simplified MESI stable-state transitions</title>
+<rect width="100%" height="100%" fill="#fff"/>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#222"/></marker></defs>
+<style>
+.t{font-family:Arial,Helvetica,sans-serif;fill:#111}
+.h{font-family:Arial,Helvetica,sans-serif;fill:#111;font-weight:700}
+.b{fill:#f7f7f7;stroke:#222;stroke-width:1.7}
+.s{fill:#fff;stroke:#222;stroke-width:1.4}
+.a{fill:none;stroke:#222;stroke-width:1.7;marker-end:url(#arrow)}
+.thin{fill:none;stroke:#444;stroke-width:1.2}
+.n{fill:#fff;stroke:#222;stroke-width:1.2}
+</style>
+<text x="620" y="34" font-size="26" class="h" text-anchor="middle">MESI - Simplified Stable-State Transitions</text>
+
+<!-- state machine -->
+<circle cx="245" cy="150" r="66" class="b"/>
+<text x="245" y="145" font-size="31" class="h" text-anchor="middle">M</text>
+<text x="245" y="174" font-size="15" class="t" text-anchor="middle">Modified</text>
+<circle cx="245" cy="375" r="66" class="b"/>
+<text x="245" y="370" font-size="31" class="h" text-anchor="middle">E</text>
+<text x="245" y="399" font-size="15" class="t" text-anchor="middle">Exclusive</text>
+<circle cx="245" cy="600" r="66" class="b"/>
+<text x="245" y="595" font-size="31" class="h" text-anchor="middle">I</text>
+<text x="245" y="624" font-size="15" class="t" text-anchor="middle">Invalid</text>
+<circle cx="600" cy="375" r="66" class="b"/>
+<text x="600" y="370" font-size="31" class="h" text-anchor="middle">S</text>
+<text x="600" y="399" font-size="15" class="t" text-anchor="middle">Shared</text>
+
+<!-- arrows; numbered to keep the figure readable -->
+<path d="M245 534 L245 441" class="a"/>
+<circle cx="224" cy="487" r="13" class="n"/><text x="224" y="492" font-size="12" class="h" text-anchor="middle">1</text>
+<path d="M202 324 C170 280 176 230 206 199" class="a"/>
+<circle cx="173" cy="263" r="13" class="n"/><text x="173" y="268" font-size="12" class="h" text-anchor="middle">2</text>
+<path d="M306 577 C406 535 503 465 553 415" class="a"/>
+<circle cx="424" cy="507" r="13" class="n"/><text x="424" y="512" font-size="12" class="h" text-anchor="middle">3</text>
+<path d="M302 561 C438 468 468 280 299 198" class="a"/>
+<circle cx="413" cy="315" r="13" class="n"/><text x="413" y="320" font-size="12" class="h" text-anchor="middle">4</text>
+<path d="M551 330 C478 272 388 213 303 178" class="a"/>
+<circle cx="438" cy="248" r="13" class="n"/><text x="438" y="253" font-size="12" class="h" text-anchor="middle">5</text>
+<path d="M307 177 C405 209 503 269 554 332" class="a"/>
+<circle cx="442" cy="196" r="13" class="n"/><text x="442" y="201" font-size="12" class="h" text-anchor="middle">6</text>
+<path d="M311 375 L534 375" class="a"/>
+<circle cx="421" cy="355" r="13" class="n"/><text x="421" y="360" font-size="12" class="h" text-anchor="middle">7</text>
+<path d="M582 439 C545 510 448 573 311 597" class="a"/>
+<circle cx="465" cy="548" r="13" class="n"/><text x="465" y="553" font-size="12" class="h" text-anchor="middle">8</text>
+<path d="M203 428 C174 485 180 545 205 568" class="a"/>
+<circle cx="169" cy="504" r="13" class="n"/><text x="169" y="509" font-size="12" class="h" text-anchor="middle">9</text>
+<path d="M195 193 C115 305 125 505 198 568" class="a"/>
+<circle cx="116" cy="383" r="13" class="n"/><text x="116" y="388" font-size="12" class="h" text-anchor="middle">10</text>
+
+<!-- transition legend -->
+<rect x="730" y="88" width="455" height="585" rx="10" class="b"/>
+<text x="958" y="128" font-size="20" class="h" text-anchor="middle">Common stable-state transitions</text>
+<text x="770" y="176" font-size="14" class="h">1</text><text x="804" y="176" font-size="14" class="t">I -> E: read miss, no other cached copy</text>
+<text x="770" y="212" font-size="14" class="h">2</text><text x="804" y="212" font-size="14" class="t">E -> M: local write; no coherence traffic needed</text>
+<text x="770" y="248" font-size="14" class="h">3</text><text x="804" y="248" font-size="14" class="t">I -> S: read miss, another cache has a copy</text>
+<text x="770" y="284" font-size="14" class="h">4</text><text x="804" y="284" font-size="14" class="t">I -> M: write miss / RFO obtains ownership</text>
+<text x="770" y="320" font-size="14" class="h">5</text><text x="804" y="320" font-size="14" class="t">S -> M: local write + invalidate sharers</text>
+<text x="770" y="356" font-size="14" class="h">6</text><text x="804" y="356" font-size="14" class="t">M -> S: remote read; owner supplies latest data</text>
+<text x="770" y="392" font-size="14" class="h">7</text><text x="804" y="392" font-size="14" class="t">E -> S: remote read creates a clean sharer</text>
+<text x="770" y="428" font-size="14" class="h">8</text><text x="804" y="428" font-size="14" class="t">S -> I: invalidation or eviction</text>
+<text x="770" y="464" font-size="14" class="h">9</text><text x="804" y="464" font-size="14" class="t">E -> I: eviction or remote ownership request</text>
+<text x="770" y="500" font-size="14" class="h">10</text><text x="804" y="500" font-size="14" class="t">M -> I: remote ownership or eviction + writeback</text>
+<line x1="770" y1="535" x2="1145" y2="535" class="thin"/>
+<text x="958" y="573" font-size="17" class="h" text-anchor="middle">Interview invariant</text>
+<text x="770" y="609" font-size="14" class="t">A writer needs exclusive ownership; competing copies are invalidated.</text>
+<text x="770" y="638" font-size="14" class="t">A dirty owner is responsible for supplying the latest data.</text>
+<text x="620" y="720" font-size="14" class="t" text-anchor="middle">Stable states only; real protocols add transient states, acknowledgments, retries, and implementation-specific messages.</text>
+</svg>
