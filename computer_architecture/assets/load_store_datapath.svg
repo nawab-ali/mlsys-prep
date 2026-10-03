@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="640" viewBox="0 0 1000 640">
+<title>Plain load and store datapaths</title>
+<desc>The address, store data, and load result travel on distinct paths. Base-register writeback is not shown.</desc>
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#24343d}</style>
+<defs>
+<marker id="ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#24343d"/></marker>
+<marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2267a5"/></marker>
+<marker id="teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#087f7a"/></marker>
+<marker id="red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b34939"/></marker>
+</defs>
+<text x="32" y="42" font-size="28" text-anchor="start" font-weight="700" style="fill:#24343d">Plain load and store datapaths</text>
+<text x="32" y="73" font-size="17" text-anchor="start" font-weight="400" style="fill:#24343d">The address, store data, and load result travel on distinct paths.</text>
+<path d="M32 94 H968" fill="none" stroke="#dce4e8" stroke-width="1"/>
+<rect x="55" y="165" width="260" height="90" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="185.0" y="202.95" font-size="17" text-anchor="middle" font-weight="700" style="fill:#24343d">Register file</text>
+<text x="185.0" y="228.95" font-size="17" text-anchor="middle" font-weight="400" style="fill:#24343d">base / store data / destination</text>
+<rect x="55" y="330" width="260" height="70" rx="5" fill="#f4f6f7" stroke="#71818a" stroke-width="1.6"/>
+<text x="185.0" y="370.95" font-size="17" text-anchor="middle" font-weight="700" style="fill:#24343d">Sign-extended displacement</text>
+<rect x="410" y="165" width="230" height="90" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="525.0" y="203.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">Address ALU</text>
+<text x="525.0" y="229.3" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">base + displacement</text>
+<rect x="740" y="165" width="220" height="145" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="850.0" y="217.8" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">TLB + cache</text>
+<text x="850.0" y="243.8" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">address lookup</text>
+<text x="850.0" y="269.8" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">load or store</text>
+<path d="M315 190 H410" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)"/>
+<text x="362" y="175" font-size="17" text-anchor="middle" font-weight="400" style="fill:#2267a5">Base</text>
+<path d="M315 365 H525 V255" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)"/>
+<path d="M640 205 H740" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)"/>
+<text x="690" y="182" font-size="17" text-anchor="middle" font-weight="400" style="fill:#2267a5">Address</text>
+<path d="M185 255 V290 H350 V460 H810 V310" fill="none" stroke="#b34939" stroke-width="2.3" marker-end="url(#red)"/>
+<text x="575" y="449" font-size="18" text-anchor="middle" font-weight="400" style="fill:#b34939">Store data: register -&gt; cache</text>
+<path d="M920 310 V540 H30 V210 H55" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)"/>
+<text x="525" y="528" font-size="18" text-anchor="middle" font-weight="400" style="fill:#087f7a">Load result: cache -&gt; destination register</text>
+<text x="55" y="594" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Plain stores write memory, not registers. Base-register updates are not shown.</text>
+<text x="55" y="621" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Fetch, control signals, and an OoO LSQ are omitted.</text>
+</svg>

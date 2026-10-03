@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="440" viewBox="0 0 1000 440">
+<title>ISA versus microarchitecture</title>
+<desc>The ISA is the software-visible contract, not a particular processor design.</desc>
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#24343d}</style>
+<defs>
+<marker id="ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#24343d"/></marker>
+<marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2267a5"/></marker>
+<marker id="teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#087f7a"/></marker>
+<marker id="red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b34939"/></marker>
+</defs>
+<text x="32" y="42" font-size="28" text-anchor="start" font-weight="700" style="fill:#24343d">ISA versus microarchitecture</text>
+<text x="32" y="73" font-size="17" text-anchor="start" font-weight="400" style="fill:#24343d">The ISA is the software-visible contract, not a particular processor design.</text>
+<path d="M32 94 H968" fill="none" stroke="#dce4e8" stroke-width="1"/>
+<rect x="280" y="120" width="440" height="65" rx="5" fill="#f4f6f7" stroke="#71818a" stroke-width="1.6"/>
+<text x="500.0" y="159.15" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">Program / compiler</text>
+<path d="M500 185 V218" fill="none" stroke="#24343d" stroke-width="2.3" marker-end="url(#ink)"/>
+<rect x="120" y="220" width="760" height="82" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="500.0" y="254.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">ISA: instructions, registers, memory behavior</text>
+<text x="500.0" y="280.65" font-size="19" text-anchor="middle" font-weight="400" style="fill:#24343d">Defines what execution must mean</text>
+<path d="M300 302 V340" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)"/>
+<path d="M700 302 V340" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)"/>
+<rect x="100" y="342" width="400" height="65" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="300.0" y="381.15" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">In-order implementation</text>
+<rect x="540" y="342" width="360" height="65" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="720.0" y="381.15" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">Out-of-order implementation</text>
+</svg>

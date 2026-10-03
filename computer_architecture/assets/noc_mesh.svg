@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="780" viewBox="0 0 1000 780">
+<title>Mesh NoC with attached agents</title>
+<desc>Nine routers; each endpoint attaches through its own local network interface (NI).</desc>
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#24343d}</style>
+<defs>
+<marker id="ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#24343d"/></marker>
+<marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2267a5"/></marker>
+<marker id="teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#087f7a"/></marker>
+<marker id="red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b34939"/></marker>
+</defs>
+<text x="32" y="42" font-size="28" text-anchor="start" font-weight="700" style="fill:#24343d">Mesh NoC with attached agents</text>
+<text x="32" y="73" font-size="17" text-anchor="start" font-weight="400" style="fill:#24343d">Nine routers; each endpoint attaches through its own local network interface (NI).</text>
+<path d="M32 94 H968" fill="none" stroke="#dce4e8" stroke-width="1"/>
+<path d="M100 250 H740" fill="none" stroke="#83959f" stroke-width="3"/>
+<path d="M100 450 H740" fill="none" stroke="#83959f" stroke-width="3"/>
+<path d="M100 650 H740" fill="none" stroke="#83959f" stroke-width="3"/>
+<path d="M100 250 V650" fill="none" stroke="#83959f" stroke-width="3"/>
+<path d="M420 250 V650" fill="none" stroke="#83959f" stroke-width="3"/>
+<path d="M740 250 V650" fill="none" stroke="#83959f" stroke-width="3"/>
+<rect x="145" y="125" width="200" height="55" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="245.0" y="158.45" font-size="17" text-anchor="middle" font-weight="700" style="fill:#24343d">Core 0 + L1</text>
+<path d="M118 228 L165 180" fill="none" stroke="#087f7a" stroke-width="2"/>
+<text x="170" y="211" font-size="16" text-anchor="start" font-weight="400" style="fill:#087f7a">NI</text>
+<circle cx="100" cy="250" r="27" fill="#eaf2fb" stroke="#2267a5" stroke-width="2"/>
+<text x="100" y="256.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">R00</text>
+<rect x="465" y="125" width="200" height="55" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="565.0" y="158.45" font-size="17" text-anchor="middle" font-weight="700" style="fill:#24343d">LLC / directory 0</text>
+<path d="M438 228 L485 180" fill="none" stroke="#087f7a" stroke-width="2"/>
+<text x="490" y="211" font-size="16" text-anchor="start" font-weight="400" style="fill:#087f7a">NI</text>
+<circle cx="420" cy="250" r="27" fill="#eaf2fb" stroke="#2267a5" stroke-width="2"/>
+<text x="420" y="256.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">R01</text>
+<rect x="785" y="125" width="200" height="55" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="885.0" y="158.45" font-size="17" text-anchor="middle" font-weight="700" style="fill:#24343d">Memory controller 0</text>
+<path d="M758 228 L805 180" fill="none" stroke="#087f7a" stroke-width="2"/>
+<text x="810" y="211" font-size="16" text-anchor="start" font-weight="400" style="fill:#087f7a">NI</text>
+<circle cx="740" cy="250" r="27" fill="#eaf2fb" stroke="#2267a5" stroke-width="2"/>
+<text x="740" y="256.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">R02</text>
+<rect x="145" y="325" width="200" height="55" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="245.0" y="358.45" font-size="17" text-anchor="middle" font-weight="700" style="fill:#24343d">Core 1 + L1</text>
+<path d="M118 428 L165 380" fill="none" stroke="#087f7a" stroke-width="2"/>
+<text x="170" y="411" font-size="16" text-anchor="start" font-weight="400" style="fill:#087f7a">NI</text>
+<circle cx="100" cy="450" r="27" fill="#eaf2fb" stroke="#2267a5" stroke-width="2"/>
+<text x="100" y="456.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">R10</text>
+<rect x="465" y="325" width="200" height="55" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="565.0" y="358.45" font-size="17" text-anchor="middle" font-weight="700" style="fill:#24343d">LLC / directory 1</text>
+<path d="M438 428 L485 380" fill="none" stroke="#087f7a" stroke-width="2"/>
+<text x="490" y="411" font-size="16" text-anchor="start" font-weight="400" style="fill:#087f7a">NI</text>
+<circle cx="420" cy="450" r="27" fill="#eaf2fb" stroke="#2267a5" stroke-width="2"/>
+<text x="420" y="456.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">R11</text>
+<rect x="785" y="325" width="200" height="55" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="885.0" y="358.45" font-size="17" text-anchor="middle" font-weight="700" style="fill:#24343d">Core 2 + L1</text>
+<path d="M758 428 L805 380" fill="none" stroke="#087f7a" stroke-width="2"/>
+<text x="810" y="411" font-size="16" text-anchor="start" font-weight="400" style="fill:#087f7a">NI</text>
+<circle cx="740" cy="450" r="27" fill="#eaf2fb" stroke="#2267a5" stroke-width="2"/>
+<text x="740" y="456.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">R12</text>
+<rect x="145" y="525" width="200" height="55" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="245.0" y="558.45" font-size="17" text-anchor="middle" font-weight="700" style="fill:#24343d">Memory controller 1</text>
+<path d="M118 628 L165 580" fill="none" stroke="#087f7a" stroke-width="2"/>
+<text x="170" y="611" font-size="16" text-anchor="start" font-weight="400" style="fill:#087f7a">NI</text>
+<circle cx="100" cy="650" r="27" fill="#eaf2fb" stroke="#2267a5" stroke-width="2"/>
+<text x="100" y="656.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">R20</text>
+<rect x="465" y="525" width="200" height="55" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="565.0" y="558.45" font-size="17" text-anchor="middle" font-weight="700" style="fill:#24343d">Core 3 + L1</text>
+<path d="M438 628 L485 580" fill="none" stroke="#087f7a" stroke-width="2"/>
+<text x="490" y="611" font-size="16" text-anchor="start" font-weight="400" style="fill:#087f7a">NI</text>
+<circle cx="420" cy="650" r="27" fill="#eaf2fb" stroke="#2267a5" stroke-width="2"/>
+<text x="420" y="656.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">R21</text>
+<rect x="785" y="525" width="200" height="55" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="885.0" y="558.45" font-size="17" text-anchor="middle" font-weight="700" style="fill:#24343d">LLC / directory 2</text>
+<path d="M758 628 L805 580" fill="none" stroke="#087f7a" stroke-width="2"/>
+<text x="810" y="611" font-size="16" text-anchor="start" font-weight="400" style="fill:#087f7a">NI</text>
+<circle cx="740" cy="650" r="27" fill="#eaf2fb" stroke="#2267a5" stroke-width="2"/>
+<text x="740" y="656.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">R22</text>
+<text x="40" y="711" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Example: Core 0 -&gt; R00 -&gt; R01 -&gt; LLC 0; LLC miss -&gt; R02 -&gt; MC 0.</text>
+<text x="40" y="748" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">All links are bidirectional; requests and responses may use different virtual networks.</text>
+</svg>

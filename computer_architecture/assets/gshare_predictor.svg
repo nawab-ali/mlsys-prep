@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 470" width="1000" height="522" font-family="DejaVu Sans, Verdana, sans-serif">
+  <rect x="0" y="0" width="900" height="470" fill="white" /><defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#334155" /></marker>
+    <marker id="aB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#1d4ed8" /></marker>
+  </defs>
+  <rect width="900" height="470" fill="#ffffff" />
+  <text x="24" y="28" font-size="14" fill="#64748b" font-weight="bold">GSHARE BRANCH PREDICTOR</text>
+  <text x="118" y="64" text-anchor="middle" font-size="14" fill="#64748b">Global history register</text>
+  <rect x="24" y="72" width="188" height="46" rx="5" fill="#e0e7ff" stroke="#334155" stroke-width="1.8" />
+  <text x="118" y="102" text-anchor="middle" font-size="17" fill="#0f172a" font-weight="bold" font-family="DejaVu Sans Mono, Consolas, monospace">1011</text>
+  <text x="118" y="164" text-anchor="middle" font-size="14" fill="#64748b">Selected PC bits</text>
+  <rect x="24" y="172" width="188" height="46" rx="5" fill="#e0e7ff" stroke="#334155" stroke-width="1.8" />
+  <text x="118" y="202" text-anchor="middle" font-size="17" fill="#0f172a" font-weight="bold" font-family="DejaVu Sans Mono, Consolas, monospace">0110</text>
+  <path d="M212 95 H240 V132 H276" fill="none" stroke="#334155" stroke-width="1.7" marker-end="url(#a)" />
+  <path d="M212 195 H240 V158 H276" fill="none" stroke="#334155" stroke-width="1.7" marker-end="url(#a)" />
+  <rect x="276" y="118" width="118" height="54" rx="5" fill="#fef3c7" stroke="#334155" stroke-width="1.8" />
+  <text x="335" y="150" text-anchor="middle" font-size="14" fill="#0f172a" font-weight="bold">XOR</text>
+  <line x1="394" y1="145" x2="466" y2="145" stroke="#1d4ed8" stroke-width="1.9" marker-end="url(#aB)" />
+  <text x="430" y="136" text-anchor="middle" font-size="14" fill="#1d4ed8" font-weight="bold" font-family="DejaVu Sans Mono, Consolas, monospace">1101</text>
+  <text x="430" y="163" text-anchor="middle" font-size="14" fill="#64748b" font-style="italic">Index</text>
+  <rect x="470" y="80" width="190" height="130" rx="5" fill="#f8fafc" stroke="#334155" stroke-width="1.8" />
+  <text x="565" y="101" text-anchor="middle" font-size="14" fill="#0f172a" font-weight="bold">Counter table</text>
+  <line x1="470" y1="110" x2="660" y2="110" stroke="#94a3b8" stroke-width="1.2" />
+  <rect x="472" y="136" width="186" height="24" fill="#fde68a" />
+  <g font-size="13.5" text-anchor="middle" fill="#0f172a" font-family="DejaVu Sans Mono, Consolas, monospace">
+    <text x="565" y="130">01</text>
+    <text x="565" y="154" font-weight="bold">11</text>
+    <text x="565" y="178">10</text>
+    <text x="565" y="202">00</text>
+  </g>
+  <line x1="660" y1="145" x2="716" y2="145" stroke="#1d4ed8" stroke-width="1.9" marker-end="url(#aB)" />
+  <text x="798" y="128" text-anchor="middle" font-size="14" fill="#64748b">Prediction</text>
+  <rect x="720" y="136" width="156" height="46" rx="5" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.8" />
+  <text x="798" y="166" text-anchor="middle" font-size="16.0" fill="#0f172a" font-weight="bold">Taken</text>
+  <line x1="24" y1="256" x2="876" y2="256" stroke="#e2e8f0" stroke-width="1.5" />
+  <text x="24" y="282" font-size="14" fill="#64748b" font-weight="bold">GSELECT VERSUS GSHARE</text>
+  <text x="24" y="322" font-size="13" fill="#0f172a" font-weight="bold">gselect 2/2</text>
+  <rect x="150" y="304" width="72" height="26" rx="3" fill="#f1f5f9" stroke="#94a3b8" />
+  <text x="186" y="322" text-anchor="middle" font-size="13" fill="#475569" font-family="DejaVu Sans Mono, Consolas, monospace">10</text>
+  <rect x="226" y="304" width="72" height="26" rx="3" fill="#f1f5f9" stroke="#94a3b8" />
+  <text x="262" y="322" text-anchor="middle" font-size="13" fill="#475569" font-family="DejaVu Sans Mono, Consolas, monospace">11</text>
+  <line x1="304" y1="317" x2="352" y2="317" stroke="#334155" stroke-width="1.5" marker-end="url(#a)" />
+  <text x="392" y="322" text-anchor="middle" font-size="13.5" fill="#0f172a" font-weight="bold" font-family="DejaVu Sans Mono, Consolas, monospace">1011</text>
+  <text x="450" y="322" font-size="14" fill="#64748b">Concatenate two bits from each input.</text>
+  <text x="24" y="376" font-size="13" fill="#0f172a" font-weight="bold">gshare 4/4</text>
+  <rect x="150" y="358" width="72" height="26" rx="3" fill="#dbeafe" stroke="#1d4ed8" />
+  <text x="186" y="376" text-anchor="middle" font-size="13" fill="#1e3a8a" font-family="DejaVu Sans Mono, Consolas, monospace">0110</text>
+  <text x="234" y="376" text-anchor="middle" font-size="15" fill="#334155">⊕</text>
+  <rect x="246" y="358" width="72" height="26" rx="3" fill="#dbeafe" stroke="#1d4ed8" />
+  <text x="282" y="376" text-anchor="middle" font-size="13" fill="#1e3a8a" font-family="DejaVu Sans Mono, Consolas, monospace">1011</text>
+  <line x1="324" y1="371" x2="352" y2="371" stroke="#334155" stroke-width="1.5" marker-end="url(#a)" />
+  <text x="392" y="376" text-anchor="middle" font-size="13.5" fill="#0f172a" font-weight="bold" font-family="DejaVu Sans Mono, Consolas, monospace">1101</text>
+  <text x="450" y="376" font-size="14" fill="#64748b">XOR all four bits from each input.</text>
+  <text x="24" y="424" font-size="14" fill="#64748b">Gselect concatenates PC and history bits. Gshare mixes them using XOR.</text>
+  <text x="24" y="444" font-size="14" fill="#64748b">Four-bit indexing addresses 16 counters; only a few entries are illustrated.</text>
+<metadata>Gshare branch predictor tr.svg; Oğuz Ergin; CC BY-SA 4.0; https://commons.wikimedia.org/wiki/File:Gshare_branch_predictor_tr.svg; https://creativecommons.org/licenses/by-sa/4.0 Modifications: English translation, separate XOR inputs, table-size clarification, white background and sizing.</metadata></svg>

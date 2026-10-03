@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="580" viewBox="0 0 1100 580">
+<title>HBM: stacked DRAM beside a processor</title>
+<desc>Generic 2.5D packaging schematic; not a generation-specific HBM specification.</desc>
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#24343d}</style>
+<defs>
+<marker id="ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#24343d"/></marker>
+<marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2267a5"/></marker>
+<marker id="teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#087f7a"/></marker>
+<marker id="red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b34939"/></marker>
+</defs>
+<text x="32" y="42" font-size="28" text-anchor="start" font-weight="700" style="fill:#24343d">HBM: stacked DRAM beside a processor</text>
+<text x="32" y="73" font-size="17" text-anchor="start" font-weight="400" style="fill:#24343d">Generic 2.5D packaging schematic; not a generation-specific HBM specification.</text>
+<path d="M32 94 H1068" fill="none" stroke="#dce4e8" stroke-width="1"/>
+<rect x="70" y="270" width="350" height="135" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="245.0" y="331.15" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">GPU / accelerator die</text>
+<text x="245.0" y="357.15" font-size="19" text-anchor="middle" font-weight="400" style="fill:#24343d">memory controller on processor</text>
+<rect x="550" y="160" width="360" height="36" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="565" y="185" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">DRAM die</text>
+<rect x="550" y="210" width="360" height="36" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="565" y="235" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">DRAM die</text>
+<rect x="550" y="260" width="360" height="36" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="565" y="285" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">DRAM die</text>
+<rect x="550" y="310" width="360" height="36" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="565" y="335" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">DRAM die</text>
+<rect x="550" y="360" width="360" height="45" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="730.0" y="388.8" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">Base / logic die</text>
+<path d="M790 157 V360" fill="none" stroke="#087f7a" stroke-width="4"/>
+<path d="M825 157 V360" fill="none" stroke="#087f7a" stroke-width="4"/>
+<path d="M860 157 V360" fill="none" stroke="#087f7a" stroke-width="4"/>
+<path d="M862 178 H944 V142" fill="none" stroke="#087f7a" stroke-width="2"/>
+<text x="960" y="141" font-size="19" text-anchor="start" font-weight="400" style="fill:#087f7a">TSVs</text>
+<text x="960" y="169" font-size="15" text-anchor="start" font-weight="400" style="fill:#087f7a">vertical links</text>
+<rect x="55" y="438" width="890" height="45" rx="5" fill="#f4f6f7" stroke="#71818a" stroke-width="1.6"/>
+<text x="500.0" y="467.15" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">Interposer: short, wide electrical connections</text>
+<circle cx="100" cy="423" r="5" fill="#71818a" stroke="#71818a" stroke-width="2"/>
+<circle cx="145" cy="423" r="5" fill="#71818a" stroke="#71818a" stroke-width="2"/>
+<circle cx="190" cy="423" r="5" fill="#71818a" stroke="#71818a" stroke-width="2"/>
+<circle cx="235" cy="423" r="5" fill="#71818a" stroke="#71818a" stroke-width="2"/>
+<circle cx="280" cy="423" r="5" fill="#71818a" stroke="#71818a" stroke-width="2"/>
+<circle cx="325" cy="423" r="5" fill="#71818a" stroke="#71818a" stroke-width="2"/>
+<circle cx="370" cy="423" r="5" fill="#71818a" stroke="#71818a" stroke-width="2"/>
+<circle cx="415" cy="423" r="5" fill="#71818a" stroke="#71818a" stroke-width="2"/>
+<circle cx="580" cy="423" r="5" fill="#71818a" stroke="#71818a" stroke-width="2"/>
+<circle cx="625" cy="423" r="5" fill="#71818a" stroke="#71818a" stroke-width="2"/>
+<circle cx="670" cy="423" r="5" fill="#71818a" stroke="#71818a" stroke-width="2"/>
+<circle cx="715" cy="423" r="5" fill="#71818a" stroke="#71818a" stroke-width="2"/>
+<circle cx="760" cy="423" r="5" fill="#71818a" stroke="#71818a" stroke-width="2"/>
+<circle cx="805" cy="423" r="5" fill="#71818a" stroke="#71818a" stroke-width="2"/>
+<circle cx="850" cy="423" r="5" fill="#71818a" stroke="#71818a" stroke-width="2"/>
+<circle cx="895" cy="423" r="5" fill="#71818a" stroke="#71818a" stroke-width="2"/>
+<rect x="55" y="510" width="890" height="40" rx="5" fill="#f4f6f7" stroke="#71818a" stroke-width="1.6"/>
+<text x="500.0" y="536.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">Package substrate</text>
+<path d="M255 484 V510 M725 484 V510" fill="none" stroke="#71818a" stroke-width="3"/>
+<text x="971" y="430" font-size="15" text-anchor="middle" font-weight="400" style="fill:#24343d">Microbumps</text>
+</svg>

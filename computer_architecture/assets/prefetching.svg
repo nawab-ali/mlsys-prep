@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="540" viewBox="0 0 1000 540">
+<title>Prefetching: predict, fetch, then use</title>
+<desc>Predicted addresses issue real memory requests; they are not data yet.</desc>
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#24343d}</style>
+<defs>
+<marker id="ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#24343d"/></marker>
+<marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2267a5"/></marker>
+<marker id="teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#087f7a"/></marker>
+<marker id="red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b34939"/></marker>
+</defs>
+<text x="32" y="42" font-size="28" text-anchor="start" font-weight="700" style="fill:#24343d">Prefetching: predict, fetch, then use</text>
+<text x="32" y="73" font-size="17" text-anchor="start" font-weight="400" style="fill:#24343d">Predicted addresses issue real memory requests; they are not data yet.</text>
+<path d="M32 94 H968" fill="none" stroke="#dce4e8" stroke-width="1"/>
+<rect x="40" y="135" width="220" height="90" rx="5" fill="#f4f6f7" stroke="#71818a" stroke-width="1.6"/>
+<text x="150.0" y="173.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">Observed accesses</text>
+<text x="150.0" y="199.65" font-size="19" text-anchor="middle" font-weight="400" style="fill:#24343d">A, A+s, A+2s, ...</text>
+<rect x="345" y="135" width="300" height="90" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="495.0" y="173.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">Predictor</text>
+<text x="495.0" y="199.3" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">stride / stream / correlation</text>
+<rect x="725" y="135" width="230" height="90" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="840.0" y="173.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">Prefetch queue</text>
+<text x="840.0" y="199.65" font-size="19" text-anchor="middle" font-weight="400" style="fill:#24343d">filter + throttle</text>
+<path d="M260 180 H345" fill="none" stroke="#24343d" stroke-width="2.3" marker-end="url(#ink)"/>
+<path d="M645 180 H725" fill="none" stroke="#24343d" stroke-width="2.3" marker-end="url(#ink)"/>
+<rect x="725" y="335" width="230" height="80" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="840.0" y="368.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">Lower memory level</text>
+<text x="840.0" y="394.3" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">fetch predicted line</text>
+<path d="M840 225 V335" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)"/>
+<text x="857" y="286" font-size="17" text-anchor="start" font-weight="400" style="fill:#2267a5">Request</text>
+<rect x="345" y="335" width="300" height="80" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="495.0" y="368.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">Cache / prefetch buffer</text>
+<text x="495.0" y="394.3" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">hold the returned data</text>
+<path d="M725 375 H645" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)"/>
+<rect x="40" y="335" width="220" height="80" rx="5" fill="#f4f6f7" stroke="#71818a" stroke-width="1.6"/>
+<text x="150.0" y="368.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">Later demand</text>
+<text x="150.0" y="394.65" font-size="19" text-anchor="middle" font-weight="400" style="fill:#24343d">can hit this line</text>
+<path d="M345 375 H260" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)"/>
+<text x="40" y="473" font-size="19" text-anchor="start" font-weight="400" style="fill:#24343d">On-time data can hide latency; late useful data can still shorten stalls.</text>
+<text x="40" y="506" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Costs: bandwidth, cache pollution, queue pressure, and wasted work.</text>
+</svg>
