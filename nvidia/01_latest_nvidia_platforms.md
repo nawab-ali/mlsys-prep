@@ -11,6 +11,31 @@ Use this file as a Week 1 orientation. Later weeks should go deeper into SM
 microarchitecture, Tensor Cores, CUDA, NCCL, TensorRT-LLM, NVLink, NVSwitch,
 training parallelism, inference serving, and cluster design.
 
+## Table of contents
+
+- [Learning goals](#learning-goals)
+- [The senior-level mental model](#the-senior-level-mental-model)
+- [Platform stack](#platform-stack)
+- [Current platform anchors](#current-platform-anchors)
+- [GB200 NVL72](#gb200-nvl72)
+- [GB300 NVL72](#gb300-nvl72)
+- [Blackwell versus Blackwell Ultra](#blackwell-versus-blackwell-ultra)
+- [Vera Rubin](#vera-rubin)
+- [Why LLMs fit NVIDIA platforms](#why-llms-fit-nvidia-platforms)
+- [Compute](#compute)
+- [Memory](#memory)
+- [Scale-up interconnect](#scale-up-interconnect)
+- [Scale-out networking](#scale-out-networking)
+- [Software stack](#software-stack)
+- [Why this matters for OpenAI and Anthropic](#why-this-matters-for-openai-and-anthropic)
+- [Common interview traps](#common-interview-traps)
+- [Senior/principal answer patterns](#seniorprincipal-answer-patterns)
+- [Whiteboard framework](#whiteboard-framework)
+- [What to memorize for Week 1](#what-to-memorize-for-week-1)
+- [What not to memorize yet](#what-not-to-memorize-yet)
+- [Week 1 self-check](#week-1-self-check)
+- [Sources](#sources)
+
 ## Learning goals
 
 By the end of this module, you should be able to:

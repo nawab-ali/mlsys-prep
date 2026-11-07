@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="600" viewBox="0 0 1000 600">
+<title>Input-buffered NoC router</title>
+<desc>Separate the flit datapath from the decisions that control it.</desc>
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#24343d}</style>
+<defs>
+<marker id="ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#24343d"/></marker>
+<marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2267a5"/></marker>
+<marker id="teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#087f7a"/></marker>
+<marker id="red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b34939"/></marker>
+</defs>
+<text x="32" y="42" font-size="28" text-anchor="start" font-weight="700" style="fill:#24343d">Input-buffered NoC router</text>
+<text x="32" y="73" font-size="17" text-anchor="start" font-weight="400" style="fill:#24343d">Separate the flit datapath from the decisions that control it.</text>
+<path d="M32 94 H968" fill="none" stroke="#dce4e8" stroke-width="1"/>
+<rect x="40" y="155" width="270" height="90" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="175.0" y="193.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">Input ports + VC buffers</text>
+<text x="175.0" y="219.3" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">N / E / S / W / local</text>
+<rect x="385" y="155" width="235" height="90" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="502.5" y="193.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">Crossbar</text>
+<text x="502.5" y="219.65" font-size="19" text-anchor="middle" font-weight="400" style="fill:#24343d">move selected flits</text>
+<rect x="705" y="155" width="245" height="90" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="827.5" y="193.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">Output links</text>
+<text x="827.5" y="219.3" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">N / E / S / W / local</text>
+<path d="M310 200 H385" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)"/>
+<path d="M620 200 H705" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)"/>
+<rect x="40" y="355" width="270" height="90" rx="5" fill="#f4f6f7" stroke="#71818a" stroke-width="1.6"/>
+<text x="175.0" y="393.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">Route computation</text>
+<text x="175.0" y="419.3" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">choose an output</text>
+<rect x="385" y="355" width="235" height="90" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="502.5" y="392.95" font-size="17" text-anchor="middle" font-weight="700" style="fill:#24343d">VC allocation</text>
+<text x="502.5" y="418.95" font-size="17" text-anchor="middle" font-weight="400" style="fill:#24343d">reserve downstream VC</text>
+<rect x="705" y="355" width="245" height="90" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="827.5" y="393.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">Switch allocation</text>
+<text x="827.5" y="419.3" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">grant input / output</text>
+<path d="M175 245 V355" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)" stroke-dasharray="7 5"/>
+<path d="M310 400 H385" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)" stroke-dasharray="7 5"/>
+<path d="M620 400 H705" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)" stroke-dasharray="7 5"/>
+<path d="M827 355 V300 H505 V245" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)" stroke-dasharray="7 5"/>
+<text x="625" y="289" font-size="17" text-anchor="middle" font-weight="400" style="fill:#2267a5">Crossbar select</text>
+<text x="40" y="496" font-size="19" text-anchor="start" font-weight="400" style="fill:#24343d">Solid: flit data. Dashed: routing and arbitration control.</text>
+<text x="40" y="530" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Credits/backpressure prevent downstream buffer overflow (not drawn).</text>
+<text x="40" y="564" font-size="17" text-anchor="start" font-weight="400" style="fill:#24343d">Logical functions shown; real designs may combine or speculate pipeline stages.</text>
+</svg>

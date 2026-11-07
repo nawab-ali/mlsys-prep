@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="790" viewBox="0 0 1000 790">
+<title>Out-of-order execution, in-order retirement</title>
+<desc>Data values live in physical registers; the ROB tracks program order and completion.</desc>
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#24343d}</style>
+<defs>
+<marker id="ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#24343d"/></marker>
+<marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2267a5"/></marker>
+<marker id="teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#087f7a"/></marker>
+<marker id="red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b34939"/></marker>
+</defs>
+<text x="32" y="42" font-size="28" text-anchor="start" font-weight="700" style="fill:#24343d">Out-of-order execution, in-order retirement</text>
+<text x="32" y="73" font-size="17" text-anchor="start" font-weight="400" style="fill:#24343d">Data values live in physical registers; the ROB tracks program order and completion.</text>
+<path d="M32 94 H968" fill="none" stroke="#dce4e8" stroke-width="1"/>
+<rect x="40" y="130" width="190" height="58" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="135.0" y="165.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">Fetch</text>
+<path d="M230 159 H280" fill="none" stroke="#24343d" stroke-width="2.3" marker-end="url(#ink)"/>
+<rect x="280" y="130" width="190" height="58" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="375.0" y="165.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">Decode</text>
+<path d="M470 159 H520" fill="none" stroke="#24343d" stroke-width="2.3" marker-end="url(#ink)"/>
+<rect x="520" y="130" width="190" height="58" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="615.0" y="165.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">Rename</text>
+<path d="M710 159 H760" fill="none" stroke="#24343d" stroke-width="2.3" marker-end="url(#ink)"/>
+<rect x="760" y="130" width="190" height="58" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="855.0" y="165.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">Dispatch</text>
+<rect x="40" y="240" width="370" height="80" rx="5" fill="#f4f6f7" stroke="#71818a" stroke-width="1.6"/>
+<text x="225.0" y="273.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">Rename map + free list</text>
+<text x="225.0" y="299.3" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">allocate physical destinations</text>
+<path d="M615 188 V218 H225 V240" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)"/>
+<rect x="610" y="260" width="340" height="85" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="780.0" y="295.8" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">Issue queues</text>
+<text x="780.0" y="321.8" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">wait for operands and resources</text>
+<path d="M855 188 V260" fill="none" stroke="#24343d" stroke-width="2.3" marker-end="url(#ink)"/>
+<rect x="610" y="410" width="340" height="85" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="780.0" y="445.8" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">Execute + load/store queue</text>
+<text x="780.0" y="471.8" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">ALU / FP / branch / memory</text>
+<path d="M780 345 V410" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)"/>
+<rect x="610" y="560" width="340" height="70" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="780.0" y="588.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">Writeback</text>
+<text x="780.0" y="614.3" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">results + completion status</text>
+<path d="M780 495 V560" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)"/>
+<rect x="40" y="395" width="370" height="90" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="225.0" y="433.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">Physical register file</text>
+<text x="225.0" y="459.3" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">source operands / produced values</text>
+<path d="M410 442 H610" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)"/>
+<path d="M610 600 H225 V485" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)"/>
+<text x="455" y="587" font-size="17" text-anchor="middle" font-weight="400" style="fill:#087f7a">Result</text>
+<rect x="40" y="660" width="370" height="85" rx="5" fill="#fff0ec" stroke="#b34939" stroke-width="1.6"/>
+<text x="225.0" y="695.8" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">ROB -&gt; commit at ROB head only</text>
+<text x="225.0" y="721.8" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">completed, non-faulting instructions</text>
+<path d="M950 159 H975 V770 H225 V745" fill="none" stroke="#b34939" stroke-width="2.3" marker-end="url(#red)" stroke-dasharray="7 5"/>
+<text x="687" y="757" font-size="17" text-anchor="middle" font-weight="400" style="fill:#b34939">Allocate in program order at dispatch</text>
+<path d="M650 630 V702 H410" fill="none" stroke="#b34939" stroke-width="2.3" marker-end="url(#red)" stroke-dasharray="7 5"/>
+<text x="503" y="690" font-size="17" text-anchor="middle" font-weight="400" style="fill:#b34939">Mark complete</text>
+<text x="40" y="361" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Retirement frees old registers; committed stores become eligible to drain.</text>
+</svg>

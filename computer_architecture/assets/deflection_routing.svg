@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="650" viewBox="0 0 1000 650">
+<title>Bufferless deflection: two flits, one desired output</title>
+<desc>A wins C -&gt; D. B is redirected east, then reaches D through SE.</desc>
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#24343d}</style>
+<defs>
+<marker id="ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#24343d"/></marker>
+<marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2267a5"/></marker>
+<marker id="teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#087f7a"/></marker>
+<marker id="red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b34939"/></marker>
+</defs>
+<text x="32" y="42" font-size="28" text-anchor="start" font-weight="700" style="fill:#24343d">Bufferless deflection: two flits, one desired output</text>
+<text x="32" y="73" font-size="17" text-anchor="start" font-weight="400" style="fill:#24343d">A wins C -&gt; D. B is redirected east, then reaches D through SE.</text>
+<path d="M32 94 H968" fill="none" stroke="#dce4e8" stroke-width="1"/>
+<path d="M190 170 H810" fill="none" stroke="#c3cdd2" stroke-width="3"/>
+<path d="M190 335 H810" fill="none" stroke="#c3cdd2" stroke-width="3"/>
+<path d="M190 500 H810" fill="none" stroke="#c3cdd2" stroke-width="3"/>
+<path d="M190 170 V500" fill="none" stroke="#c3cdd2" stroke-width="3"/>
+<path d="M500 170 V500" fill="none" stroke="#c3cdd2" stroke-width="3"/>
+<path d="M810 170 V500" fill="none" stroke="#c3cdd2" stroke-width="3"/>
+<path d="M220 335 H465" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)"/>
+<path d="M500 367 V465" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)"/>
+<path d="M500 201 V300" fill="none" stroke="#b34939" stroke-width="2.3" marker-end="url(#red)"/>
+<path d="M535 335 H775" fill="none" stroke="#b34939" stroke-width="2.3" marker-end="url(#red)"/>
+<path d="M810 367 V465" fill="none" stroke="#b34939" stroke-width="2.3" marker-end="url(#red)"/>
+<path d="M775 500 H535" fill="none" stroke="#b34939" stroke-width="2.3" marker-end="url(#red)"/>
+<circle cx="190" cy="170" r="28" fill="#f4f6f7" stroke="#24343d" stroke-width="2"/>
+<text x="190" y="176.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">NW</text>
+<circle cx="500" cy="170" r="28" fill="#f4f6f7" stroke="#24343d" stroke-width="2"/>
+<text x="500" y="176.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">N</text>
+<circle cx="810" cy="170" r="28" fill="#f4f6f7" stroke="#24343d" stroke-width="2"/>
+<text x="810" y="176.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">NE</text>
+<circle cx="190" cy="335" r="28" fill="#f4f6f7" stroke="#24343d" stroke-width="2"/>
+<text x="190" y="341.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">W</text>
+<circle cx="500" cy="335" r="28" fill="#f4f6f7" stroke="#24343d" stroke-width="2"/>
+<text x="500" y="341.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">C</text>
+<circle cx="810" cy="335" r="28" fill="#f4f6f7" stroke="#24343d" stroke-width="2"/>
+<text x="810" y="341.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">E</text>
+<circle cx="190" cy="500" r="28" fill="#f4f6f7" stroke="#24343d" stroke-width="2"/>
+<text x="190" y="506.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">SW</text>
+<circle cx="500" cy="500" r="28" fill="#e7f5f2" stroke="#087f7a" stroke-width="2"/>
+<text x="500" y="506.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">D</text>
+<circle cx="810" cy="500" r="28" fill="#f4f6f7" stroke="#24343d" stroke-width="2"/>
+<text x="810" y="506.3" font-size="18" text-anchor="middle" font-weight="700" style="fill:#24343d">SE</text>
+<text x="340" y="317" font-size="18" text-anchor="middle" font-weight="400" style="fill:#2267a5">A arrives</text>
+<text x="520" y="256" font-size="18" text-anchor="start" font-weight="400" style="fill:#b34939">B arrives</text>
+<text x="650" y="317" font-size="18" text-anchor="middle" font-weight="400" style="fill:#b34939">B deflected</text>
+<text x="480" y="420" font-size="18" text-anchor="end" font-weight="400" style="fill:#2267a5">A wins</text>
+<text x="40" y="572" font-size="19" text-anchor="start" font-weight="400" style="fill:#24343d">Routes span successive hops; later outputs are assumed free.</text>
+<text x="40" y="608" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">No input queue at the contested router; link/pipeline registers still hold flits.</text>
+</svg>

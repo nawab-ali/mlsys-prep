@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="870" viewBox="0 0 1200 870">
+<title>MESI: stable-state transitions</title>
+<desc>Each row is a separate event, not a sequence. Transient states and acknowledgments are omitted.</desc>
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#24343d}</style>
+<defs>
+<marker id="ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#24343d"/></marker>
+<marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2267a5"/></marker>
+<marker id="teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#087f7a"/></marker>
+<marker id="red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b34939"/></marker>
+</defs>
+<text x="32" y="42" font-size="28" text-anchor="start" font-weight="700" style="fill:#24343d">MESI: stable-state transitions</text>
+<text x="32" y="73" font-size="17" text-anchor="start" font-weight="400" style="fill:#24343d">Each row is a separate event, not a sequence. Transient states and acknowledgments are omitted.</text>
+<path d="M32 94 H1168" fill="none" stroke="#dce4e8" stroke-width="1"/>
+<text x="40" y="133" font-size="21" text-anchor="start" font-weight="700" style="fill:#2267a5">LOCAL PROCESSOR REQUESTS</text>
+<text x="650" y="133" font-size="21" text-anchor="start" font-weight="700" style="fill:#087f7a">SNOOPED REQUESTS / EVICTION</text>
+<text x="40" y="172" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Read miss: E if unshared; otherwise S</text>
+<rect x="40" y="187" width="100" height="50" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="90.0" y="218.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">I</text>
+<path d="M140 212 H415" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)"/>
+<rect x="415" y="187" width="100" height="50" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="465.0" y="218.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">E / S</text>
+<text x="40" y="277" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Write miss: obtain exclusive ownership</text>
+<rect x="40" y="292" width="100" height="50" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="90.0" y="323.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">I</text>
+<path d="M140 317 H415" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)"/>
+<rect x="415" y="292" width="100" height="50" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="465.0" y="323.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">M</text>
+<text x="40" y="382" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Write hit: invalidate other sharers</text>
+<rect x="40" y="397" width="100" height="50" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="90.0" y="428.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">S</text>
+<path d="M140 422 H415" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)"/>
+<rect x="415" y="397" width="100" height="50" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="465.0" y="428.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">M</text>
+<text x="40" y="487" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Write hit: no other cached copy</text>
+<rect x="40" y="502" width="100" height="50" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="90.0" y="533.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">E</text>
+<path d="M140 527 H415" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)"/>
+<rect x="415" y="502" width="100" height="50" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="465.0" y="533.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">M</text>
+<text x="40" y="592" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Read or write hit</text>
+<rect x="40" y="607" width="100" height="50" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="90.0" y="638.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">M</text>
+<path d="M140 632 H415" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)"/>
+<rect x="415" y="607" width="100" height="50" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="465.0" y="638.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">M</text>
+<text x="40" y="697" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Read hit: state unchanged</text>
+<rect x="40" y="712" width="100" height="50" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="90.0" y="743.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">E / S</text>
+<path d="M140 737 H415" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)"/>
+<rect x="415" y="712" width="100" height="50" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="465.0" y="743.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">E / S</text>
+<text x="650" y="172" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Remote read: supply / write back latest data</text>
+<rect x="650" y="187" width="100" height="50" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="700.0" y="218.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">M</text>
+<path d="M750 212 H1025" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)"/>
+<rect x="1025" y="187" width="100" height="50" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="1075.0" y="218.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">S</text>
+<text x="650" y="277" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Remote read: line becomes or remains shared</text>
+<rect x="650" y="292" width="100" height="50" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="700.0" y="323.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">E / S</text>
+<path d="M750 317 H1025" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)"/>
+<rect x="1025" y="292" width="100" height="50" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="1075.0" y="323.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">S</text>
+<text x="650" y="382" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Remote ownership: invalidate; supply if dirty</text>
+<rect x="650" y="397" width="100" height="50" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="700.0" y="428.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">M/E/S</text>
+<path d="M750 422 H1025" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)"/>
+<rect x="1025" y="397" width="100" height="50" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="1075.0" y="428.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">I</text>
+<text x="650" y="487" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Clean eviction: no data writeback</text>
+<rect x="650" y="502" width="100" height="50" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="700.0" y="533.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">E / S</text>
+<path d="M750 527 H1025" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)"/>
+<rect x="1025" y="502" width="100" height="50" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="1075.0" y="533.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">I</text>
+<text x="650" y="592" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Dirty eviction: write back latest data</text>
+<rect x="650" y="607" width="100" height="50" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="700.0" y="638.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">M</text>
+<path d="M750 632 H1025" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)"/>
+<rect x="1025" y="607" width="100" height="50" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="1075.0" y="638.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">I</text>
+<text x="650" y="697" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Snooped request: no local copy</text>
+<rect x="650" y="712" width="100" height="50" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="700.0" y="743.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">I</text>
+<path d="M750 737 H1025" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)"/>
+<rect x="1025" y="712" width="100" height="50" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="1075.0" y="743.65" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">I</text>
+<text x="40" y="845" font-size="19" text-anchor="start" font-weight="400" style="fill:#24343d">M = Modified   E = Exclusive   S = Shared   I = Invalid. Eviction is a local replacement event.</text>
+</svg>

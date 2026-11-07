@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="650" viewBox="0 0 1000 650">
+<title>Coherence is not cross-address ordering</title>
+<desc>Store-buffering example: initially x = 0 and y = 0. All accesses below are atomic.</desc>
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#24343d}</style>
+<defs>
+<marker id="ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#24343d"/></marker>
+<marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2267a5"/></marker>
+<marker id="teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#087f7a"/></marker>
+<marker id="red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b34939"/></marker>
+</defs>
+<text x="32" y="42" font-size="28" text-anchor="start" font-weight="700" style="fill:#24343d">Coherence is not cross-address ordering</text>
+<text x="32" y="73" font-size="17" text-anchor="start" font-weight="400" style="fill:#24343d">Store-buffering example: initially x = 0 and y = 0. All accesses below are atomic.</text>
+<path d="M32 94 H968" fill="none" stroke="#dce4e8" stroke-width="1"/>
+<rect x="50" y="135" width="400" height="75" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="250.0" y="166.5" font-size="20" text-anchor="middle" font-weight="700" style="fill:#24343d">Core 0</text>
+<text x="250.0" y="192.5" font-size="20" text-anchor="middle" font-weight="400" style="fill:#24343d">store x = 1; then load y -&gt; r0</text>
+<rect x="550" y="135" width="400" height="75" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="750.0" y="166.5" font-size="20" text-anchor="middle" font-weight="700" style="fill:#24343d">Core 1</text>
+<text x="750.0" y="192.5" font-size="20" text-anchor="middle" font-weight="400" style="fill:#24343d">store y = 1; then load x -&gt; r1</text>
+<rect x="50" y="290" width="400" height="75" rx="5" fill="#eaf2fb" stroke="#2267a5" stroke-width="1.6"/>
+<text x="250.0" y="321.15" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">Store buffer 0: x = 1</text>
+<text x="250.0" y="347.15" font-size="19" text-anchor="middle" font-weight="400" style="fill:#24343d">write not yet globally visible</text>
+<rect x="550" y="290" width="400" height="75" rx="5" fill="#e7f5f2" stroke="#087f7a" stroke-width="1.6"/>
+<text x="750.0" y="321.15" font-size="19" text-anchor="middle" font-weight="700" style="fill:#24343d">Store buffer 1: y = 1</text>
+<text x="750.0" y="347.15" font-size="19" text-anchor="middle" font-weight="400" style="fill:#24343d">write not yet globally visible</text>
+<path d="M250 210 V290" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)"/>
+<path d="M750 210 V290" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)"/>
+<rect x="240" y="450" width="520" height="65" rx="5" fill="#f4f6f7" stroke="#71818a" stroke-width="1.6"/>
+<text x="500.0" y="489.5" font-size="20" text-anchor="middle" font-weight="700" style="fill:#24343d">Globally visible values: x = 0, y = 0</text>
+<path d="M250 365 V450" fill="none" stroke="#2267a5" stroke-width="2.3" marker-end="url(#blue)" stroke-dasharray="7 5"/>
+<path d="M750 365 V450" fill="none" stroke="#087f7a" stroke-width="2.3" marker-end="url(#teal)" stroke-dasharray="7 5"/>
+<text x="500" y="405" font-size="18" text-anchor="middle" font-weight="400" style="fill:#24343d">Buffered stores may drain later</text>
+<text x="50" y="563" font-size="19" text-anchor="start" font-weight="400" style="fill:#24343d">Both loads can read 0 under models permitting Store -&gt; Load reordering.</text>
+<text x="50" y="597" font-size="18" text-anchor="start" font-weight="400" style="fill:#24343d">Coherence still orders each address. Sequential consistency forbids this outcome.</text>
+<text x="50" y="628" font-size="17" text-anchor="start" font-weight="400" style="fill:#24343d">Use appropriate synchronization; this is not a valid non-atomic C/C++ data-race example.</text>
+</svg>
